@@ -1,0 +1,382 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .container997 {
+    width: 60vw;
+    padding: 2vh;
+    font-family: Arial, sans-serif;
+  }
+  
+  .buttonContainer997 {
+    display: flex;
+    gap: 1vw;
+    margin-bottom: 3vh;
+    justify-content: center;
+  }
+  
+
+  
+  .dropdownContainer997 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2vw; /* Space between dropdown and buttons */
+    margin-bottom: 3vh;
+  }
+  
+  #financialYear997 {
+    margin-left: 1vw;
+    margin-right: 2vw; /* Additional space after dropdown */
+    font-size: 1.8vh;
+    padding: 1vh;
+    border: 1px solid black;
+  }
+  
+  #downloadSegregatedFile997, #downloadConsolidatedFile997 {
+    font-size: 2vh;
+    padding: 0.75vh 1vw;
+    margin-left: 1vw; /* Space between buttons */
+    background-color: #3e3e3e;
+    color: #ffffff;
+    border: none;
+    border-radius: 0.5vw;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  #downloadSegregatedFile997:hover, #downloadConsolidatedFile997:hover {
+    background-color: #1a73e8;
+  }
+  
+  
+  .tableContainer997 {
+    overflow-x: auto;
+    width: 70vw;
+    margin: 0 auto;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .oilAnalysisTable997 {
+    width: 50%;
+    border-collapse: collapse;
+    font-size: 1.6vh;
+    color: #333;
+  }
+  
+  .oilAnalysisTable997 th, .oilAnalysisTable997 td {
+    padding: 1.5vh;
+    text-align: center;
+    border: 1px solid #ccc;
+  }
+  
+  .oilAnalysisTable997 th {
+    background-color: #0d3b66;
+    color: #fff;
+    font-size: 1.8vh;
+    font-weight: bold;
+  }
+  
+  .orderTypeHeader997 {
+    text-align: left;
+  }
+  
+  .orderTypeLink997 a {
+    color: #1a73e8;
+    font-size: 1.8vh;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .orderTypeLink997 a:hover {
+    color: #0d3b66;
+    text-decoration: underline;
+  }
+  
+  .oilAnalysisTable997 tbody tr:nth-child(even) {
+    background-color: #f0f4f8;
+  }
+  
+  .oilAnalysisTable997 tbody tr:hover {
+    background-color: #e1eaf0;
+    transition: background-color 0.3s ease;
+  }
+
+  .oilAnalysisTable997 td:first-child, /* Fixes the first column to be sticky */
+  .oilAnalysisTable997 th:first-child {
+    position: sticky;
+    left: 0;
+    background-color: #004d80; /* Dark blue background */
+    color: white; /* White text color for the sticky header */
+    z-index: 2; /* Make sure it's above the body rows */
+  }
+  
+  .oilAnalysisTable997 td:first-child a {
+    color: white; /* Ensure the link text is white */
+    font-size: 1.8vh; /* Adjust font size if needed */
+  }
+  
+  .oilAnalysisTable997 td:first-child a:hover {
+    color: #ffcc00; /* Optional: Change the color when hovering */
+  }
+  
+  
+
+  /* modal box and inner table */
+
+  /* Preloader Circle */
+.preloader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5); /* Transparent background */
+  z-index: 9999;
+}
+
+.circle {
+  border: 4px solid #fff;
+  border-top: 4px solid transparent;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+/* Spinner animation */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Modal Styling */
+.modal-7997 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* z-index: 9999; */
+  z-index: 100001;
+  padding: 2vw;
+  overflow: hidden;
+}
+
+.modal-content-7997 {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: #fff;
+  border-radius: 1vw;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Cross Icon Button */
+button.close-modal {
+  position: absolute;
+  top: 1vw;
+  right: 1vw;
+  padding: 1vw;
+  background-color: transparent;
+  border: none;
+  color: #ff6f61;
+  font-size: 2vw; /* Adjust size for cross icon */
+  cursor: pointer;
+  font-weight: bold;
+  font-family: Arial, sans-serif;
+}
+
+/* Remove Hover Effect */
+button.close-modal:hover {
+  background-color: transparent;
+}
+
+/* Data Table Wrapper */
+.data-table-wrapper-7997 {
+  height: calc(100% - 2.5vw);
+  overflow: auto;
+  /* padding: 1vw; */
+}
+
+/* Table Styling */
+.data-table-7997 {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 100%;
+  overflow-x: auto;
+  box-sizing: border-box;
+  font-size: 1vw;
+
+}
+
+.data-table-7997 th, .data-table-7997 td {
+  padding: 1vw;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+.data-table-7997 thead {
+  background-color: #f4f4f4;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.data-table-7997 th {
+  background-color: #004d80; /* Dark blue background */
+  color: white;
+  font-weight: bold;
+}
+
+.data-table-7997 tr:nth-child(even) {
+  /* background-color: #f9f9f9; */
+}
+
+.data-table-7997 tr:nth-child(odd) {
+  /* background-color: #fff; */
+}
+
+/* Sticky first four columns */
+/* .data-table-7997 td:nth-child(-n+4), 
+.data-table-7997 th:nth-child(-n+4) {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+} */
+
+.data-table-7997 th:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 3; /* Ensure it stays above the first column */
+    white-space: nowrap; /* Prevents text wrapping */
+    /* padding: 12px 16px; */
+    text-align: left;
+    border-bottom: 1px solid #eee; /* Light border for separation */
+    font-size: 0.9rem; /* Slightly smaller font for body */
+    color: white; /* Darker color for text */
+}
+
+.data-table-7997 td:first-child {
+  position: sticky;
+    left: 0;
+    white-space: nowrap; /* Prevents text wrapping */
+    /* padding: 12px 16px; */
+    text-align: left;
+    border-bottom: 1px solid #eee; /* Light border for separation */
+    font-size: 0.9rem; /* Slightly smaller font for body */
+    color: black; /* Darker color for text */
+    background-color: white
+}
+
+.data-table-7997 th:nth-child(2) {
+  position: sticky;
+  left: 6rem;
+  white-space: nowrap; /* Prevents text wrapping */
+  /* padding: 12px 16px; */
+  text-align: left;
+  border-bottom: 1px solid #eee; /* Light border for separation */
+  font-size: 0.9rem; /* Slightly smaller font for body */
+}
+
+.data-table-7997 td:nth-child(2) {
+  position: sticky;
+  left: 6rem;
+  white-space: nowrap; /* Prevents text wrapping */
+  /* padding: 12px 16px; */
+  text-align: left;
+  border-bottom: 1px solid #eee; /* Light border for separation */
+  font-size: 0.9rem; /* Slightly smaller font for body */
+  color: black; /* Darker color for text */
+  background-color: white;
+}
+
+.data-table-7997 th:nth-child(3) {
+  position: sticky;
+  left: 20rem;
+  white-space: nowrap; /* Prevents text wrapping */
+  /* padding: 12px 16px; */
+  text-align: left;
+  border-bottom: 1px solid #eee; /* Light border for separation */
+  font-size: 0.9rem; /* Slightly smaller font for body */
+}
+
+.data-table-7997 td:nth-child(3) {
+  position: sticky;
+  left: 20rem;
+  white-space: nowrap; /* Prevents text wrapping */
+  /* padding: 12px 16px; */
+  text-align: left;
+  border-bottom: 1px solid #eee; /* Light border for separation */
+  font-size: 0.9rem; /* Slightly smaller font for body */
+  color: black; /* Darker color for text */
+  background-color: white;
+}
+
+.data-table-7997 th:nth-child(4) {
+  position: sticky;
+  left: 24rem;
+  white-space: nowrap; /* Prevents text wrapping */
+  /* padding: 12px 16px; */
+  text-align: left;
+  border-bottom: 1px solid #eee; /* Light border for separation */
+  font-size: 0.9rem; /* Slightly smaller font for body */
+}
+
+.data-table-7997 td:nth-child(4) {
+  position: sticky;
+  left: 24rem;
+  white-space: nowrap; /* Prevents text wrapping */
+  /* padding: 12px 16px; */
+  text-align: left;
+  border-bottom: 1px solid #eee; /* Light border for separation */
+  font-size: 0.9rem; /* Slightly smaller font for body */
+  color: black; /* Darker color for text */
+  background-color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .modal-content-7997 {
+    width: 95vw;
+    height: 95vh;
+  }
+
+  .data-table-7997 th, .data-table-7997 td {
+    font-size: 2vw;
+    padding: 1.5vw;
+  }
+
+  button.close-modal {
+    padding: 2vw;
+    font-size: 3vw;
+  }
+}
+
+#closebtn {
+  background-color: #004d80; /* Red background */
+  color: white;             /* White text */
+  font-size: 18px;          /* Larger text */
+  font-weight: bold;        /* Bold text */
+  border: none;             /* Remove default border */
+  border-radius: 8px;       /* Rounded corners */
+  padding: 12px 20px;       /* Adjust padding for a larger button */
+  cursor: pointer;          /* Pointer cursor on hover */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+}
+
+
+

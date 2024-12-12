@@ -1,0 +1,257 @@
+/* Navbar.css */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #FFFFFF;
+  z-index: 1000;
+  color: #333;
+  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  */
+  height: 86px;
+  display: flex;
+  align-items: center;
+  padding: 0 30px;
+  border-bottom: 2px solid #04ada2;
+}
+
+.navbar h2 {
+  margin-bottom: 20px;
+}
+
+.navbar ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.navbar li {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.navbar li:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* Custom class for logo size */
+.suzlon-logo {
+  height: 40px; 
+  width: 160px;
+}
+
+.logo {
+  border: 1px solid #86C4FF; 
+  background: radial-gradient(circle at center, #67C8E7 0%, #006383 100%);
+  width: 223px;
+  height: 53px;
+  border-radius: 6px;  
+  margin-left: 20px;
+  position: relative;
+  overflow: hidden; 
+}
+
+.logo::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%; 
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  animation: shine 7s infinite;
+}
+
+
+@keyframes shine {
+  0% {
+    left: -100%;
+  }
+  50% {
+    left: 100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+.logo p {
+  font-weight: bold;
+  color: #FFFFFF;
+}
+
+.separator {
+  width: 2px;
+  height: 38px; 
+  background-color: #A6A6A6; 
+  margin: 0 7px; 
+}
+
+.nav-item .nav-link p {
+  margin: 0; 
+  font-weight: 500; 
+  font-size: 14px;
+  color: #000000;
+}
+
+.nav-item .nav-link span {
+  font-size: 14px; 
+  color: #00978D; 
+}
+
+.sap-finder-logo {
+  width: 28px;
+  height: 28px;
+  margin-top: 10px;
+  margin-left: 15px;
+  margin-right: 5px;
+}
+
+.header-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #FFFFFF;
+  font-family: 'Poppins', sans-serif;
+}
+
+.profile-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.profile-icon {
+  font-size: 14px;
+  font-weight: bold;
+  color: #FFFFFF;
+  background-color:#06b69e;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  /* border: 2px solid #f70b0b; */
+}
+
+.profile-icon:hover + .dropdown-content,
+.dropdown-content:hover {
+  display: block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  padding: 12px 16px;
+  text-align: left;
+}
+
+.dropdown-content p {
+  margin: 0;
+  font-weight: 500;
+  font-size: 14px;
+  color: #000;
+}
+
+.dropdown-content span {
+  display: block;
+  font-size: 14px;
+  color: #00978D;
+  margin-bottom: 12px;
+}
+
+.dropdown-item {
+  text-decoration: none;
+  display: block;
+  font-size: 14px;
+  color: #333;
+}
+
+.dropdown-item:hover {
+  background-color: #f1f1f1;
+}
+
+/* Mobile styles */
+@media (max-width: 480px) {
+  .suzlon-logo {
+    width: 90px;
+    height: 20px;
+    margin-left: 10px;
+  }
+
+  .navbar {
+    padding: 0 10px;
+    height: 60px;
+  }
+
+  .logo {
+    width: 70% !important;
+    height: 40px;
+    margin-left: 10px;
+  }
+
+  .logo p {
+    font-size: 10px; 
+  }
+
+  .separator {
+    display: none;
+  }
+
+  .nav-item .nav-link p {
+    font-size: 12px; 
+  }
+
+  .nav-item .nav-link span {
+    font-size: 12px; 
+  }
+
+  .sap-finder-logo {
+    width: 20px; 
+    height: 20px; 
+    margin-top: 6px;
+    margin-left: 10px; 
+    margin-right: 5px;
+  }
+
+  .logo-image {
+    height: 5px;
+  }
+
+  .header-text {
+    font-size: 8px; 
+  }
+
+  .dropdown-menu {
+    min-width: 95px; 
+    height: 38px;
+  }
+}
+
+/* Tablet styles */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0 15px;
+  }
+
+  .logo {
+    width: 180px;
+    height: 40px;
+    margin-left: 10px;
+  }
+
+  .logo p {
+    font-size: 12px;
+  }
+
+  .separator {
+    display: none;
+  }
+}

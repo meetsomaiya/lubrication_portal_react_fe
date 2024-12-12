@@ -1,0 +1,65 @@
+.lub-table-container {
+  margin: 20px;
+}
+
+.lub-table-head {
+  background-color:#D5D5D5;
+}
+
+.lub-table-head-cell {
+  color:#393939;
+  font-weight: 600;
+  font-size: 16px;
+  font-family: poppins;
+  line-height: 24px;
+  text-align: center;
+}
+
+.lub-table-cell {
+  padding: 8px;
+  font-weight: 400;
+  font-size: 14px;
+  font-family: poppins;
+  line-height: 21px;
+  text-align: center;
+  color: #393939;
+}
+
+.lub-chip-success {
+  background-color: #D7EFE1;
+  color: #393939;
+  border-radius: 0;
+  padding: 4px 8px;
+  width: 56px;
+  height: 44px;
+  border-radius: 4px;
+  margin: 2px;
+  min-width: 40px; /* Adjust as needed */
+  text-align: center;
+}
+
+.lub-chip-warning {
+  background-color: #F2707D;
+  color: #393939;
+  padding: 4px 8px;
+  width: 56px;
+  height: 44px;
+  border-radius: 4px;
+  margin: 2px;
+  min-width: 40px; /* Adjust as needed */
+  text-align: center;
+}
+
+.lub-chip-error {
+  background-color:#D51426;
+  color:#393939;
+  padding: 4px 8px;
+  width: 56px;
+  height: 44px;
+  border-radius: 4px;
+  margin: 2px;
+  min-width: 40px; /* Adjust as needed */
+  text-align: center;
+  
+}
+

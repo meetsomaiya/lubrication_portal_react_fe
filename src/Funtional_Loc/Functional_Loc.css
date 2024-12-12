@@ -1,0 +1,338 @@
+.WTGWiseLoc-dropdown {
+    margin: 3px;
+    margin-left: 2vmin;
+    position: relative;
+    margin-top: 3vmax;
+    margin-bottom: 2vmax;
+}
+
+.WTGWiseLoc-dropdown select,
+.WTGWiseLoc-dropdown input[type="date"] {
+    padding: 10px;
+    width: 18.6vmax;
+    /* max-width: 100%; */
+    height: 50px;
+    color: #868686;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    border: 1px solid #BEBEBE;
+    border-radius: 4px;
+    outline: none;
+    line-height: 16px;
+}
+
+.WTGWiseLoc-dropdown input[type="date"]::before {
+    content: attr(placeholder);
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    color: #a6a6a6;
+    pointer-events: none;
+}
+
+.WTGWiseLoc-dropdown input[type="date"]:focus::before,
+.WTGWiseLoc-dropdown input[type="date"]:valid::before,
+.WTGWiseLoc-dropdown input[type="date"][value]::before {
+    display: none;
+}
+
+.WTGWiseLoc-dropdown select:focus,
+.WTGWiseLoc-dropdown input[type="date"]:focus {
+    border-color: #66afe9;
+    box-shadow: 0 0 5px rgba(102, 175, 233, 0.6);
+}
+
+
+
+
+.WTG-WISE-table {
+    /* width: 80vw; */
+    max-width: 100%;
+    border-radius: 1rem;
+    background-color: #fff;
+    overflow: hidden;
+    border: 1px solid #ddd;
+}
+.WTG-WISE-table .WTG-table-container {
+    overflow-y: hidden;
+}
+.WTG-WISE-table table tbody {
+    display: block;
+    height: 400px; /* Adjust this value as needed */
+    overflow-y: auto;
+    scrollbar-width: thin; /* For Firefox */
+    scrollbar-color: #888 #e0e0e0; /* For Firefox */
+  }
+  
+  .WTG-WISE-table table thead,
+  .WTG-WISE-table table tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+
+.WTG-WISE-table table {
+    border-collapse: collapse;
+    width: 100%;
+    text-align: center;
+}
+
+.WTG-WISE-table table th,
+.WTG-WISE-table table td {
+    padding: 1vmin;
+    font-size: 16px;
+}
+
+.WTG-WISE-table table th {
+    background-color: #D5D5D5;
+    color: #393939;
+    padding: 2vmin;
+    text-align: center;
+    font-size: 0.9em;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+}
+
+.WTG-WISE-table table td {
+    color: #3E3E3E;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+    padding: 1vmin;
+    text-align: center;
+    font-size: 0.8em;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+}
+
+
+
+.chip {
+    display: inline-block;
+    padding: 0.8rem 0.75rem;
+    border-radius: 0.5rem;
+    font-weight:500;
+    font-size: 14px;
+    width: 56px;
+    height: 44px;
+    color: #ffff;
+    margin-top: 0.8vmax;
+    font-family:Poppins;
+  }
+  
+  .chip-success {
+    background-color: #8DE9B3;
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+  
+  .chip-warning {
+    background-color: #F998A1;
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+  
+  .chip-warning-light {
+    background-color: #FDC5CB;
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+  
+  .chip-warning-dark {
+    background-color: #F998A1;
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+  
+  .chip-error {
+    background-color: #D51426;
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+
+
+  .WTG-download-container {
+    display: flex;
+    /* justify-content: flex-end; */
+    /* align-items: center; */
+    margin-bottom: 0.4em;
+    gap: 1em;
+    /* margin-left: 40px; */
+}
+
+/* .WTG-legend {
+    display: flex;
+    gap: 0.1em;
+   
+} */
+
+/* .WTG-legend-item {
+    display: inline-block;
+    padding: 0.3em 0.6em;
+    border-radius: 0.3em;
+    font-size: 0.9em;
+} */
+
+.WTG-download-button {
+    display: flex;
+    align-items: center;
+    padding: 0.5em 1em;
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid #BEBEBE;
+    border-radius: 0.3em;
+    cursor: pointer;
+    font-size: 0.9em;
+    margin-right: 0.8em;
+}
+
+.WTG-download-button:hover {
+    background-color: #f1f1f1;
+}
+
+.WTG-excel-icon {
+    margin-right: 0.5em;
+    width: 20px;
+    height: 20px;
+}
+
+.WTG-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* margin: 1rem 0; */
+}
+
+.WTG-list-admin {
+    font-size: 1em;
+    font-weight: 400;
+    font-family: 'Poppins', sans-serif;
+}
+.searchLoc_dropicon{
+    padding-left: 10px !important;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: url("../assets/dropdown\ arrow.png") white no-repeat calc(100% - 15px) !important; 
+  }
+  .filter-header {
+    position: relative;
+    /* display: flex; */
+    align-items: center;
+  }
+  
+  .filter-icon {
+    margin-left: 5px;
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+    cursor: pointer;
+  }
+  
+  .close-filter-icon {
+    margin-left: auto;
+    width: 12px;
+  height: 12px;
+  vertical-align: middle;
+  cursor: pointer;
+  margin-top: -14px;
+    margin-bottom: 12px;
+  }
+  
+  .clear-filter-button {
+    display: flex;
+    align-items: center;
+    padding: 0.3em;
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid #BEBEBE;
+    border-radius: 0.3em;
+    cursor: pointer;
+    font-size: 1em;
+    margin-top: 10px;
+  }
+  
+  .clear-filter-button:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .clear-icon {
+    margin-right: 0.5em;
+    width: 16px;
+    height: 16px;
+  }
+  
+  .filter-container {
+    position: absolute;
+    top: 40px;
+    left: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    padding: 10px;
+    min-width: 200px;
+  }
+  
+  .filter-search {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  .multi-select-dropdown {
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 5px;
+  }
+  
+  .multi-select-checkbox {
+    display: block;
+    margin-bottom: 8px;
+  }
+  
+  .multi-select-checkbox input[type="checkbox"] {
+    display: none;
+  }
+  
+  .multi-select-checkbox label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 400;
+  }
+  
+  .multi-select-checkbox label::before {
+    content: "";
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    margin-right: 8px;
+  }
+  
+  .multi-select-checkbox input[type="checkbox"]:checked + label::before {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+  
+  .multi-select-checkbox label::after {
+    content: "\2713";
+    font-size: 12px;
+    color: white;
+    display: none;
+  }
+  
+  .multi-select-checkbox input[type="checkbox"]:checked + label::after {
+    display: inline-block;
+  }

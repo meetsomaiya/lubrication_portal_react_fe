@@ -1,0 +1,304 @@
+
+.header_user {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.list-admin {
+    font-size: 1.3em;
+    /* font-weight: bold; */
+    font-family: 'Poppins', sans-serif;
+    
+}
+
+.admin-options {
+    display: flex;
+    justify-content: flex-end;
+     margin-right: 60px;
+}
+
+.add-User-button {
+    border: 1px solid #A6A6A6;
+    color: #A6A6A6;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    width: 152px;
+    height: 44px;
+    font-size: 12px;
+    line-height: 21px;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
+}
+
+.add-User-button:hover {
+    background-color: #F8FDFD;
+    color: #A6A6A6;
+}
+
+.icon {
+    margin-right: 5px;
+    width: 20px;
+    height: 20px;
+}
+
+.customerListTable {
+    max-width: 100%;
+    border-radius: 1rem;
+    background-color: #fff;
+    overflow: hidden;
+    border: 1px solid #ddd;
+    margin-top: 0.3rem; 
+}
+
+.customerListTable table {
+    border-collapse: collapse;
+    width: 100%;
+    text-align: center;
+}
+
+.customerListTable table th,
+.customerListTable table td {
+    padding: 1vmin;
+    font-size: 14px;
+}
+
+.customerListTable table th {
+    background-color: #D5D5D5;
+    color: #393939;
+    padding: 2vmin;
+    text-align: center;
+    font-size: 0.9em;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+}
+
+.customerListTable table td {
+    color: #3E3E3E;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+    padding: 1vmin;
+    text-align: center;
+    font-size: 0.8em;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+}
+
+.update-button, .delete-button {
+    border-radius: 5px;
+    margin: 0.6vmin 1.4vmin;
+    padding: 0.2vw 1.2vw;
+    cursor: pointer;
+    height: 5.95vmin;
+    width: 20.5vmin;
+    font-size: 0.8em;
+    font-weight: 400;
+    line-height: 1.125em;
+    font-family: 'Poppins', sans-serif;
+}
+
+.update-button {
+    border: 1px solid #00781A;
+    background-color: #fff;
+    color: #00781A;
+}
+
+.delete-button {
+    border: 1px solid red;
+    background-color: #fff;
+    color: red;
+}
+
+.update-button:hover {
+    background-color: #00781A;
+    color: white;
+}
+
+.delete-button:hover {
+    background-color: red;
+    color: white;
+}
+
+.customerListTable table th:nth-child(4),
+.customerListTable table td:nth-child(4) {
+    width: 35%;
+}
+
+.User_modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.User_modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: relative; 
+}
+
+.User_close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 12px;
+    cursor: pointer;
+    /* font-family: poppins; */
+}
+
+.User_close img { 
+    width: 20px;
+    height: 20px;
+}
+
+.User_modal-content h2 {
+    margin-bottom: 10px;
+    font-size: 20px;
+}
+
+.User_modal-content form {
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+.User_modal-content form input,
+.User_modal-content form select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    width: 100%;
+    font-size: 14px;
+    color: #868686;
+    font-family: Poppins;
+    font-weight: 400;
+}
+
+.User_modal-content form button {
+    padding: 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.search-bar {
+    margin: 2rem 0;
+    display: flex;
+    justify-content: center;
+    margin-right: 10rem;
+}
+
+.search-bar input {
+    width: 55%;
+    height: 50px; /* Set the height */
+    padding: 0.5rem;
+    border-radius: 5px 5px 5px 5px;
+    border: 1px solid #ccc;
+    font-size: 0.8rem;
+    font-family: 'Poppins', sans-serif;
+}
+
+.search-bar .search-button {
+    width: 100px; /* Set the width */
+    height: 50px; /* Set the height to match the input */
+    padding: 0.5rem 1rem;
+    border-radius: 5px 5px 5px 5px;
+    border: 1px solid  #00978D;
+    background-color: #00978D;
+    color: white;
+    cursor: pointer;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    margin-left: 5px;
+}
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    .customerListTable {
+        width: 95vw;
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .admin-options {
+        justify-content: center;
+        margin-top: 1rem;
+    }
+
+    .add-admin-button {
+        width: 100px;
+        height: 40px;
+    }
+
+    .update-button, .delete-button {
+        width: auto;
+        padding: 0.5em 1em;
+    }
+    
+    .search-bar .search-button {
+        width: 30%;
+        margin-top: 1rem; /* Ensure spacing between input and button on small screens */
+    }
+}
+
+/* Accessibility Styles */
+button:focus, .close:focus {
+    outline: 2px solid #00781A;
+    outline-offset: 2px;
+}
+
+
+
+
+
+.multi-select-dropdown {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.multi-select-dropdown-header {
+    padding: 10px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    background: #fff;
+    display: flex;
+    justify-content: space-between;
+}
+
+.multi-select-dropdown-list {
+    position: absolute;
+    width: 100%;
+    background: #fff;
+    border: 1px solid #ccc;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.multi-select-dropdown-item {
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+}
+
+.multi-select-dropdown-item input {
+    margin-right: 10px;
+}

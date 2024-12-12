@@ -1,0 +1,130 @@
+.Site-report-table {
+    max-width: 100%;
+    border-radius: 1rem;
+    background-color: #fff;
+    overflow: hidden;
+    border: 1px solid #ddd;
+}
+
+.Site-report-table .table-container {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.Site-report-table table {
+    border-collapse: collapse;
+    width: 100%;
+    text-align: center;
+}
+
+.Site-report-table table th,
+.Site-report-table table td {
+    padding: 1vmin;
+    font-size: 16px;
+}
+
+.Site-report-table table th {
+    background-color: #D5D5D5;
+    color: #393939;
+    padding: 2vmin;
+    text-align: center;
+    font-size: 0.9em;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+}
+
+.Site-report-table table td {
+    color: #3E3E3E;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+    padding: 1vmin;
+    text-align: center;
+    font-size: 0.8em;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+}
+
+label {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.cell-content {
+    display: inline-block;
+    padding: 0.2em 0.5em;
+    border-radius: 0.3em;
+}
+
+.below-80 {
+    background-color: #ffcccc; /* Light red */
+}
+
+.between-80-95 {
+    background-color: #fff2cc; /* Light yellow */
+}
+
+.above-95 {
+    background-color: #ccffcc; /* Light green */
+}
+
+.legend-download-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 0.7em;
+    gap: 1em;
+    margin-top: 15px;
+}
+
+.legend {
+    display: flex;
+    gap: 1em;
+}
+
+.legend-item {
+    display: inline-block;
+    padding: 0.3em 0.6em;
+    border-radius: 0.3em;
+    font-size: 0.9em;
+}
+
+.below-80.legend-item {
+    background-color: #ffcccc; /* Light red */
+}
+
+.between-80-95.legend-item {
+    background-color: #fff2cc; /* Light yellow */
+}
+
+.above-95.legend-item {
+    background-color: #ccffcc; /* Light green */
+}
+
+.download-button {
+    display: flex;
+    align-items: center;
+    padding: 0.3em 0.7em;
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid #BEBEBE;
+    border-radius: 0.3em;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.download-button:hover {
+    background-color: #f1f1f1;
+}
+
+.excel-icon {
+    margin-right: 0.5em;
+    width: 20px;
+    height: 20px;
+}
+
+.site_container {
+    margin-left: 0px;
+    max-width: 100%;
+}
+
+

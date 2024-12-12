@@ -1,0 +1,92 @@
+/* .Site-report-table {
+    max-width: 100%;
+    border-radius: 1rem;
+    background-color: #fff;
+    overflow: hidden;
+    border: 1px solid #ddd;
+} */
+
+
+
+.sitereport-dropdown {
+    margin: 3px;
+    margin-left: 1vmin;
+    position: relative;
+    margin-top: 3vmax;
+    margin-bottom: 2vmax;
+}
+
+.sitereport-dropdown select,
+.sitereport-dropdown input[type="date"] {
+    padding: 10px;
+    width: 25vmax;
+    height: 50px;
+    color: #868686;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    border: 1px solid #BEBEBE;
+    border-radius: 4px;
+    outline: none;
+    line-height: 16px;
+}
+
+.sitereport-dropdown input[type="date"]::before {
+    content: attr(placeholder);
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    color: #a6a6a6;
+    pointer-events: none;
+}
+
+.sitereport-dropdown input[type="date"]:focus::before,
+.sitereport-dropdown input[type="date"]:valid::before,
+.sitereport-dropdown input[type="date"][value]::before {
+    display: none;
+}
+
+.sitereport-dropdown select:focus,
+.sitereport-dropdown input[type="date"]:focus {
+    border-color: #66afe9;
+    box-shadow: 0 0 5px rgba(102, 175, 233, 0.6);
+}
+
+label {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.cell-content {
+    display: inline-block;
+    padding: 0.2em 0.5em;
+    border-radius: 0.3em;
+}
+
+.tabs {
+    display: flex;
+    /* border-bottom: 1px solid #ddd; */
+    margin-top: 7px;
+    margin-bottom: -2px;
+}
+
+.site-report_tab {
+    padding: 10px 20px;
+    text-decoration: none;
+    color: gray;
+    cursor: pointer;
+}
+
+.site-report_tab.active {
+    color: teal;
+    border-bottom: 3px solid teal;
+}
+
+.searchsite_dropicon {
+    padding-left: 10px !important;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: url("../assets/dropdown\ arrow.png") white no-repeat calc(100% - 15px) !important;
+}
