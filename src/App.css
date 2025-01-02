@@ -1,30 +1,96 @@
-/* App.css */
-
+/* General Container Styling */
 .app-container {
   display: flex;
   max-width: 100%;
+  height: 100vh; /* Ensures full viewport height */
+  overflow: hidden; /* Prevents overflow from sidebar or content */
 }
 
+/* Sidebar Transitions */
 .sidebar-open .main-content {
-  margin-left: 250px; /* Width of the open sidebar */
+  margin-left: 250px; /* Adjust this value based on your sidebar width */
   transition: margin-left 0.3s ease-in-out;
 }
 
 .sidebar-closed .main-content {
-  margin-left: 85px; /* Width of the closed sidebar */
+  margin-left: 85px; /* Adjust this value based on your sidebar width */
   transition: margin-left 0.3s ease-in-out;
 }
 
+/* Main Content Area */
 .main-content {
-  width: 100%;
+  width: 100%; /* Ensures the main content fills available space */
   flex-grow: 1;
   padding: 20px;
-  margin-top: 70px;
+  margin-top: 70px; /* Adjust to match your navbar height */
+  overflow-y: auto; /* Allows scrolling for large content */
+  background-color: #f5f5f5; /* Optional: Light background for contrast */
 }
 
+/* Navbar Styling */
 .navbar {
   position: fixed;
   top: 0;
-  max-width: 100%;
-  z-index: 1000;
+  left: 0;
+  width: 100%; /* Full-width navbar */
+  height: 70px; /* Match the margin-top in .main-content */
+  background-color: #fff; /* Default background color */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Optional shadow for depth */
+  z-index: 1000; /* Keeps navbar above other elements */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .sidebar-open .main-content,
+  .sidebar-closed .main-content {
+    margin-left: 0; /* Remove margin for mobile screens */
+  }
+  .navbar {
+    height: 60px; /* Adjust navbar height for smaller screens */
+  }
+  .main-content {
+    margin-top: 60px; /* Match the adjusted navbar height */
+  }
+}
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.sidebar-open .main-content {
+  margin-left: 250px; /* Adjust this value to match your sidebar width */
+}
+
+.sidebar-closed .main-content {
+  margin-left: 0;
+}
+
+.main-content {
+  flex: 1;
+  padding: 20px;
+}
+
+.excel-upload {
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  max-width: 400px;
+  margin: auto;
+}
+/* App.css */
+.App {
+  text-align: center;
+  font-family: Arial, sans-serif;
+  padding: 50px;
+}
+
+.app-header {
+  font-size: 36px;
+  color: #333;
+  margin-bottom: 30px;
 }

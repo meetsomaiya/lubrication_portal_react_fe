@@ -102,10 +102,12 @@
 .sap-finder-logo {
   width: 28px;
   height: 28px;
-  margin-top: 10px;
-  margin-left: 15px;
-  margin-right: 5px;
+  margin: 0; /* Reset margins */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
 
 .header-text {
   display: flex;
@@ -184,6 +186,7 @@
     width: 90px;
     height: 20px;
     margin-left: 10px;
+  
   }
 
   .navbar {
@@ -192,8 +195,8 @@
   }
 
   .logo {
-    width: 70% !important;
-    height: 40px;
+    width: 40% !important;
+    height: 20px;
     margin-left: 10px;
   }
 

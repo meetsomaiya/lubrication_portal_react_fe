@@ -51,7 +51,7 @@ const Navbar = () => {
                     <div className='header-text'>Lubrication Portal</div>
                 </div>
             </div>
-
+            
             <div className="profile-dropdown">
                 <div className="profile-icon">
                     {initials}

@@ -113,13 +113,6 @@ const Login = ({ setAuth }) => {
     }
 };
 
-
-
-
-
-
-  
-
   return (
     <main className="relative flex justify-center items-center h-screen w-screen" id='main'>
       <div className="absolute aspect-w-16 aspect-h-9 h-full w-full bg-slate-300 bg-cover z-negative-10 overflow-hidden filter">

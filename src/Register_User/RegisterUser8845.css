@@ -1,0 +1,44 @@
+.register-user-container {
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  width: 300px;
+  font-family: Arial, sans-serif;
+}
+
+.register-user-container h1 {
+  font-size: 24px;
+  color: #333;
+}
+
+.register-user-container form {
+  display: flex;
+  flex-direction: column;
+}
+
+.register-user-container label {
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.register-user-container input {
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.register-user-container button {
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.register-user-container button:hover {
+  background-color: #0056b3;
+}

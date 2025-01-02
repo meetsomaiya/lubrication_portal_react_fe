@@ -44,13 +44,9 @@ function UserManagement() {
     };
  
     const handleDelete = (index) => {
-        const confirmDelete = window.confirm("Are you sure you want to delete this item?");
-        if (confirmDelete) {
-            const updatedUsers = users.filter((_, i) => i !== index);
-            setUsers(updatedUsers);
-        }
+        const updatedUsers = users.filter((_, i) => i !== index);
+        setUsers(updatedUsers);
     };
-     
  
     const handleSearch = (event) => {
         setSearchTerm(event.target.value);
@@ -238,40 +234,20 @@ function AddModal({ onClose, onSave }) {
         }));
     };
 
-   // Add a new value to the selected values array
-const addBubble = (dropdown, value) => {
-    if (!value || selectedValues779[dropdown]?.includes(value)) return; // Prevent duplicates
-    setSelectedValues779((prev) => ({
-        ...prev,
-        [dropdown]: [...(prev[dropdown] || []), value],
-    }));
-};
-
-
-// Remove a selected value and clear dependent dropdowns
-const removeBubble = (dropdown, valueToRemove) => {
-    setSelectedValues779((prev) => ({
-        ...prev,
-        [dropdown]: prev[dropdown]?.filter((value) => value !== valueToRemove),
-    }));
-
-    // Clear dependent dropdowns when a parent is removed
-    if (dropdown === 'state') {
-        setArea001('');
-        setSite001('');
+    const addBubble = (dropdown, value) => {
+        if (!value || selectedValues779[dropdown]?.includes(value)) return; // Prevent duplicates
         setSelectedValues779((prev) => ({
             ...prev,
-            area: [],
-            site: [],
+            [dropdown]: [...(prev[dropdown] || []), value],
         }));
-    } else if (dropdown === 'area') {
-        setSite001('');
+    };
+    
+    const removeBubble = (dropdown, valueToRemove) => {
         setSelectedValues779((prev) => ({
             ...prev,
-            site: [],
+            [dropdown]: prev[dropdown]?.filter((value) => value !== valueToRemove),
         }));
-    }
-};
+    };
     
  
     const handleSave = () => {
@@ -310,7 +286,7 @@ const removeBubble = (dropdown, valueToRemove) => {
                     {value}{' '}
                     <button
                         onClick={(e) => {
-                            e.preventDefault();
+                            e.preventDefault(); // Prevent default button behavior
                             removeBubble('state', value);
                         }}
                     >
@@ -322,9 +298,8 @@ const removeBubble = (dropdown, valueToRemove) => {
         <select
             value={state001}
             onChange={(e) => {
-                const newState = e.target.value;
-                handleStateChange(newState);
-                addBubble('state', newState); // Add state bubble
+                setState001(e.target.value);
+                addBubble('state', e.target.value);
             }}
         >
             <option value="">Select State</option>
@@ -344,7 +319,7 @@ const removeBubble = (dropdown, valueToRemove) => {
                     {value}{' '}
                     <button
                         onClick={(e) => {
-                            e.preventDefault();
+                            e.preventDefault(); // Prevent default button behavior
                             removeBubble('area', value);
                         }}
                     >
@@ -356,9 +331,8 @@ const removeBubble = (dropdown, valueToRemove) => {
         <select
             value={area001}
             onChange={(e) => {
-                const newArea = e.target.value;
-                handleAreaChange(newArea);
-                addBubble('area', newArea); // Add area bubble
+                setArea001(e.target.value);
+                addBubble('area', e.target.value);
             }}
             disabled={!state001} // Disable if no state selected
         >
@@ -379,7 +353,7 @@ const removeBubble = (dropdown, valueToRemove) => {
                     {value}{' '}
                     <button
                         onClick={(e) => {
-                            e.preventDefault();
+                            e.preventDefault(); // Prevent default button behavior
                             removeBubble('site', value);
                         }}
                     >
@@ -391,10 +365,10 @@ const removeBubble = (dropdown, valueToRemove) => {
         <select
             value={site001}
             onChange={(e) => {
-                const newSite = e.target.value;
-                addBubble('site', newSite); // Add site bubble
+                setSite001(e.target.value);
+                addBubble('site', e.target.value);
             }}
-            disabled={!area001} // Disable if no area selected
+            disabled={!area001}
         >
             <option value="">Select Site</option>
             {sitesData001.map((site, index) => (
@@ -407,7 +381,6 @@ const removeBubble = (dropdown, valueToRemove) => {
 
     <button type="button">Register</button>
 </form>
-
 
             </div>
         </div>

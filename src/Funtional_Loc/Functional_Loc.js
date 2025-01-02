@@ -249,14 +249,33 @@ const handleSelectChangeSite1 = async (e) => {
     }, []);
   
 
-  const handleDownload = () => {
-    const header = ['Plant', 'Order No.', 'Status', 'Start Date', 'End Date', 'Order Type', 'PM Start Date', 'Delays'];
-    const data = rows.map(row => [row.plant, row.orderno, row.status, row.startdate, row.enddate, row.ordertype, row.PMstart, row.delay]);
-    const sheet = XLSX.utils.aoa_to_sheet([header, ...data]);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, sheet, 'Sheet1');
-    XLSX.writeFile(wb, 'FuntionalLoc_Data.xlsx');
-  };
+    const handleDownload = () => {
+      // Header for the downloaded sheet
+      const header = ['Plant', 'Order No.', 'Status', 'Start Date', 'End Date', 'Order Type', 'PM Start Date', 'Delays'];
+      
+      // Use filteredData992 for the dynamic rows
+      const data = filteredData992.map(row => [
+        row.PLANT, 
+        row.CRM_ORDERH, 
+        row.ZTEXT1, 
+        row.ZACTSTDT, 
+        row.ZACTENDT, 
+        row.ZEXT_RNO, 
+        row.ZREQ_SDAT, 
+        row.delay
+      ]);
+    
+      // Create a sheet from the header and data
+      const sheet = XLSX.utils.aoa_to_sheet([header, ...data]);
+      
+      // Create a new workbook and append the sheet
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, sheet, 'Sheet1');
+      
+      // Trigger the download with the desired filename
+      XLSX.writeFile(wb, 'FunctionalLoc_Data.xlsx');
+    };
+    
 
   const handleSelectChangePlant = (event) => {
     const value = event.target.value;

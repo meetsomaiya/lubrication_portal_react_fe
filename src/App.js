@@ -6,7 +6,7 @@ import Navbar from './Navbarr/Navbarr';
 import Navbar_user from './USERS/Navbarr_user/Navbarr_user';
 import LoginForm from './LoginFrom/LoginFrom';
 import './App.css';
-
+ 
 // Admin Components
 import Home from './Home/Home';
 import WTG_Wise_Planning from './WTG_wise/WTG_Wise_Planning';
@@ -17,8 +17,12 @@ import Functional_Loc from './Funtional_Loc/Functional_Loc';
 import Oil from './Site_Report/Oil/Oil';
 import PM from './Site_Report/PM/PM';
 import Lubrication from './Site_Report/Lubrication/Lubrication_table';
-
+ 
 import OilAnalysisTable from './Oil_Analysis/Oil_Analysis';
+
+import UploadExcel from './Excel_Upload_Site_Incharge/ExcelUpload';
+import RegisterUser from './Register_User/RegiterUser8867';
+import SopConsumptionAnalysis8867 from './SOP_CONSUMPTION_ANALYSIS/SOP_CONSUMPTION_ANALYSIS';
 
 // User Components
 import Site_Report_user from './USERS/Site_Report/Site_Report_user';
@@ -30,15 +34,17 @@ import PM_user from './USERS/Site_Report/PM/PM_user';
 import Lubrication_user from './USERS/Site_Report/Lubrication/Lubrication_table_user';
 import OilAnalysisTableUser from './USERS/Oil_Analysis_user/Oil_Analysis_user';
 
+
+ 
 const MainApp = ({ sidebarOpen, toggleSidebar }) => {
   // Check if the current route is a user route by looking for `_user` at the end
   const isUserRoute = window.location.pathname.endsWith('_user');
-
+ 
   return (
     <div className={`app-container ${sidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
       {/* Render Navbar based on Admin or User */}
       {isUserRoute ? <Navbar_user /> : <Navbar />}
-      
+     
       <div className="d-flex w-full">
         {/* Render Sidebar based on Admin or User */}
         {isUserRoute ? (
@@ -46,7 +52,7 @@ const MainApp = ({ sidebarOpen, toggleSidebar }) => {
         ) : (
           <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
         )}
-        
+       
         <main className="main-content">
           <Routes>
             {/* Admin Routes */}
@@ -61,6 +67,9 @@ const MainApp = ({ sidebarOpen, toggleSidebar }) => {
             <Route path="/Lubrication" element={<Lubrication />} />
             <Route path="/Oil_Analysis" element={<OilAnalysisTable />} />
 
+            <Route path="/upload-excel" element={<UploadExcel />} />
+            <Route path="/Register_Users" element={<RegisterUser />} />
+ 
             {/* User Routes */}
             <Route path="/Home_user" element={<Home_user />} />
             <Route path="/WTG_Wise_Planning_user" element={<WTG_Wise_Planning_user />} />
@@ -70,19 +79,21 @@ const MainApp = ({ sidebarOpen, toggleSidebar }) => {
             <Route path="/PM_user" element={<PM_user />} />
             <Route path="/Lubrication_user" element={<Lubrication_user />} />
             <Route path="/Oil_Analysis_user" element={<OilAnalysisTableUser />} />
+            <Route path="/sop-consumption" element={<SopConsumptionAnalysis8867 />} />
+
           </Routes>
         </main>
       </div>
     </div>
   );
 };
-
+ 
 const App = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
-
+ 
   return (
     <Router>
       <Routes>
@@ -92,5 +103,6 @@ const App = () => {
     </Router>
   );
 };
-
+ 
 export default App;
+ 

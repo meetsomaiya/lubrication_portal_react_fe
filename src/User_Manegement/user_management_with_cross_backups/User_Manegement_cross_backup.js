@@ -44,13 +44,9 @@ function UserManagement() {
     };
  
     const handleDelete = (index) => {
-        const confirmDelete = window.confirm("Are you sure you want to delete this item?");
-        if (confirmDelete) {
-            const updatedUsers = users.filter((_, i) => i !== index);
-            setUsers(updatedUsers);
-        }
+        const updatedUsers = users.filter((_, i) => i !== index);
+        setUsers(updatedUsers);
     };
-     
  
     const handleSearch = (event) => {
         setSearchTerm(event.target.value);
@@ -156,11 +152,7 @@ function AddModal({ onClose, onSave }) {
     const [site001, setSite001] = useState('');
     const [access001, setAccess001] = useState([]);
     const [statesData001, setStatesData001] = useState([]);
-    const [selectedValues779, setSelectedValues779] = useState({
-        state: [],
-        area: [],
-        site: [],
-    });
+    const [selectedValues779, setSelectedValues779] = useState({});
  
     const [areasData001, setAreasData001] = useState([]);
     const [sitesData001, setSitesData001] = useState([]);
@@ -223,56 +215,21 @@ function AddModal({ onClose, onSave }) {
         setAccess(typeof value === 'string' ? value.split(',') : value);
     };
     const handleSelection779 = (dropdown, value) => {
-        if (!value || selectedValues779[dropdown]?.includes(value)) return; // Prevent duplicates
-        setSelectedValues779((prev) => ({
-            ...prev,
-            [dropdown]: [...(prev[dropdown] || []), value],
-        }));
+        setSelectedValues779((prev) => {
+            const existingValues = prev[dropdown] || [];
+            if (!existingValues.includes(value)) {
+                return { ...prev, [dropdown]: [...existingValues, value] };
+            }
+            return prev;
+        });
     };
 
-    // Remove selected value from the corresponding dropdown list
     const handleRemove779 = (dropdown, value) => {
-        setSelectedValues779((prev) => ({
-            ...prev,
-            [dropdown]: prev[dropdown]?.filter((item) => item !== value),
-        }));
+        setSelectedValues779((prev) => {
+            const updatedValues = prev[dropdown]?.filter((item) => item !== value) || [];
+            return { ...prev, [dropdown]: updatedValues };
+        });
     };
-
-   // Add a new value to the selected values array
-const addBubble = (dropdown, value) => {
-    if (!value || selectedValues779[dropdown]?.includes(value)) return; // Prevent duplicates
-    setSelectedValues779((prev) => ({
-        ...prev,
-        [dropdown]: [...(prev[dropdown] || []), value],
-    }));
-};
-
-
-// Remove a selected value and clear dependent dropdowns
-const removeBubble = (dropdown, valueToRemove) => {
-    setSelectedValues779((prev) => ({
-        ...prev,
-        [dropdown]: prev[dropdown]?.filter((value) => value !== valueToRemove),
-    }));
-
-    // Clear dependent dropdowns when a parent is removed
-    if (dropdown === 'state') {
-        setArea001('');
-        setSite001('');
-        setSelectedValues779((prev) => ({
-            ...prev,
-            area: [],
-            site: [],
-        }));
-    } else if (dropdown === 'area') {
-        setSite001('');
-        setSelectedValues779((prev) => ({
-            ...prev,
-            site: [],
-        }));
-    }
-};
-    
  
     const handleSave = () => {
         onSave({
@@ -293,122 +250,94 @@ const removeBubble = (dropdown, valueToRemove) => {
                 </span>
                 <h2>Register New User</h2>
                 <form>
-    <label>
-        <input
-            type="text"
-            value={domainId}
-            onChange={(e) => setDomainId(e.target.value)}
-            placeholder="Enter Domain ID"
-        />
-    </label>
+            <label>
+                <input
+                    type="text"
+                    value={domainId}
+                    onChange={(e) => setDomainId(e.target.value)}
+                    placeholder="Enter Domain ID"
+                />
+            </label>
 
-    {/* State Dropdown */}
-    <label>
-        <div className="selected-values-container">
-            {(selectedValues779['state'] || []).map((value, index) => (
-                <span className="bubble" key={index}>
-                    {value}{' '}
-                    <button
-                        onClick={(e) => {
-                            e.preventDefault();
-                            removeBubble('state', value);
-                        }}
-                    >
-                        x
-                    </button>
-                </span>
-            ))}
-        </div>
-        <select
-            value={state001}
-            onChange={(e) => {
-                const newState = e.target.value;
-                handleStateChange(newState);
-                addBubble('state', newState); // Add state bubble
-            }}
-        >
-            <option value="">Select State</option>
-            {statesData001.map((state, index) => (
-                <option key={index} value={state}>
-                    {state}
-                </option>
-            ))}
-        </select>
-    </label>
+            {/* State Dropdown */}
+            <label>
+                <div className="selected-values-container">
+                    {(selectedValues779['state'] || []).map((value) => (
+                        <span className="bubble" key={value}>
+                            {value} <button onClick={() => handleRemove779('state', value)}>x</button>
+                        </span>
+                    ))}
+                </div>
+                <select
+                    value={state001}
+                    onChange={(e) => {
+                        setState001(e.target.value);
+                        handleSelection779('state', e.target.value);
+                    }}
+                >
+                    <option value="">Select State</option>
+                    {statesData001.map((state, index) => (
+                        <option key={index} value={state}>
+                            {state}
+                        </option>
+                    ))}
+                </select>
+            </label>
 
-    {/* Area Dropdown */}
-    <label>
-        <div className="selected-values-container">
-            {(selectedValues779['area'] || []).map((value, index) => (
-                <span className="bubble" key={index}>
-                    {value}{' '}
-                    <button
-                        onClick={(e) => {
-                            e.preventDefault();
-                            removeBubble('area', value);
-                        }}
-                    >
-                        x
-                    </button>
-                </span>
-            ))}
-        </div>
-        <select
-            value={area001}
-            onChange={(e) => {
-                const newArea = e.target.value;
-                handleAreaChange(newArea);
-                addBubble('area', newArea); // Add area bubble
-            }}
-            disabled={!state001} // Disable if no state selected
-        >
-            <option value="">Select Area</option>
-            {areasData001.map((area, index) => (
-                <option key={index} value={area}>
-                    {area}
-                </option>
-            ))}
-        </select>
-    </label>
+            {/* Area Dropdown */}
+            <label>
+                <div className="selected-values-container">
+                    {(selectedValues779['area'] || []).map((value) => (
+                        <span className="bubble" key={value}>
+                            {value} <button onClick={() => handleRemove779('area', value)}>x</button>
+                        </span>
+                    ))}
+                </div>
+                <select
+                    value={area001}
+                    onChange={(e) => {
+                        setArea001(e.target.value);
+                        handleSelection779('area', e.target.value);
+                    }}
+                    disabled={!state001} // Disable if no state selected
+                >
+                    <option value="">Select Area</option>
+                    {areasData001.map((area, index) => (
+                        <option key={index} value={area}>
+                            {area}
+                        </option>
+                    ))}
+                </select>
+            </label>
 
-    {/* Site Dropdown */}
-    <label>
-        <div className="selected-values-container">
-            {(selectedValues779['site'] || []).map((value, index) => (
-                <span className="bubble" key={index}>
-                    {value}{' '}
-                    <button
-                        onClick={(e) => {
-                            e.preventDefault();
-                            removeBubble('site', value);
-                        }}
-                    >
-                        x
-                    </button>
-                </span>
-            ))}
-        </div>
-        <select
-            value={site001}
-            onChange={(e) => {
-                const newSite = e.target.value;
-                addBubble('site', newSite); // Add site bubble
-            }}
-            disabled={!area001} // Disable if no area selected
-        >
-            <option value="">Select Site</option>
-            {sitesData001.map((site, index) => (
-                <option key={index} value={site}>
-                    {site}
-                </option>
-            ))}
-        </select>
-    </label>
+            {/* Site Dropdown */}
+            <label>
+                <div className="selected-values-container">
+                    {(selectedValues779['site'] || []).map((value) => (
+                        <span className="bubble" key={value}>
+                            {value} <button onClick={() => handleRemove779('site', value)}>x</button>
+                        </span>
+                    ))}
+                </div>
+                <select
+                    value={site001}
+                    onChange={(e) => {
+                        setSite001(e.target.value);
+                        handleSelection779('site', e.target.value);
+                    }}
+                    disabled={!area001}
+                >
+                    <option value="">Select Site</option>
+                    {sitesData001.map((site, index) => (
+                        <option key={index} value={site}>
+                            {site}
+                        </option>
+                    ))}
+                </select>
+            </label>
 
-    <button type="button">Register</button>
-</form>
-
-
+            <button type="button">Register</button>
+        </form>
             </div>
         </div>
     );
