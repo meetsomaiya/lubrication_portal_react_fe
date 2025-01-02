@@ -24,6 +24,9 @@ import UploadExcel from './Excel_Upload_Site_Incharge/ExcelUpload';
 import RegisterUser from './Register_User/RegiterUser8867';
 import SopConsumptionAnalysis8867 from './SOP_CONSUMPTION_ANALYSIS/SOP_CONSUMPTION_ANALYSIS';
 
+import TableComponent9976 from './Corrective_Action/TableComponent9976';
+
+
 // User Components
 import Site_Report_user from './USERS/Site_Report/Site_Report_user';
 import WTG_Wise_Planning_user from './USERS/WTG_wise/WTG_Wise_Planning_user';
@@ -69,6 +72,7 @@ const MainApp = ({ sidebarOpen, toggleSidebar }) => {
 
             <Route path="/upload-excel" element={<UploadExcel />} />
             <Route path="/Register_Users" element={<RegisterUser />} />
+            <Route path="/Corrective_Action" element={<TableComponent9976 />} />
  
             {/* User Routes */}
             <Route path="/Home_user" element={<Home_user />} />

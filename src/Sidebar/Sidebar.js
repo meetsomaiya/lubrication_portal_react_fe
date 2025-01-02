@@ -169,7 +169,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     { path: '/Admin_management', label: 'Admin Management', icon: adminIcon },
     { path: '/sop-consumption', label: 'SOP For Consumption Analysis', icon: siteReportIcon },
     { path: '/upload-excel', label: 'upload-excel Site Incharge', icon: siteReportIcon },
-    { path: '/Register_Users', label: 'Register Users', icon: usersIcon }
+    { path: '/Register_Users', label: 'Register Users', icon: usersIcon },
+
+    { path: '/Corrective_Action', label: 'Corrective Action', icon: usersIcon }
   ];
 
   return (
