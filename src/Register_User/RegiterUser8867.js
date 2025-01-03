@@ -42,13 +42,14 @@ const RegisterUser = () => {
                     <p className="file-name">{fileName}</p>
                 </div>
 
-                <button
-                    type="button"
-                    className="download-btn"
-                    onClick={handleDownload}
-                >
-                    Format of uploading users
-                </button>
+                <button 
+  type="button" 
+  className="download-btn" 
+  onClick={handleDownload}
+>
+  Format of uploading users
+</button>
+
 
                 <button type="submit" className="submit-btn">
                     Upload and Register Users
