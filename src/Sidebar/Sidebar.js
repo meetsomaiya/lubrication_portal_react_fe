@@ -153,6 +153,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       'sop-consumption',
       'Excel_Upload',
       'Register_Users',
+      'Corrective_Action',
       'Home'
     ].find(route => path.includes(route)) || 'Home';
     setActiveIndex(activeRoute);
@@ -170,7 +171,6 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     { path: '/sop-consumption', label: 'SOP For Consumption Analysis', icon: siteReportIcon },
     { path: '/upload-excel', label: 'upload-excel Site Incharge', icon: siteReportIcon },
     { path: '/Register_Users', label: 'Register Users', icon: usersIcon },
-
     { path: '/Corrective_Action', label: 'Corrective Action', icon: usersIcon }
   ];
 
@@ -180,9 +180,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         {menuItems.map((item, index) => (
           <Link to={item.path} key={index}>
             <li
-              className={
-                activeIndex === item.path.split('/')[1] ? 'active' : ''
-              }
+              className={activeIndex === item.path.split('/')[1] ? 'active' : ''}
               style={item.specialStyle ? { backgroundColor: '#009F89', border: '1px solid #009F89' } : {}}
             >
               <img src={item.icon} alt={item.label} className="icon_S" />
