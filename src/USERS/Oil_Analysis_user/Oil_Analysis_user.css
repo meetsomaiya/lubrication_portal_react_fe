@@ -4,10 +4,11 @@
     padding: 0;
   }
   
-  .container997container997user {
+  .container997user {
     width: 60vw;
     padding: 2vh;
     font-family: Arial, sans-serif;
+    overflow: none;
   }
   
   .buttonContainer997user {
@@ -168,7 +169,7 @@
   align-items: center;
   z-index: 100001;
   padding: 2vw;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .modal-content-7997user {
@@ -177,7 +178,8 @@
   height: 100vh;
   background: #fff;
   border-radius: 1vw;
-  overflow: hidden;
+  /* overflow: auto; */
+  overflow: scroll;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   display: flex;
   flex-direction: column;

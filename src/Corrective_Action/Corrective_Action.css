@@ -1,0 +1,31 @@
+.table-container-9976 {
+    width: 90vw;
+    margin: 5vh auto;
+    padding: 2vh;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+ 
+  .data-table-9976 {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1.2vw;
+  }
+ 
+  .data-table-9976 th,
+  .data-table-9976 td {
+    padding: 1vh;
+    text-align: left;
+    border: 1px solid #ccc;
+  }
+ 
+  .data-table-9976 th {
+    background-color: #0d3b66;
+    color: white;
+  }
+ 
+  .data-table-9976 tbody tr:nth-child(odd) {
+    background-color: #f2f2f2;
+  }
+ 

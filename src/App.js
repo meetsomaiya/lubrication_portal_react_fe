@@ -17,8 +17,15 @@ import Functional_Loc from './Funtional_Loc/Functional_Loc';
 import Oil from './Site_Report/Oil/Oil';
 import PM from './Site_Report/PM/PM';
 import Lubrication from './Site_Report/Lubrication/Lubrication_table';
+import UploadExcel from './Excel_Upload_Site_Incharge/ExcelUpload';
 
 import OilAnalysisTable from './Oil_Analysis/Oil_Analysis';
+import SopConsumptionAnalysis8867 from './SOP_CONSUMPTION_ANALYSIS/SOP_CONSUMPTION_ANALYSIS';
+
+import TableComponent9976_admin from './Corrective_Action/Corrective_Action';
+
+import RegisterUsers3394 from './RegisterUsers/RegisterUsers3394';
+
 
 // User Components
 import Site_Report_user from './USERS/Site_Report/Site_Report_user';
@@ -29,6 +36,8 @@ import Oil_user from './USERS/Site_Report/Oil/Oil_user';
 import PM_user from './USERS/Site_Report/PM/PM_user';
 import Lubrication_user from './USERS/Site_Report/Lubrication/Lubrication_table_user';
 import OilAnalysisTableUser from './USERS/Oil_Analysis_user/Oil_Analysis_user';
+
+import TableComponent9976 from './USERS/Corrective_Action_user/corrective-action-user';
 
 const MainApp = ({ sidebarOpen, toggleSidebar }) => {
   // Check if the current route is a user route by looking for `_user` at the end
@@ -60,6 +69,13 @@ const MainApp = ({ sidebarOpen, toggleSidebar }) => {
             <Route path="/PM" element={<PM />} />
             <Route path="/Lubrication" element={<Lubrication />} />
             <Route path="/Oil_Analysis" element={<OilAnalysisTable />} />
+            <Route path="/upload-excel" element={<UploadExcel />} />
+            <Route path="/sop-consumption" element={<SopConsumptionAnalysis8867 />} />
+
+            <Route path="/corrective-action" element={<TableComponent9976_admin />} />
+
+            <Route path="/register-users" element={<RegisterUsers3394 />} />
+
 
             {/* User Routes */}
             <Route path="/Home_user" element={<Home_user />} />
@@ -70,6 +86,7 @@ const MainApp = ({ sidebarOpen, toggleSidebar }) => {
             <Route path="/PM_user" element={<PM_user />} />
             <Route path="/Lubrication_user" element={<Lubrication_user />} />
             <Route path="/Oil_Analysis_user" element={<OilAnalysisTableUser />} />
+            <Route path="/corrective-action-user" element={<TableComponent9976 />} />
           </Routes>
         </main>
       </div>

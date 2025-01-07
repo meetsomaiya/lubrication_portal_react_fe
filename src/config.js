@@ -3,9 +3,9 @@
 
 // const BASE_URL='localhost:8094/';
 
-// const BASE_URL='http://localhost:224';
+const BASE_URL='http://localhost:224';
 
-const BASE_URL='http://10.102.0.192:224/';
+// const BASE_URL='http://10.102.0.192:224/';
 
 // const BASE_URL='http://10.102.0.192:3001/';
 

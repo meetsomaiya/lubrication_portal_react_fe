@@ -6,7 +6,7 @@
   left: 0;
   width: 235px; /* Default width when open */
   transition: transform 0.2s ease-in-out, width 0.3s ease-in-out;
-  overflow: hidden;
+  overflow: scroll;
   font-size: 14px;
   display: flex;
   transition: transform 0.2s ease-in-out; 
@@ -63,6 +63,7 @@
   width: 100%;
   height: 100vh;
   /* margin-top: 10px; */
+  overflow: scroll;
 }
 
 /* Menu Items */

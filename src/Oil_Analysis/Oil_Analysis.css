@@ -376,7 +376,81 @@ button.close-modal:hover {
   cursor: pointer;          /* Pointer cursor on hover */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
   transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+  width: 100px;
 }
 
+.btn-content-7997 {
+  display: flex;
+  justify-content: flex-end; /* Align buttons to the right */
+  gap: 1.5vw; /* Space between the buttons */
+  padding: 2vh 3vw; /* Space inside the container */
+  background-color: #ffffff; /* Clean white background */
+  border: 1px solid #e0e0e0; /* Subtle light-gray border */
+  border-radius: 8px; /* Slightly rounded corners */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+}
+
+#download-excel {
+  padding: 1vh 2vw;
+  font-size: 0.9vw;
+  border: 1px solid #007bff; /* Subtle blue border */
+  border-radius: 6px; /* Slightly rounded corners */
+  background-color: #007bff; /* Blue background */
+  color: #ffffff; /* White text */
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effects */
+}
+
+#download-excel:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+  box-shadow: 0 4px 6px rgba(0, 123, 255, 0.3); /* Slight shadow on hover */
+}
+
+#closebtn {
+  padding: 1vh 2vw;
+  font-size: 0.9vw;
+  border: 1px solid #dc3545; /* Subtle red border */
+  border-radius: 6px; /* Slightly rounded corners */
+  background-color: #dc3545; /* Red background */
+  color: #ffffff; /* White text */
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effects */
+}
+
+#closebtn:hover {
+  background-color: #b52a37; /* Darker red on hover */
+  box-shadow: 0 4px 6px rgba(220, 53, 69, 0.3); /* Slight shadow on hover */
+}
+
+.order-type-heading-7997 {
+  font-size: 20px; /* Modest, readable font size */
+  color: #333; /* Slightly softer dark color for text */
+  font-family: 'Helvetica Neue', sans-serif; /* Modern and clean font */
+  text-align: center; /* Center the text */
+  padding: 10px 0; /* Moderate padding for a balanced look */
+  background-color: #f5f5f5; /* Soft, light background */
+  border-radius: 6px; /* Subtle rounded corners */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+  width: 80%; /* Responsive width */
+  max-width: 400px; /* Maximum width to avoid excess stretching */
+  margin: 2vh auto; /* Center the heading with vertical margin */
+  transition: transform 0.2s ease; /* Smooth hover effect */
+  height: 30px;
+}
+
+/* Hover effect */
+.order-type-heading-7997:hover {
+  transform: translateY(-2px); /* Slight lift effect */
+}
+
+/* Responsive handling for smaller devices */
+@media (max-width: 768px) {
+  .order-type-heading-7997 {
+    font-size: 22px; /* Slightly smaller font for smaller screens */
+    width: 90%; /* Wider for smaller screens */
+  }
+}
 
 

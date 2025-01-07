@@ -249,14 +249,19 @@ const handleSelectChangeSite1 = async (e) => {
     }, []);
   
 
-  const handleDownload = () => {
-    const header = ['Plant', 'Order No.', 'Status', 'Start Date', 'End Date', 'Order Type', 'PM Start Date', 'Delays'];
-    const data = rows.map(row => [row.plant, row.orderno, row.status, row.startdate, row.enddate, row.ordertype, row.PMstart, row.delay]);
-    const sheet = XLSX.utils.aoa_to_sheet([header, ...data]);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, sheet, 'Sheet1');
-    XLSX.writeFile(wb, 'FuntionalLoc_Data.xlsx');
-  };
+    const handleDownload = () => {
+      // Create a new workbook
+      const wb = XLSX.utils.book_new();
+      
+      // Convert table data into a worksheet
+      const ws = XLSX.utils.table_to_sheet(document.querySelector('.WTG-table-container table'));
+    
+      // Append the worksheet to the workbook
+      XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    
+      // Create an Excel file and initiate download
+      XLSX.writeFile(wb, 'WTG_Data.xlsx');
+    };
 
   const handleSelectChangePlant = (event) => {
     const value = event.target.value;

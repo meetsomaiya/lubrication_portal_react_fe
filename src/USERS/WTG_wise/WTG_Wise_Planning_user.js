@@ -7,6 +7,7 @@ import excel_iconpng from '../assets/excel - Copy.jpg';
 // import WTG_Wise_Planning from '../WTG_wise/WTG_Wise_Planning';
 
 import { BASE_URL } from '../../config'
+import * as XLSX from 'xlsx';
 
 const createData = (FuntionLoc, plant, orderno, status, startdate, enddate, ordertype, PMstart, delay, reason) => {
   return { FuntionLoc, plant, orderno, status, startdate, enddate, ordertype, PMstart, delay, reason };
@@ -69,6 +70,11 @@ const Functional_Loc_user = () => {
 
   const [monthRange, setMonthRange] = useState('');
 
+    // State to hold selected filter values
+    const [selectedFunctionLoc991, setSelectedFunctionLoc991] = useState([]);
+    const [selectedPlant991, setSelectedPlant991] = useState([]);
+    const [selectedOrderNo991, setSelectedOrderNo991] = useState([]);
+
 
   const [isTotalPlannedCountFetched, setTotalPlannedCountFetched] = useState(false);
 const [isTotalWtgCountFetched, setTotalWtgCountFetched] = useState(false);
@@ -76,6 +82,15 @@ const [isOpenStatusCountFetched, setOpenStatusCountFetched] = useState(false);
 const [isCompletedStatusCountFetched, setCompletedStatusCountFetched] = useState(false);
 const [isOutOfGraceCountFetched, setOutOfGraceCountFetched] = useState(false);
 const [isTotalStateWiseCountFetched, setTotalStateWiseCountFetched] = useState(false);
+
+  // Search term for each filter
+  const [searchTermFunctionLoc991, setSearchTermFunctionLoc991] = useState('');
+  const [searchTermPlant991, setSearchTermPlant991] = useState('');
+  const [searchTermOrderNo991, setSearchTermOrderNo991] = useState('');
+
+  const [searchTermFunctionLoc, setSearchTermFunctionLoc] = useState('');
+const [searchTermPlant, setSearchTermPlant] = useState('');
+const [searchTermOrderNo, setSearchTermOrderNo] = useState('');
 
      // Calculate the dates for two years back and two years ahead
      const [twoYearsBack, setTwoYearsBack] = useState(() => {
@@ -116,7 +131,11 @@ const [isTotalStateWiseCountFetched, setTotalStateWiseCountFetched] = useState(f
     const [openPercentage, setOpenPercentage] = useState(0);
     const [completedPercentage, setCompletedPercentage] = useState(0);
     const [gracePercentage, setGracePercentage] = useState(0);
+    
+    const [domainId007, setdomainId007] = useState(0);
+    const [name007, setname007] = useState(0)
 
+    
 
          // Define state for planned count
          const [plannedCount, setPlannedCount] = useState(null);
@@ -180,6 +199,19 @@ useEffect(() => {
   const stateCookie = getCookie('state');
   const areaCookie = getCookie('area');
   const siteCookie = getCookie('site');
+
+  // Usage Example
+const domainId = getCookie("domain_id");
+setdomainId007(domainId)
+const userName = getCookie("name");
+setname007(userName)
+const state = getCookie("state");
+
+console.log("Retrieved Cookies:");
+console.log("Domain ID:", domainId);
+console.log("User Name:", userName);
+console.log("State:", state);
+
 
   // Split cookie values by comma and trim spaces
   const parsedStates = stateCookie ? stateCookie.split(',').map(state => state.trim()) : [];
@@ -251,6 +283,70 @@ useEffect(() => {
   }
 
   };
+
+      // Function to handle changes in the search input
+      const handleSearchChange = (e, filterType) => {
+        const value = e.target.value;
+        if (filterType === 'FunctionLoc') {
+          setSearchTermFunctionLoc(value);
+        } else if (filterType === 'Plant') {
+          setSearchTermPlant(value);
+        } else if (filterType === 'OrderNo') {
+          setSearchTermOrderNo(value);
+        }
+      };
+      
+
+      const filterData = () => {
+        return totalData.filter(row => {
+          const matchesFunctionLoc = selectedFunctionLoc.length === 0 || selectedFunctionLoc.includes(row.FUNCT_LOC);
+          const matchesPlant = selectedPlant.length === 0 || selectedPlant.includes(row.PLANT);
+          const matchesOrderNo = selectedOrderNo.length === 0 || selectedOrderNo.includes(row.CRM_ORDERH);
+      
+          const matchesFunctionLocSearch = row.FUNCT_LOC.toLowerCase().includes(searchTermFunctionLoc.toLowerCase());
+          const matchesPlantSearch = row.PLANT.toLowerCase().includes(searchTermPlant.toLowerCase());
+          const matchesOrderNoSearch = row.CRM_ORDERH.toLowerCase().includes(searchTermOrderNo.toLowerCase());
+      
+          return (
+            matchesFunctionLoc &&
+            matchesPlant &&
+            matchesOrderNo &&
+            matchesFunctionLocSearch &&
+            matchesPlantSearch &&
+            matchesOrderNoSearch
+          );
+        });
+      };
+      
+
+          // Function to fetch unique options for filtering from data
+    const getUniqueValues = (key) => {
+      return [...new Set(totalData.map(row => row[key]))];
+    };
+
+     // Function to handle checkbox changes
+     const handleCheckboxChange = (e, filterType) => {
+      const value = e.target.value;
+      let updatedSelection = [];
+      
+      if (filterType === 'FunctionLoc') {
+        updatedSelection = selectedFunctionLoc.includes(value)
+          ? selectedFunctionLoc.filter(v => v !== value)
+          : [...selectedFunctionLoc, value];
+        setSelectedFunctionLoc(updatedSelection);
+      } else if (filterType === 'Plant') {
+        updatedSelection = selectedPlant.includes(value)
+          ? selectedPlant.filter(v => v !== value)
+          : [...selectedPlant, value];
+        setSelectedPlant(updatedSelection);
+      } else if (filterType === 'OrderNo') {
+        updatedSelection = selectedOrderNo.includes(value)
+          ? selectedOrderNo.filter(v => v !== value)
+          : [...selectedOrderNo, value];
+        setSelectedOrderNo(updatedSelection);
+      }
+    };
+    
 
   const handleSelectChange2 = (event) => {
     setSelectedOption2(event.target.value);
@@ -392,6 +488,138 @@ const fetchTotalStateWiseCount = async () => {
       // Set the planned count from the API response
       setStateWiseCount(data.stateWiseCounts);
       
+      setTotalStateWiseCountFetched(true); // Mark as fetched
+  } catch (error) {
+      console.error('Error fetching total planned count:', error);
+  }
+};
+
+const fetchTotalPlannedStateWiseCount = async () => {
+  const params = {
+      orderType: selectedOption1,   // Replace with actual selected option or state variable
+      fromDate: startDate,          // Replace with actual startDate variable
+      toDate: endDate,              // Replace with actual endDate variable
+      state: selectedOption2,       // Replace with actual selected option for state
+      area: selectedOption3,        // Replace with actual selected option for area
+      site: selectedOption4,        // Replace with actual selected option for site
+  };
+
+  // Convert params object to URL search parameters
+  const queryString = new URLSearchParams(params).toString();
+  // const url = `http://localhost:224/api/get_total_wtg_count_based_on_state?${queryString}`;
+  const url = `${BASE_URL}/api/get_planned_wtg_count_based_on_state?${queryString}`;
+
+
+  try {
+      const response = await fetch(url);
+      if (!response.ok) {
+          throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      console.log('Data fetched from API:', data); // Log the fetched data
+      // Set the planned count from the API response
+      setStateWiseCount(data.stateWiseCounts);
+
+      setTotalStateWiseCountFetched(true); // Mark as fetched
+  } catch (error) {
+      console.error('Error fetching total planned count:', error);
+  }
+};
+
+const fetchTotalOpenStateWiseCount = async () => {
+  const params = {
+      orderType: selectedOption1,   // Replace with actual selected option or state variable
+      fromDate: startDate,          // Replace with actual startDate variable
+      toDate: endDate,              // Replace with actual endDate variable
+      state: selectedOption2,       // Replace with actual selected option for state
+      area: selectedOption3,        // Replace with actual selected option for area
+      site: selectedOption4,        // Replace with actual selected option for site
+  };
+
+  // Convert params object to URL search parameters
+  const queryString = new URLSearchParams(params).toString();
+  // const url = `http://localhost:224/api/get_total_wtg_count_based_on_state?${queryString}`;
+  const url = `${BASE_URL}/api/get_open_wtg_count_based_on_state?${queryString}`;
+
+
+  try {
+      const response = await fetch(url);
+      if (!response.ok) {
+          throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      console.log('Data fetched from API:', data); // Log the fetched data
+      // Set the planned count from the API response
+      setStateWiseCount(data.stateWiseCounts);
+
+      setTotalStateWiseCountFetched(true); // Mark as fetched
+  } catch (error) {
+      console.error('Error fetching total planned count:', error);
+  }
+};
+
+const fetchTotalCompletedStateWiseCount = async () => {
+  const params = {
+      orderType: selectedOption1,   // Replace with actual selected option or state variable
+      fromDate: startDate,          // Replace with actual startDate variable
+      toDate: endDate,              // Replace with actual endDate variable
+      state: selectedOption2,       // Replace with actual selected option for state
+      area: selectedOption3,        // Replace with actual selected option for area
+      site: selectedOption4,        // Replace with actual selected option for site
+  };
+
+  // Convert params object to URL search parameters
+  const queryString = new URLSearchParams(params).toString();
+  // const url = `http://localhost:224/api/get_total_wtg_count_based_on_state?${queryString}`;
+  const url = `${BASE_URL}/api/get_completed_wtg_count_based_on_state?${queryString}`;
+
+
+  try {
+      const response = await fetch(url);
+      if (!response.ok) {
+          throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      console.log('Data fetched from API:', data); // Log the fetched data
+      // Set the planned count from the API response
+      setStateWiseCount(data.stateWiseCounts);
+
+      setTotalStateWiseCountFetched(true); // Mark as fetched
+  } catch (error) {
+      console.error('Error fetching total planned count:', error);
+  }
+};
+
+const fetchTotalOutOfGraceStateWiseCount = async () => {
+  const params = {
+      orderType: selectedOption1,   // Replace with actual selected option or state variable
+      fromDate: startDate,          // Replace with actual startDate variable
+      toDate: endDate,              // Replace with actual endDate variable
+      state: selectedOption2,       // Replace with actual selected option for state
+      area: selectedOption3,        // Replace with actual selected option for area
+      site: selectedOption4,        // Replace with actual selected option for site
+  };
+
+  // Convert params object to URL search parameters
+  const queryString = new URLSearchParams(params).toString();
+  // const url = `http://localhost:224/api/get_total_wtg_count_based_on_state?${queryString}`;
+  const url = `${BASE_URL}/api/get_completed_out_of_grace_wtg_count_based_on_state?${queryString}`;
+
+
+  try {
+      const response = await fetch(url);
+      if (!response.ok) {
+          throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      console.log('Data fetched from API:', data); // Log the fetched data
+      // Set the planned count from the API response
+      setStateWiseCount(data.stateWiseCounts);
+
       setTotalStateWiseCountFetched(true); // Mark as fetched
   } catch (error) {
       console.error('Error fetching total planned count:', error);
@@ -673,9 +901,9 @@ const fetchOpenStateWiseCount = async () => {
 
     // Convert params object to URL search parameters
     const queryString = new URLSearchParams(params).toString();
-    // const url = `http://localhost:224/api/get_open_status_wtg_data?${queryString}`;
+    const url = `http://localhost:224/api/get_open_status_wtg_data?${queryString}`;
 
-    const url = `${BASE_URL}/api/get_open_status_wtg_data?${queryString}`;
+    // const url = `${BASE_URL}/api/get_open_status_wtg_data?${queryString}`;
 
     try {
         const response = await fetch(url);
@@ -771,21 +999,75 @@ const fetchOpenStateWiseCount = async () => {
     setModalData({ ...modalData, reason: event.target.value });
   };
 
-  const handleSubmitReason = () => {
-    // Update the reason in the rows array
-    const updatedRows = rows.map(row =>
-      row.orderno === modalData.orderNo && row.FuntionLoc === modalData.functionLoc
-        ? { ...row, reason: modalData.reason }
-        : row
-    );
+  // const handleSubmitReason = () => {
+  //   // Update the reason in the rows array
+  //   const updatedRows = rows.map(row =>
+  //     row.orderno === modalData.orderNo && row.FuntionLoc === modalData.functionLoc
+  //       ? { ...row, reason: modalData.reason }
+  //       : row
+  //   );
 
-    // Update the state with the updated rows
-    setRows(updatedRows);
+  //   // Update the state with the updated rows
+  //   setRows(updatedRows);
 
-    // Close the modal
-    closeModal();
+  //   // Close the modal
+  //   closeModal();
+  // };
+
+  const handleSubmitReason = async () => {
+    if (!modalData.reason || modalData.reason === "Select Reason") {
+      alert('Please select a valid reason before submitting.');
+      return;
+    }
+  
+    // Use the domainId007 state directly
+    const domainId = domainId007; // The new state holding domainId
+    const name = name007
+  
+    // Log the data being sent, including domainId and functionLoc
+    console.log('Sending data:', {
+      reason: modalData.reason,
+      orderNo: modalData.orderNo,
+      domainId: domainId,
+      name: name,
+      functionLoc: modalData.functionLoc,
+    });
+  
+    try {
+      const response = await fetch('http://localhost:224/api/insert_reason_for_wtg_planning', {
+        // const response = await fetch('http://localhost:3001/api/insert_reason_for_wtg_planning', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          reason: modalData.reason,
+          orderNo: modalData.orderNo,  // Sending order number along with the reason
+          domainId: domainId,          // Sending domainId from the new state
+          name: name,
+          functionLoc: modalData.functionLoc,  // Sending functionLoc
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
+  
+      const data = await response.json();
+      alert('Reason submitted successfully!');
+      console.log('API Response:', data);
+  
+      // Reset the reason selection, order number, and functionLoc
+      setModalData({ reason: '', orderNo: '', functionLoc: '' });
+    } catch (error) {
+      console.error('Error submitting reason:', error);
+      alert('Failed to submit the reason. Please try again.');
+    }
   };
-
+  
+  
+  
+  
   const filteredRows = rows.filter(row => {
     return (
       (selectedFunctionLoc.length === 0 || selectedFunctionLoc.includes(row.FuntionLoc)) &&
@@ -805,41 +1087,32 @@ const fetchOpenStateWiseCount = async () => {
   }, [selectedFunctionLoc, selectedPlant, selectedOrderNo, selectedOption1, selectedOption2, selectedOption3, selectedOption4, dateFrom, dateTo]);
 
   const handleDownload = () => {
-    // Generate data to download
-    const dataToDownload = filteredRows.map(row => ({
-      FunctionalLocation: row.FuntionLoc,
-      Plant: row.plant,
-      OrderNo: row.orderno,
-      Status: row.status,
-      StartDate: row.startdate,
-      EndDate: row.enddate,
-      OrderType: row.ordertype,
-      PMStartDate: row.PMstart,
-      Reason: row.reason,
-      Delays: row.delay
+    // Get the filtered data from the table
+    const data = filterData();
+  
+    // Map the data into a format suitable for Excel
+    const formattedData = data.map(row => ({
+      "Functional Location": row.FUNCT_LOC,
+      Plant: row.PLANT,
+      "Order No.": row.CRM_ORDERH,
+      Status: row.ZTEXT1,
+      "Start Date": row.ZACTSTDT,
+      "End Date": row.ZACTENDT,
+      "Order Type": row.ZEXT_RNO,
+      "PM Start Date": row.ZREQ_SDAT,
+      Reason: row.reason || "N/A",
+      Delays: row.delay || "N/A"
     }));
-
-    
-    const csvData = convertArrayOfObjectsToCSV(dataToDownload);
-
-    
-    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
-
-    
-    const url = window.URL.createObjectURL(blob);
-
-    
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', 'WTG_Wise_Planning.csv');
-    document.body.appendChild(link);
-
-    
-    link.click();
-
-    
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
+  
+    // Convert the data to a worksheet
+    const worksheet = XLSX.utils.json_to_sheet(formattedData);
+  
+    // Create a new workbook and append the worksheet
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Table Data");
+  
+    // Generate a binary string to download as an Excel file
+    XLSX.writeFile(workbook, "TableData.xlsx");
   };
 
   
@@ -848,17 +1121,15 @@ const fetchOpenStateWiseCount = async () => {
     return ['Functional Location,Plant,Order No.,Status,Start Date,End Date,Order Type,PM Start Date,Reason,Delays'].concat(csv).join('\n');
   };
 
-  const clearFilters = () => {
+  const clearAllFilters = () => {
     setSelectedFunctionLoc([]);
     setSelectedPlant([]);
     setSelectedOrderNo([]);
-    setSelectedOption1('Select');
-    setSelectedOption2('Select');
-    setSelectedOption3('Select');
-    setSelectedOption4('Select');
-    setDateFrom('');
-    setDateTo('');
+    setSearchTermFunctionLoc('');
+    setSearchTermPlant('');
+    setSearchTermOrderNo('');
   };
+  
 
       // UseEffect to calculate percentages after all counts are updated
       useEffect(() => {
@@ -916,12 +1187,19 @@ const fetchOpenStateWiseCount = async () => {
               <div className="modal-field">
                 <label>Select Reason</label>
                 <select value={modalData.reason} onChange={handleReasonChange}>
-                  <option value="">Select Reason</option>
-                  <option value="Reason 1">Reason 1</option>
-                  <option value="Reason 2">Reason 2</option>
-                  <option value="Reason 3">Reason 3</option>
-                  {/* Add more options as needed */}
-                </select>
+  <option value="">Select Reason</option>
+  <option value="pm activity not applicable">PM Activity Not Applicable</option>
+  <option value="material not available">Material Not Available</option>
+  <option value="tools not available">Tools Not Available</option>
+  <option value="lubricants not available">Lubricants Not Available</option>
+  <option value="Contractor not Available">Contractor Not Available</option>
+  <option value="Manpower not Available">Manpower Not Available</option>
+  <option value="Equipment not Available">Equipment Not Available</option>
+  <option value="Insufficient Time">Insufficient Time</option>
+  <option value="Design Issue">Design Issue</option>
+  <option value="Maintainability Issue">Maintainability Issue</option>
+</select>
+
               </div>
               <button className="submit-button" onClick={handleSubmitReason}>Submit</button>
             </div>
@@ -1024,6 +1302,7 @@ const fetchOpenStateWiseCount = async () => {
   onClick={() => {
     handleCardClick('Total');
     fetchTotalWtgCount();
+    fetchTotalStateWiseCount();
   }}
 >
 
@@ -1044,7 +1323,8 @@ const fetchOpenStateWiseCount = async () => {
             onClick={() => {
               handleCardClick('Planned');
               fetchTotalPlannedData(); // Call the function here
-              fetchPlanStateWiseCount();
+              // fetchPlanStateWiseCount();
+              fetchTotalPlannedStateWiseCount();
 
             }}
             
@@ -1066,8 +1346,9 @@ const fetchOpenStateWiseCount = async () => {
   className={`card open-card ${selectedCard === 'Open' ? 'active' : ''}`}
   onClick={() => {
     handleCardClick('Open');
-    fetchOpenStateWiseCount(); // Call your function here
+   // fetchOpenStateWiseCount(); // Call your function here
     fetchTotalOpenData();
+    fetchTotalOpenStateWiseCount();
   }}
 >
             <div className='flex justify-between'>
@@ -1087,8 +1368,9 @@ const fetchOpenStateWiseCount = async () => {
   className={`card completed ${selectedCard === 'Completed' ? 'active' : ''}`}
   onClick={() => {
     handleCardClick('Completed');
-    fetchCompletedStateWiseCount(); // Call your function here
+    //fetchCompletedStateWiseCount(); // Call your function here
     fetchTotalCompletedData();
+    fetchTotalCompletedStateWiseCount();
   }}
 >
             <div className='flex justify-between'>
@@ -1108,8 +1390,9 @@ const fetchOpenStateWiseCount = async () => {
   className={`card grace ${selectedCard === 'Grace' ? 'active' : ''}`}
   onClick={() => {
     handleCardClick('Grace');
-    fetchOutOfGraceStateWiseCount(); // Call your function here
+  //  fetchOutOfGraceStateWiseCount(); // Call your function here
     fetchTotalCompletedOutOfGraceData();
+    fetchTotalOutOfGraceStateWiseCount();
   }}
 >
             <div className='flex justify-between'>
@@ -1161,155 +1444,187 @@ const fetchOpenStateWiseCount = async () => {
           
           <div className="Table-Lub-table">
             <div className="Lub-table-container">
-              <table>
-                <thead>
-                  <tr>
-                    <th className="filter-header">
-                      <div className='d-flex align-items-center'>
-                        <span> Functional Location</span>
-                        <img
-                          src={filterIcon}
-                          alt="Filter"
-                          className="filter-icon"
-                          onClick={() => setShowFunctionLocDropdown(!showFunctionLocDropdown)}
-                        />
-                      </div>
-                      {showFunctionLocDropdown && (
-                        <div className="filter-container">
-                          <div className="filter-header">
-                            <span>Functional Location</span>
-                            <img
-                              src={cancelIcon}
-                              alt="Close"
-                              className="close-filter-icon"
-                              onClick={() => setShowFunctionLocDropdown(false)}
-                            />
-                          </div>
+            <table>
+  <thead>
+    <tr>
+      <th className="filter-header">
+        <div className='d-flex align-items-center'>
+          <span>Functional Location</span>
+          <img
+            src={filterIcon}
+            alt="Filter"
+            className="filter-icon"
+            onClick={() => setShowFunctionLocDropdown(!showFunctionLocDropdown)}
+          />
+        </div>
+        {showFunctionLocDropdown && (
+          <div className="filter-container">
+            <div className="filter-header">
+              <span>Functional Location</span>
+              <img
+                src={cancelIcon}
+                alt="Close"
+                className="close-filter-icon"
+                onClick={() => setShowFunctionLocDropdown(false)}
+              />
+            </div>
+            <input
+              type="text"
+              placeholder="Search..."
+              className="filter-search"
+              onChange={(e) => handleSearchChange(e, 'FunctionLoc')}
+            />
+            <div className="multi-select-dropdown">
+              {getUniqueValues('FUNCT_LOC')
+                .filter(value => value.toLowerCase().includes(searchTermFunctionLoc.toLowerCase()))
+                .map((value) => (
+                  <div className="multi-select-checkbox" key={value}>
+                    <input
+                      type="checkbox"
+                      id={value}
+                      value={value}
+                      onChange={(e) => handleCheckboxChange(e, 'FunctionLoc')}
+                    />
+                    <label htmlFor={value}>{value}</label>
+                  </div>
+                ))}
+            </div>
+            <button className="clear-filter-button" onClick={() => setSelectedFunctionLoc([])}>
+              <img src={clearIcon} alt="Clear" className="clear-icon" /> Clear All
+            </button>
+          </div>
+        )}
+      </th>
+      {/* Similar blocks for Plant and OrderNo */}
+      <th className="filter-header">
+              <div className='d-flex align-items-center' style={{ marginLeft: '15px' }}>
+                <span>Plant</span>
+                <img
+                  src={filterIcon}
+                  alt="Filter"
+                  className="filter-icon"
+                  onClick={() => setShowPlantDropdown(!showPlantDropdown)}
+                />
+              </div>
+              {showPlantDropdown && (
+                <div className="filter-container">
+                  <div className="filter-header">
+                    <span>Plant</span>
+                    <img
+                      src={cancelIcon}
+                      alt="Close"
+                      className="close-filter-icon"
+                      onClick={() => setShowPlantDropdown(false)}
+                    />
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="Search..."
+                    className="filter-search"
+                    onChange={(e) => handleSearchChange(e, 'Plant')}
+                  />
+                  <div className="multi-select-dropdown">
+                    {getUniqueValues('PLANT')
+                      .filter(value => value.toLowerCase().includes(searchTermPlant991.toLowerCase()))
+                      .map((value) => (
+                        <div className="multi-select-checkbox" key={value}>
                           <input
-                            type="text"
-                            placeholder="Search..."
-                            className="filter-search"
-                            onChange={handleSelectChangeFunctionLoc}
+                            type="checkbox"
+                            id={value}
+                            value={value}
+                            onChange={(e) => handleCheckboxChange(e, 'Plant')}
                           />
-                          <div className="multi-select-dropdown">
-                            <div className="multi-select-checkbox">
-                              <input type="checkbox" id="SWSPAL-SC2-RS102-P112" value="SWSPAL-SC2-RS102-P112" onChange={handleSelectChangeFunctionLoc} />
-                              <label htmlFor="SWSPAL-SC2-RS102-P112">SWSPAL-SC2-RS102-P112</label>
-                            </div>
-                            {/* Add more options as needed */}
-                          </div>
-                          <button className="clear-filter-button" onClick={() => setSelectedFunctionLoc([])}>
-                            <img src={clearIcon} alt="Clear" className="clear-icon" /> Clear All
-                          </button>
+                          <label htmlFor={value}>{value}</label>
                         </div>
-                      )}
-                    </th>
-                    <th className="filter-header">
-                      <div className='d-flex align-items-center' style={{marginLeft:'15px'}}>
-                        <span> Plant</span>
-                        <img
-                          src={filterIcon}
-                          alt="Filter"
-                          className="filter-icon"
-                          onClick={() => setShowPlantDropdown(!showPlantDropdown)}
-                        />
-                      </div>
-                      {showPlantDropdown && (
-                        <div className="filter-container">
-                          <div className="filter-header">
-                            <span>Plant</span>
-                            <img
-                              src={cancelIcon}
-                              alt="Close"
-                              className="close-filter-icon"
-                              onClick={() => setShowPlantDropdown(false)}
-                            />
-                          </div>
+                      ))}
+                  </div>
+                  <button className="clear-filter-button" onClick={() => setSelectedPlant991([])}>
+                    <img src={clearIcon} alt="Clear" className="clear-icon" /> Clear All
+                  </button>
+                </div>
+              )}
+            </th>
+      <th className="filter-header">
+              <div className='d-flex align-items-center'>
+                <span>Order No.</span>
+                <img
+                  src={filterIcon}
+                  alt="Filter"
+                  className="filter-icon"
+                  onClick={() => setShowOrderNoDropdown(!showOrderNoDropdown)}
+                />
+              </div>
+              {showOrderNoDropdown && (
+                <div className="filter-container">
+                  <div className="filter-header">
+                    <span>Order No.</span>
+                    <img
+                      src={cancelIcon}
+                      alt="Close"
+                      className="close-filter-icon"
+                      onClick={() => setShowOrderNoDropdown(false)}
+                    />
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="Search..."
+                    className="filter-search"
+                    onChange={(e) => handleSearchChange(e, 'OrderNo')}
+                  />
+                  <div className="multi-select-dropdown">
+                    {getUniqueValues('CRM_ORDERH')
+                      .filter(value => value.toLowerCase().includes(searchTermOrderNo991.toLowerCase()))
+                      .map((value) => (
+                        <div className="multi-select-checkbox" key={value}>
                           <input
-                            type="text"
-                            placeholder="Search..."
-                            className="filter-search"
-                            onChange={handleSelectChangePlant}
+                            type="checkbox"
+                            id={value}
+                            value={value}
+                            onChange={(e) => handleCheckboxChange(e, 'OrderNo')}
                           />
-                          <div className="multi-select-dropdown">
-                            <div className="multi-select-checkbox">
-                              <input type="checkbox" id="4446" value="4446" onChange={handleSelectChangePlant} />
-                              <label htmlFor="4446">4446</label>
-                            </div>
-                            {/* Add more options as needed */}
-                          </div>
-                          <button className="clear-filter-button" onClick={() => setSelectedPlant([])}>
-                            <img src={clearIcon} alt="Clear" className="clear-icon" /> Clear All
-                          </button>
+                          <label htmlFor={value}>{value}</label>
                         </div>
-                      )}
-                    </th>
-                    <th className="filter-header">
-                      <div className='d-flex align-items-center'>
-                        <span>Order No.</span>
-                        <img
-                          src={filterIcon}
-                          alt="Filter"
-                          className="filter-icon"
-                          onClick={() => setShowOrderNoDropdown(!showOrderNoDropdown)}
-                        />
-                      </div>
-                      {showOrderNoDropdown && (
-                        <div className="filter-container">
-                          <div className="filter-header">
-                            <span>Order No.</span>
-                            <img
-                              src={cancelIcon}
-                              alt="Close"
-                              className="close-filter-icon"
-                              onClick={() => setShowOrderNoDropdown(false)}
-                            />
-                          </div>
-                          <input
-                            type="text"
-                            placeholder="Search..."
-                            className="filter-search"
-                            onChange={handleSelectChangeOrderNo}
-                          />
-                          <div className="multi-select-dropdown">
-                            <div className="multi-select-checkbox">
-                              <input type="checkbox" id="0018165907" value="0018165907" onChange={handleSelectChangeOrderNo} />
-                              <label htmlFor="0018165907">0018165907</label>
-                            </div>
-                            {/* Add more options as needed */}
-                          </div>
-                          <button className="clear-filter-button" onClick={() => setSelectedOrderNo([])}>
-                            <img src={clearIcon} alt="Clear" className="clear-icon" /> Clear All
-                          </button>
-                        </div>
-                      )}
-                    </th>
-                    <th>Status</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
+                      ))}
+                  </div>
+                  <button className="clear-filter-button" onClick={() => setSelectedOrderNo991([])}>
+                    <img src={clearIcon} alt="Clear" className="clear-icon" /> Clear All
+                  </button>
+
+                </div>
+              )}
+            </th> 
+            <th>Status</th>
+            {selectedCard !== 'Open' && <th>Start Date</th>}
+            {selectedCard !== 'Open' && <th>End Date</th>}
                     <th>Order Type</th>
                     <th>PM Start Date</th>
-                    <th>Reason</th>
+                    {selectedCard === 'Open' && <th>Reason</th>}
                     <th>Delays</th>
-                  </tr>
-                </thead>
-                <tbody>
-          {totalData.map((row, index) => (
-            <tr key={index}>
-              <td>{row.FUNCT_LOC}</td>
-              <td>{row.PLANT}</td>
-              <td>{row.CRM_ORDERH}</td>
-              <td>{row.ZTEXT1}</td> {/* Assuming this is the status */}
-              <td>{row.ZACTSTDT}</td>
-              <td>{row.ZACTENDT}</td>
-              <td>{row.ZEXT_RNO}</td> {/* Adjust if needed */}
-              <td>{row.ZREQ_SDAT}</td>
-              <td>{row.reason ? row.reason : <button onClick={() => openModal(row.CRM_ORDERH)}>Add Reason</button>}</td>
-              <td>{getDelayChip(row.delay)}</td> {/* Define getDelayChip function to render delays */}
-            </tr>
-          ))}
-        </tbody>
-              </table>
+    </tr>
+  </thead>
+  <tbody>
+    {filterData().map((row, index) => (
+      <tr key={index}>
+        <td>{row.FUNCT_LOC}</td>
+        <td>{row.PLANT}</td>
+        <td>{row.CRM_ORDERH}</td>
+        <td>{row.ZTEXT1}</td>
+        {selectedCard !== 'Open' && <td>{row.ZACTSTDT}</td>} {/* Start Date */}
+        {selectedCard !== 'Open' && <td>{row.ZACTENDT}</td>} {/* End Date */}
+        <td>{row.ZEXT_RNO}</td>
+        <td>{row.ZREQ_SDAT}</td>
+        {selectedCard === 'Open' && (
+        <td>
+          {row.Reason ? row.Reason : (
+            <button onClick={() => openModal(row.CRM_ORDERH, row.FUNCT_LOC)}>Add Reason</button>
+          )}
+        </td>
+      )}
+        <td>{getDelayChip(row.delay)}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
             </div>
           </div>
         </div>

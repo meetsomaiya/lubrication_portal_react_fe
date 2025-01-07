@@ -1,33 +1,25 @@
 import React from 'react';
 import './Navbarr.css';
-// import '../App.css';
 import myImage from '../assets/image.png';
 import myImage_1 from '../assets/Clip path group.png';
 
-
-
 const Navbar_user = () => {
-       // Function to get the name from the cookies
-       const getNameFromCookie = () => {
-        const nameCookie = document.cookie
+    // Function to retrieve a cookie by name
+    const getCookie = (cookieName) => {
+        const cookieString = document.cookie
             .split('; ')
-            .find(row => row.startsWith('name='));
-        return nameCookie ? decodeURIComponent(nameCookie.split('=')[1]) : '';
+            .find(row => row.startsWith(`${cookieName}=`));
+        return cookieString ? decodeURIComponent(cookieString.split('=')[1]) : null;
     };
 
-    // Function to get the designation from the cookies
-    const getDesignationFromCookie = () => {
-        const designationCookie = document.cookie
-            .split('; ')
-            .find(row => row.startsWith('designation='));
-        return designationCookie ? decodeURIComponent(designationCookie.split('=')[1]) : 'Your Designation';
-    };
+    // Retrieve the user's name and userId from cookies
+    const userName = getCookie('name') || "Guest";
+    const userId = getCookie('userId') || "Unknown User";
 
-    // Retrieve the user's name and designation from the cookies
-    const userName = getNameFromCookie() || "Guest"; // Default to "Guest" if name not found
-    const userDesignation = getDesignationFromCookie(); // Default to "Your Designation" if not found
+    // Retrieve the designation if stored in cookies (optional)
+    const userDesignation = getCookie('designation') || 'Your Designation';
 
-
+    // Function to get user initials
     const getInitials = (name) => {
         const nameArray = name.split(" ");
         if (nameArray.length > 1) {
@@ -37,6 +29,39 @@ const Navbar_user = () => {
     };
 
     const initials = getInitials(userName).toUpperCase();
+
+    // Logout function
+    const handleLogout = async () => {
+        // Set cookies to be sent with the API
+        document.cookie = `userId=${userId}; path=/`;
+        document.cookie = `name=${encodeURIComponent(userName)}; path=/`;
+
+        // Log the data being sent
+        console.log({
+            userId: userId,
+            name: userName,
+        });
+
+        // Send data to the logout_user API
+        try {
+            const response = await fetch('http://localhost:224/api/logout_user', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId, name: userName }),
+            });
+
+            if (response.ok) {
+                console.log('Logout successful');
+                window.location.href = "/"; // Redirect to the login page
+            } else {
+                console.error('Logout failed:', await response.text());
+            }
+        } catch (error) {
+            console.error('Error during logout:', error);
+        }
+    };
 
     return (
         <nav className="navbar">
@@ -60,13 +85,13 @@ const Navbar_user = () => {
                     {initials}
                 </div>
                 <div className="dropdown-content">
-                <p>{userName}</p>
-                <span>{userDesignation}</span> {/* Display the retrieved designation */}
-                    <a className="dropdown-item" href="login">Logout</a>
+                    <p>{userName}</p>
+                    <span>{userDesignation}</span> {/* Display the retrieved designation */}
+                    <button onClick={handleLogout} className="dropdown-item">Logout</button>
                 </div>
             </div>
         </nav>
     );
-}
+};
 
 export default Navbar_user;

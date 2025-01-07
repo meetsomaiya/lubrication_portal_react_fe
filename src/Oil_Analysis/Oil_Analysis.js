@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './Oil_Analysis.css';
 import { BASE_URL } from '../config'
+import * as XLSX from 'xlsx';
  
 // Import the FontAwesome library
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -31,39 +32,17 @@ const OilAnalysisTable = () => {
   const [searchQuery9963, setSearchQuery9963] = useState('');
  
   const [selectedFinancialYear, setSelectedFinancialYear] = useState("");
+  
  
-  const handleOpenFilterModal9963 = (column) => {
-    const uniqueValues = [...new Set(modalData.map((row) => row[column]))].sort();
-    setFilterColumn9963(column);
-    setFilterOptions9963(uniqueValues);
-    setOriginalFilterOptions9963(uniqueValues); // Save the original values for reset
-    setSelectedFilters9963((prev) => ({
-      ...prev,
-      [column]: selectedFilters9963[column] || [],
-    }));
-    setFilterModalOpen9963(true);
-  };
+
+  
 
   const formatToTwoDecimals = (value) => {
     return Number(value).toFixed(2);
   };
  
  
-  const handleSearchChange9963 = (event) => {
-    const query = event.target.value;
-    setSearchQuery9963(query);
- 
-    if (query === '') {
-      // If search is cleared, reset to the original options
-      setFilterOptions9963(originalFilterOptions9963);
-    } else {
-      // Filter the options based on the search query
-      const filteredOptions = originalFilterOptions9963.filter(option =>
-        option.toLowerCase().includes(query.toLowerCase())
-      );
-      setFilterOptions9963(filteredOptions);
-    }
-  };
+
  
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -75,27 +54,65 @@ const OilAnalysisTable = () => {
       )
     : filterOptions9963;
  
-  const handleCheckboxChange9963 = (option) => {
-    setSelectedFilters9963((prev) => ({
-      ...prev,
-      [filterColumn9963]: prev[filterColumn9963]?.includes(option)
-        ? prev[filterColumn9963].filter((item) => item !== option)
-        : [...(prev[filterColumn9963] || []), option],
-    }));
-  };
+    const handleOpenFilterModal9963 = (column) => {
+      setFilterColumn9963(column);
+      const options = generateFilterOptions(modalData, column);
+      setFilterOptions9963(options);
+      setFilterModalOpen9963(true);
+    };
+    
+    const handleSearchChange9963 = (event) => {
+      const query = event.target.value.toLowerCase();
+      setSearchQuery9963(query);
+      const options = generateFilterOptions(modalData, filterColumn9963).filter((option) =>
+        option.toLowerCase().includes(query)
+      );
+      setFilterOptions9963(options);
+    };
+    
+    const handleCheckboxChange9963 = (option) => {
+      const mappedKey = headerToKeyMap[filterColumn9963] || filterColumn9963;
+    
+      // Ensure the selectedFilters9963 state aligns with available filter options
+      const newFilters = { ...selectedFilters9963 };
+    
+      // Initialize or update the filter array for the specific column
+      if (!newFilters[mappedKey]) {
+        newFilters[mappedKey] = [];
+      }
+    
+      // Add or remove the selected option
+      if (newFilters[mappedKey].includes(option)) {
+        newFilters[mappedKey] = newFilters[mappedKey].filter((item) => item !== option);
+      } else if (filterOptions9963.includes(option)) {
+        // Only add the option if it's a valid filter option
+        newFilters[mappedKey].push(option);
+      }
+    
+      setSelectedFilters9963(newFilters);
+    };
+    
+
+    const generateFilterOptions = (data, column) => {
+      const mappedKey = headerToKeyMap[column] || column;
+      return [...new Set(data.map((item) => item[mappedKey]))].filter(Boolean); // Unique and non-empty options
+    };
+    
  
   const applyFilters9963 = () => {
     let filteredData = modalData;
     Object.keys(selectedFilters9963).forEach((column) => {
+      const mappedKey = headerToKeyMap[column] || column; // Use the mapped key or fallback to the column
       if (selectedFilters9963[column].length > 0) {
         filteredData = filteredData.filter((row) =>
-          selectedFilters9963[column].includes(row[column])
+          selectedFilters9963[column].includes(row[mappedKey])
         );
       }
     });
     setModalData(filteredData);
     setFilterModalOpen9963(false);
   };
+  
  
   const resetFilters9963 = () => {
     setSelectedFilters9963({});
@@ -104,6 +121,7 @@ const OilAnalysisTable = () => {
     setModalData(originalData); // Reset the data to original if needed
     setFilterModalOpen9963(false);
   };
+  
  
  
     // // Helper function to format values to 2 decimal places
@@ -767,6 +785,17 @@ const formatValue = (value) => {
  
  
  
+  const downloadTableAsExcel = () => {
+    // Get the table element by its ID
+    const table = document.getElementById('tbl7997');
+  
+    // Create a new workbook
+    const wb = XLSX.utils.table_to_book(table, { sheet: "Sheet1" });
+  
+    // Trigger download of the Excel file
+    XLSX.writeFile(wb, "table_data.xlsx");
+  };
+
   const fetchDataForPendingTeco = async (event) => {
     const year = event.target.value;
     setSelectedYear(year);
@@ -842,6 +871,37 @@ const formatValue = (value) => {
     }
   };
  
+  const headerToKeyMap = {
+  "Order No": "Order No",
+  "Function Loc": "Function Loc",
+  "Issue": "Issue",
+  "Return": "Return",
+  "Return Percentage": "Return Percentage",
+  "Plant": "Plant",
+  "State": "State",
+  "Area": "Area",
+  "Site": "Site",
+  "Material": "Material",
+  "Storage Location": "Storage Location",
+  "Move Type": "Move Type",
+  "Material Document": "Material Document",
+  "Description": "Description",
+  "Val Type": "Val Type",
+  "Posting Date": "Posting Date",
+  "Entry Date": "Entry Date",
+  "Quantity": "Quantity",
+  "Order": "Order",
+  "Order Type": "Order Type",
+  "Component": "Component",
+  "WTG Model": "WTG Model",
+  "Current Oil Change Date": "Current Oil Change Date",
+  "State Engineering Head": "stateEnggHead",
+  "Area Incharge": "areaIncharge",
+  "Site Incharge": "siteIncharge",
+  "State PMO": "statePMO",
+  "Order Status": "Order Status",
+};
+
 // Mapping of order types to their respective API endpoints
 const orderTypeApiMap = {
   'FC_OIL_CHANGE ORDER': 'fetch_fc_oil_chg_data',
@@ -1133,7 +1193,20 @@ const handleConsolidatedFileDownload = () => {
     {showModal && (
       <div className="modal-7997">
         <div className="modal-content-7997">
-          <button id='closebtn' onClick={() => setShowModal(false)}>Close</button>
+        
+        <div className="btn-content-7997">
+           {/* Display the selected order type dynamically */}
+           {clickedOrderType && <h1 className="order-type-heading-7997">{clickedOrderType}</h1>}
+           <button
+  id="download-excel"
+  onClick={() => downloadTableAsExcel()}
+>
+  Download Excel
+</button>
+
+  <button id="closebtn" onClick={() => setShowModal(false)}>Close</button>
+</div>
+
           {modalData && (
             <div className="data-table-wrapper-7997">
        <table className="data-table-7997" id="tbl7997">
@@ -1232,24 +1305,24 @@ const handleConsolidatedFileDownload = () => {
               onChange={handleSearchChange9963}
               className="search-bar"
             />
-                <div className="filter-options-9963">
-                  {filterOptions9963.map((option, index) => (
-                    <div key={index} className="filter-option-9963">
-                      <input
-                        type="checkbox"
-                        id={`filter-checkbox-9963-${index}`}
-                        checked={
-                          selectedFilters9963[filterColumn9963]?.includes(option) ||
-                          false
-                        }
-                        onChange={() => handleCheckboxChange9963(option)}
-                      />
-                      <label htmlFor={`filter-checkbox-9963-${index}`}>
-                        {option || "(Empty)"}
-                      </label>
-                    </div>
-                  ))}
-                </div>
+<div className="filter-options-9963">
+  {filterOptions9963.map((option, index) => (
+    <div key={index} className="filter-option-9963">
+      <input
+        type="checkbox"
+        id={`filter-checkbox-9963-${index}`}
+        checked={
+          selectedFilters9963[headerToKeyMap[filterColumn9963] || filterColumn9963]?.includes(option) || false
+        }
+        onChange={() => handleCheckboxChange9963(option)}
+      />
+      <label htmlFor={`filter-checkbox-9963-${index}`}>
+        {option || "(Empty)"}
+      </label>
+    </div>
+  ))}
+</div>
+
                 <div className="filter-buttons-9963">
                   <button onClick={applyFilters9963} className="apply-button-9963">
                     Apply Filters

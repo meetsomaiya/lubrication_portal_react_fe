@@ -5,6 +5,7 @@ import cancelIcon from '../assets/close-line-icon.png';
 import clearIcon from '../assets/filter-remove-icon.png';
 import excel_iconpng from '../assets/excel - Copy.jpg';
 // import WTG_Wise_Planning from '../WTG_wise/WTG_Wise_Planning';
+import * as XLSX from 'xlsx';
 
 import { BASE_URL } from '../config'
 
@@ -334,6 +335,39 @@ const [isTotalStateWiseCountFetched, setTotalStateWiseCountFetched] = useState(f
     }
 };
 
+const fetchTotalPlannedStateWiseCount = async () => {
+  const params = {
+      orderType: selectedOption1,   // Replace with actual selected option or state variable
+      fromDate: startDate,          // Replace with actual startDate variable
+      toDate: endDate,              // Replace with actual endDate variable
+      state: selectedOption2,       // Replace with actual selected option for state
+      area: selectedOption3,        // Replace with actual selected option for area
+      site: selectedOption4,        // Replace with actual selected option for site
+  };
+
+  // Convert params object to URL search parameters
+  const queryString = new URLSearchParams(params).toString();
+  // const url = `http://localhost:224/api/get_total_wtg_count_based_on_state?${queryString}`;
+  const url = `${BASE_URL}/api/get_planned_wtg_count_based_on_state?${queryString}`;
+
+
+  try {
+      const response = await fetch(url);
+      if (!response.ok) {
+          throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      console.log('Data fetched from API:', data); // Log the fetched data
+      // Set the planned count from the API response
+      setStateWiseCount(data.stateWiseCounts);
+
+      setTotalStateWiseCountFetched(true); // Mark as fetched
+  } catch (error) {
+      console.error('Error fetching total planned count:', error);
+  }
+};
+
 const fetchPlanStateWiseCount = async () => {
   const params = {
       orderType: selectedOption1,   // Replace with actual selected option or state variable
@@ -360,6 +394,105 @@ const fetchPlanStateWiseCount = async () => {
       console.log('Data fetched from API:', data); // Log the fetched data
       // Set the planned count from the API response
       setStateWiseCount(data.stateWiseCounts);
+  } catch (error) {
+      console.error('Error fetching total planned count:', error);
+  }
+};
+
+const fetchTotalOpenStateWiseCount = async () => {
+  const params = {
+      orderType: selectedOption1,   // Replace with actual selected option or state variable
+      fromDate: startDate,          // Replace with actual startDate variable
+      toDate: endDate,              // Replace with actual endDate variable
+      state: selectedOption2,       // Replace with actual selected option for state
+      area: selectedOption3,        // Replace with actual selected option for area
+      site: selectedOption4,        // Replace with actual selected option for site
+  };
+
+  // Convert params object to URL search parameters
+  const queryString = new URLSearchParams(params).toString();
+  // const url = `http://localhost:224/api/get_total_wtg_count_based_on_state?${queryString}`;
+  const url = `${BASE_URL}/api/get_open_wtg_count_based_on_state?${queryString}`;
+
+
+  try {
+      const response = await fetch(url);
+      if (!response.ok) {
+          throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      console.log('Data fetched from API:', data); // Log the fetched data
+      // Set the planned count from the API response
+      setStateWiseCount(data.stateWiseCounts);
+
+      setTotalStateWiseCountFetched(true); // Mark as fetched
+  } catch (error) {
+      console.error('Error fetching total planned count:', error);
+  }
+};
+
+const fetchTotalCompletedStateWiseCount = async () => {
+  const params = {
+      orderType: selectedOption1,   // Replace with actual selected option or state variable
+      fromDate: startDate,          // Replace with actual startDate variable
+      toDate: endDate,              // Replace with actual endDate variable
+      state: selectedOption2,       // Replace with actual selected option for state
+      area: selectedOption3,        // Replace with actual selected option for area
+      site: selectedOption4,        // Replace with actual selected option for site
+  };
+
+  // Convert params object to URL search parameters
+  const queryString = new URLSearchParams(params).toString();
+  // const url = `http://localhost:224/api/get_total_wtg_count_based_on_state?${queryString}`;
+  const url = `${BASE_URL}/api/get_completed_wtg_count_based_on_state?${queryString}`;
+
+
+  try {
+      const response = await fetch(url);
+      if (!response.ok) {
+          throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      console.log('Data fetched from API:', data); // Log the fetched data
+      // Set the planned count from the API response
+      setStateWiseCount(data.stateWiseCounts);
+
+      setTotalStateWiseCountFetched(true); // Mark as fetched
+  } catch (error) {
+      console.error('Error fetching total planned count:', error);
+  }
+};
+
+const fetchTotalOutOfGraceStateWiseCount = async () => {
+  const params = {
+      orderType: selectedOption1,   // Replace with actual selected option or state variable
+      fromDate: startDate,          // Replace with actual startDate variable
+      toDate: endDate,              // Replace with actual endDate variable
+      state: selectedOption2,       // Replace with actual selected option for state
+      area: selectedOption3,        // Replace with actual selected option for area
+      site: selectedOption4,        // Replace with actual selected option for site
+  };
+
+  // Convert params object to URL search parameters
+  const queryString = new URLSearchParams(params).toString();
+  // const url = `http://localhost:224/api/get_total_wtg_count_based_on_state?${queryString}`;
+  const url = `${BASE_URL}/api/get_completed_out_of_grace_wtg_count_based_on_state?${queryString}`;
+
+
+  try {
+      const response = await fetch(url);
+      if (!response.ok) {
+          throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      console.log('Data fetched from API:', data); // Log the fetched data
+      // Set the planned count from the API response
+      setStateWiseCount(data.stateWiseCounts);
+
+      setTotalStateWiseCountFetched(true); // Mark as fetched
   } catch (error) {
       console.error('Error fetching total planned count:', error);
   }
@@ -614,9 +747,9 @@ const fetchPlanStateWiseCount = async () => {
 
       // Convert params object to URL search parameters
       const queryString = new URLSearchParams(params).toString();
-      // const url = `http://localhost:224/api/get_open_status_wtg_data?${queryString}`;
+      const url = `http://localhost:224/api/get_open_status_wtg_data?${queryString}`;
 
-      const url = `${BASE_URL}/api/get_open_status_wtg_data?${queryString}`;
+      // const url = `${BASE_URL}/api/get_open_status_wtg_data?${queryString}`;
 
 
       try {
@@ -626,7 +759,7 @@ const fetchPlanStateWiseCount = async () => {
           }
 
           const data = await response.json();
-          console.log('Data of planned data fetched from API:', data); // Log the fetched data
+          console.log('Data of open data fetched from API:', data); // Log the fetched data
           // Set the planned count from the API response
           // setPlannedData(data.totalPlannedCount);
           setTotalData(data || []); // Ensure data is an array
@@ -934,43 +1067,59 @@ const fetchPlanStateWiseCount = async () => {
     setFilteredCount(filteredRows.length);
   }, [selectedFunctionLoc, selectedPlant, selectedOrderNo, selectedOption1, selectedOption2, selectedOption3, selectedOption4, dateFrom, dateTo]);
 
-  const handleDownload = () => {
-    // Generate data to download
-    const dataToDownload = filteredRows.map(row => ({
-      FunctionalLocation: row.FuntionLoc,
-      Plant: row.plant,
-      OrderNo: row.orderno,
-      Status: row.status,
-      StartDate: row.startdate,
-      EndDate: row.enddate,
-      OrderType: row.ordertype,
-      PMStartDate: row.PMstart,
-      Reason: row.reason,
-      Delays: row.delay
-    }));
+//   const handleDownload = () => {
+//     // Mapping the filtered data to a format that can be used for Excel download
+//     const dataForDownload = filteredData.map((row) => ({
+//         FunctionalLocation: row.FUNCT_LOC,
+//         Plant: row.PLANT,
+//         OrderNo: row.CRM_ORDERH,
+//         Status: row.ZTEXT1,
+//         StartDate: row.ZACTSTDT,
+//         EndDate: row.ZACTENDT,
+//         OrderType: row.ZEXT_RNO,
+//         PMStartDate: row.ZREQ_SDAT,
+//         Reason: row.reason || 'N/A', // If there's no reason, display 'N/A'
+//         Delays: getDelayChip(row.delay), // Assuming this function handles delay rendering
+//     }));
 
-    
-    const csvData = convertArrayOfObjectsToCSV(dataToDownload);
+//     // Convert the data to an Excel sheet
+//     const worksheet = XLSX.utils.json_to_sheet(dataForDownload);
+//     const workbook = XLSX.utils.book_new();
+//     XLSX.utils.book_append_sheet(workbook, worksheet, "Lubrication Report");
 
-    
-    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
+//     // Write the workbook to a buffer
+//     const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+//     const dataBlob = new Blob([excelBuffer], { type: "application/octet-stream" });
 
-    
-    const url = window.URL.createObjectURL(blob);
+//     // Trigger the download
+//     saveAs(dataBlob, "Lubrication_Report.xlsx");
+// };
 
-    
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', 'WTG_Wise_Planning.csv');
-    document.body.appendChild(link);
+const handleDownload = () => {
+  // Create a new worksheet with the data in table rows
+  const worksheetData = filteredData.map(row => ({
+    'Functional Location': row.FUNCT_LOC,
+    'Plant': row.PLANT,
+    'Order No.': row.CRM_ORDERH,
+    'Status': row.ZTEXT1,
+    'Start Date': row.ZACTSTDT,
+    'End Date': row.ZACTENDT,
+    'Order Type': row.ZEXT_RNO,
+    'PM Start Date': row.ZREQ_SDAT,
+    'Reason': row.reason || 'Add Reason', // If no reason, put a placeholder
+    'Delays': getDelayChip(row.delay) // Make sure getDelayChip function is correctly defined
+  }));
 
-    
-    link.click();
+  // Create a worksheet from the data
+  const ws = XLSX.utils.json_to_sheet(worksheetData);
 
-    
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
-  };
+  // Create a workbook
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'PM Tracker');
+
+  // Export the workbook as an Excel file
+  XLSX.writeFile(wb, 'PM_Tracker.xlsx');
+};
 
   
   const convertArrayOfObjectsToCSV = (data) => {
@@ -1047,12 +1196,19 @@ const fetchPlanStateWiseCount = async () => {
               <div className="modal-field">
                 <label>Select Reason</label>
                 <select value={modalData.reason} onChange={handleReasonChange}>
-                  <option value="">Select Reason</option>
-                  <option value="Reason 1">Reason 1</option>
-                  <option value="Reason 2">Reason 2</option>
-                  <option value="Reason 3">Reason 3</option>
-                  {/* Add more options as needed */}
-                </select>
+  <option value="">Select Reason</option>
+  <option value="pm activity not applicable">PM Activity Not Applicable</option>
+  <option value="material not available">Material Not Available</option>
+  <option value="tools not available">Tools Not Available</option>
+  <option value="lubricants not available">Lubricants Not Available</option>
+  <option value="Contractor not Available">Contractor Not Available</option>
+  <option value="Manpower not Available">Manpower Not Available</option>
+  <option value="Equipment not Available">Equipment Not Available</option>
+  <option value="Insufficient Time">Insufficient Time</option>
+  <option value="Design Issue">Design Issue</option>
+  <option value="Maintainability Issue">Maintainability Issue</option>
+</select>
+
               </div>
               <button className="submit-button" onClick={handleSubmitReason}>Submit</button>
             </div>
@@ -1166,6 +1322,7 @@ const fetchPlanStateWiseCount = async () => {
         onClick={() => {
           handleCardClick('Total');
           fetchTotalWtgCount();
+          fetchTotalStateWiseCount();
         }}
       >
         <div className="flex justify-between">
@@ -1186,6 +1343,7 @@ const fetchPlanStateWiseCount = async () => {
         onClick={() => {
           handleCardClick('Planned');
           fetchTotalPlannedData();
+          fetchTotalPlannedStateWiseCount();
         }}
       >
         <div className="flex justify-between">
@@ -1205,7 +1363,10 @@ const fetchPlanStateWiseCount = async () => {
         className={`card open-card ${selectedCard === 'Open' ? 'active' : ''}`}
         onClick={() => {
           handleCardClick('Open');
-          fetchOpenStateWiseCount();
+     //     fetchOpenStateWiseCount();
+          fetchTotalOpenData();
+          fetchTotalOpenStateWiseCount();
+          
         }}
       >
         <div className="flex justify-between">
@@ -1225,7 +1386,9 @@ const fetchPlanStateWiseCount = async () => {
         className={`card completed ${selectedCard === 'Completed' ? 'active' : ''}`}
         onClick={() => {
           handleCardClick('Completed');
-          fetchCompletedStateWiseCount();
+        //  fetchCompletedStateWiseCount();
+          fetchTotalCompletedData();
+          fetchTotalCompletedStateWiseCount();
         }}
       >
         <div className="flex justify-between">
@@ -1245,7 +1408,8 @@ const fetchPlanStateWiseCount = async () => {
         className={`card grace ${selectedCard === 'Grace' ? 'active' : ''}`}
         onClick={() => {
           handleCardClick('Grace');
-          fetchOutOfGraceStateWiseCount();
+          fetchTotalCompletedOutOfGraceData();
+          fetchTotalOutOfGraceStateWiseCount();
         }}
       >
         <div className="flex justify-between">
@@ -1445,11 +1609,11 @@ const fetchPlanStateWiseCount = async () => {
             </th> 
 
             <th>Status</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
+            {selectedCard !== 'Open' && <th>Start Date</th>}
+            {selectedCard !== 'Open' && <th>End Date</th>}
                     <th>Order Type</th>
                     <th>PM Start Date</th>
-                    <th>Reason</th>
+                    {selectedCard === 'Open' && <th>Reason</th>}
                     <th>Delays</th>
           </tr>
         </thead>
@@ -1461,11 +1625,18 @@ const fetchPlanStateWiseCount = async () => {
               <td>{row.CRM_ORDERH}</td>
               {/* Add other rows here */}
               <td>{row.ZTEXT1}</td> {/* Assuming this is the status */}
-      <td>{row.ZACTSTDT}</td>
-      <td>{row.ZACTENDT}</td>
+              {selectedCard !== 'Open' && <td>{row.ZACTSTDT}</td>} {/* Start Date */}
+              {selectedCard !== 'Open' && <td>{row.ZACTENDT}</td>} {/* End Date */}
       <td>{row.ZEXT_RNO}</td> {/* Adjust if needed */}
       <td>{row.ZREQ_SDAT}</td>
-      <td>{row.reason ? row.reason : <button onClick={() => openModal(row.CRM_ORDERH)}>Add Reason</button>}</td>
+      {selectedCard === 'Open' && (
+        <td>
+          {row.Reason ? row.Reason : (
+             <button onClick={() => openModal(row.CRM_ORDERH, row.FUNCT_LOC)}>Add Reason</button>
+          )}
+        </td>
+        //<td>{row.Reason}</td>
+      )}
       <td>{getDelayChip(row.delay)}</td> {/* Define getDelayChip function to render delays */}
             </tr>
           ))}

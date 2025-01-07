@@ -40,17 +40,20 @@ const Login = ({ setAuth }) => {
             document.cookie = `designation=${encodeURIComponent(data.Department)}; path=/`;
 
             if (data.IsActive) { // Check if IsActive is true
-                const { DomainId, Name } = data; // Extract DomainId and Name
+               // const { DomainId, Name } = data; // Extract DomainId and Name
+
+                const { DomainId, Name, EmailId } = data; // Extract DomainId and Name
 
                 // Log the data to be sent to checkAdmin
                 console.log('Data sent to checkAdmin:', {
                     DomainId,
-                    Name,
+                    Name, 
+                    EmailId,
                 });
 
                 // Make a GET request to checkAdmin with query parameters
                 // const adminResponse = await fetch(`http://localhost:224/api/checkAdmin?DomainId=${DomainId}&Name=${encodeURIComponent(Name)}`);
-                const adminResponse = await fetch(`${BASE_URL}/api/checkAdmin?DomainId=${DomainId}&Name=${encodeURIComponent(Name)}`);
+                const adminResponse = await fetch(`${BASE_URL}/api/checkAdmin?DomainId=${DomainId}&Name=${encodeURIComponent(Name)}&EmailId=${encodeURIComponent(EmailId)}`);
 
                 if (adminResponse.ok) {
                     const adminData = await adminResponse.json();
@@ -60,15 +63,17 @@ const Login = ({ setAuth }) => {
                     if (adminData.checkAdmin) { // Check if checkAdmin is true
                         // Set cookies for name and id
                         document.cookie = `name=${encodeURIComponent(adminData.name)}; path=/`;
-                        document.cookie = `id=${adminData.id}; path=/`;
+                        // document.cookie = `id=${adminData.id}; path=/`;
+                        document.cookie = `adminId=${adminData.id}; path=/`;
                         document.cookie = `access=${adminData.access}; path=/`;
+                        document.cookie = `adminEmail=${adminData.email}; path=/`;
 
                         // setAuth(true);
                         navigate('/Home'); // Redirect to admin home if applicable
                     } else {
                         // If checkAdmin is false, send request to checkUser.js
                         // const userResponse = await fetch(`http://localhost:224/api/checkUser?DomainId=${DomainId}`);
-                        const userResponse = await fetch(`${BASE_URL}/api/checkUser?DomainId=${DomainId}`);
+                        const userResponse = await fetch(`${BASE_URL}/api/checkUser?DomainId=${DomainId}&Name=${encodeURIComponent(Name)}&EmailId=${encodeURIComponent(EmailId)}`);
                         
                         if (userResponse.ok) {
                             const userData = await userResponse.json();
@@ -78,12 +83,14 @@ const Login = ({ setAuth }) => {
                             // setAuth(true);
                                                   // Set cookies for name and id
                         document.cookie = `name=${encodeURIComponent(userData.name)}; path=/`;
-                        document.cookie = `id=${userData.id}; path=/`;
+                        // document.cookie = `id=${userData.id}; path=/`;
+                        document.cookie = `userId=${userData.id}; path=/`;
                         document.cookie = `access=${userData.access}; path=/`;
                         document.cookie = `domain_id=${userData.domain_id}; path=/`;
                         document.cookie = `state=${userData.state}; path=/`;
                         document.cookie = `area=${userData.area}; path=/`;
                         document.cookie = `site=${userData.site}; path=/`;
+                        document.cookie = `email=${userData.email}; path=/`;
 
                             navigate('/Home_user'); // Redirect to normal home if user is not admin
                         } else {

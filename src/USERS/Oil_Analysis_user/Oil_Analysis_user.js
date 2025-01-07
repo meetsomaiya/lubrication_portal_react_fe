@@ -7,6 +7,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // Import specific icons from the solid icon set
 import { faFilter } from "@fortawesome/free-solid-svg-icons";
 
+import * as XLSX from 'xlsx';
+
 
 const OilAnalysisTableUser = () => {
   // const orderData = [
@@ -46,60 +48,70 @@ const OilAnalysisTableUser = () => {
 
   const [searchQuery9963, setSearchQuery9963] = useState('');
   
+  
 
-  const handleOpenFilterModal9963 = (column) => {
-    const uniqueValues = [...new Set(modalData.map((row) => row[column]))].sort();
-    setFilterColumn9963(column);
-    setFilterOptions9963(uniqueValues);
-    setOriginalFilterOptions9963(uniqueValues); // Save the original values for reset
-    setSelectedFilters9963((prev) => ({
-      ...prev,
-      [column]: selectedFilters9963[column] || [],
-    }));
-    setFilterModalOpen9963(true);
-  };
-  
-  const handleSearchChange9963 = (event) => {
-    const query = event.target.value;
-    setSearchQuery9963(query);
-  
-    if (query === '') {
-      // If search is cleared, reset to the original options
-      setFilterOptions9963(originalFilterOptions9963);
-    } else {
-      // Filter the options based on the search query
-      const filteredOptions = originalFilterOptions9963.filter(option =>
-        option.toLowerCase().includes(query.toLowerCase())
-      );
-      setFilterOptions9963(filteredOptions);
-    }
-  };
-  
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
-  
+ 
   const filteredOptions = searchQuery9963
     ? filterOptions9963.filter((option) =>
         option.toLowerCase().includes(searchQuery9963.toLowerCase())
       )
     : filterOptions9963;
-  
-  const handleCheckboxChange9963 = (option) => {
-    setSelectedFilters9963((prev) => ({
-      ...prev,
-      [filterColumn9963]: prev[filterColumn9963]?.includes(option)
-        ? prev[filterColumn9963].filter((item) => item !== option)
-        : [...(prev[filterColumn9963] || []), option],
-    }));
-  };
-  
+ 
+    const handleOpenFilterModal9963 = (column) => {
+      setFilterColumn9963(column);
+      const options = generateFilterOptions(modalData, column);
+      setFilterOptions9963(options);
+      setFilterModalOpen9963(true);
+    };
+    
+    const handleSearchChange9963 = (event) => {
+      const query = event.target.value.toLowerCase();
+      setSearchQuery9963(query);
+      const options = generateFilterOptions(modalData, filterColumn9963).filter((option) =>
+        option.toLowerCase().includes(query)
+      );
+      setFilterOptions9963(options);
+    };
+    
+    const handleCheckboxChange9963 = (option) => {
+      const mappedKey = headerToKeyMap[filterColumn9963] || filterColumn9963;
+    
+      // Ensure the selectedFilters9963 state aligns with available filter options
+      const newFilters = { ...selectedFilters9963 };
+    
+      // Initialize or update the filter array for the specific column
+      if (!newFilters[mappedKey]) {
+        newFilters[mappedKey] = [];
+      }
+    
+      // Add or remove the selected option
+      if (newFilters[mappedKey].includes(option)) {
+        newFilters[mappedKey] = newFilters[mappedKey].filter((item) => item !== option);
+      } else if (filterOptions9963.includes(option)) {
+        // Only add the option if it's a valid filter option
+        newFilters[mappedKey].push(option);
+      }
+    
+      setSelectedFilters9963(newFilters);
+    };
+    
+
+    const generateFilterOptions = (data, column) => {
+      const mappedKey = headerToKeyMap[column] || column;
+      return [...new Set(data.map((item) => item[mappedKey]))].filter(Boolean); // Unique and non-empty options
+    };
+    
+ 
   const applyFilters9963 = () => {
     let filteredData = modalData;
     Object.keys(selectedFilters9963).forEach((column) => {
+      const mappedKey = headerToKeyMap[column] || column; // Use the mapped key or fallback to the column
       if (selectedFilters9963[column].length > 0) {
         filteredData = filteredData.filter((row) =>
-          selectedFilters9963[column].includes(row[column])
+          selectedFilters9963[column].includes(row[mappedKey])
         );
       }
     });
@@ -107,6 +119,7 @@ const OilAnalysisTableUser = () => {
     setFilterModalOpen9963(false);
   };
   
+ 
   const resetFilters9963 = () => {
     setSelectedFilters9963({});
     setSearchQuery9963(''); // Clear the search query
@@ -168,10 +181,13 @@ const getCookie = (cookieName) => {
 // Usage Example
 const domainId = getCookie("domain_id");
 const userName = getCookie("name");
+const state = getCookie("state");
 
 console.log("Retrieved Cookies:");
 console.log("Domain ID:", domainId);
 console.log("User Name:", userName);
+console.log("State:", state);
+
 
 
 
@@ -191,6 +207,9 @@ console.log("User Name:", userName);
           console.error('Error fetching financial years:', error);
         }
       };
+
+     
+      
   
       // Fetch order types on component mount
       const fetchOrderTypes = async () => {
@@ -367,6 +386,8 @@ console.log("User Name:", userName);
         }
       }
     };
+
+    
   
     const fetchDataForGBOilChange = async (event) => {
       const year = event.target.value;
@@ -817,7 +838,16 @@ console.log("User Name:", userName);
       }
     };
   
-    
+      const downloadTableAsExcel = () => {
+        // Get the table element by its ID
+        const table = document.getElementById('tbl7997');
+      
+        // Create a new workbook
+        const wb = XLSX.utils.table_to_book(table, { sheet: "Sheet1" });
+      
+        // Trigger download of the Excel file
+        XLSX.writeFile(wb, "table_data.xlsx");
+      };
   
     const fetchDataForPendingTeco = async (event) => {
       const year = event.target.value;
@@ -976,7 +1006,36 @@ console.log("User Name:", userName);
     };
     
     
-
+    const headerToKeyMap = {
+      "Order No": "Order No",
+      "Function Loc": "Function Loc",
+      "Issue": "Issue",
+      "Return": "Return",
+      "Return Percentage": "Return Percentage",
+      "Plant": "Plant",
+      "State": "State",
+      "Area": "Area",
+      "Site": "Site",
+      "Material": "Material",
+      "Storage Location": "Storage Location",
+      "Move Type": "Move Type",
+      "Material Document": "Material Document",
+      "Description": "Description",
+      "Val Type": "Val Type",
+      "Posting Date": "Posting Date",
+      "Entry Date": "Entry Date",
+      "Quantity": "Quantity",
+      "Order": "Order",
+      "Order Type": "Order Type",
+      "Component": "Component",
+      "WTG Model": "WTG Model",
+      "Current Oil Change Date": "Current Oil Change Date",
+      "State Engineering Head": "stateEnggHead",
+      "Area Incharge": "areaIncharge",
+      "Site Incharge": "siteIncharge",
+      "State PMO": "statePMO",
+      "Order Status": "Order Status",
+    };
 
     // Mapping of order types to their respective API endpoints
 const orderTypeApiMap = {
@@ -1046,13 +1105,113 @@ const handleOrderTypeClick = async (orderType) => {
     }
   }, []);
 
+  const handleSegregatedFileDownload = async () => {
+    // Ensure a financial year is selected
+    if (!selectedYear) {
+      alert("Please select a financial year.");
+      return;
+    }
+  
+    console.log("Retrieved Cookies:");
+    console.log("State:", state);
+    console.log("Financial Year:", selectedYear);
+  
+    // Prepare the query parameters
+    const queryParams = new URLSearchParams({
+      state,
+      financialYear: selectedYear,
+    });
+  
+    // const apiUrl = `http://localhost:224/api/download_segregated_oil_analysis_file_user?${queryParams}`;
+  const apiUrl = `${BASE_URL}/api/download_segregated_oil_analysis_file_user?${queryParams}`
 
+    console.log("Data sent to API via GET:", queryParams.toString());
+  
+    setLoading(true); // Show preloader
+  
+    try {
+      const response = await fetch(apiUrl, {
+        method: "GET",
+      });
+  
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `segregated_file_${selectedYear}.xlsx`; // Use selectedYear in filename
+        link.click();
+        console.log("File downloaded successfully.");
+      } else {
+        console.error("Failed to download the file. Status:", response.status);
+      }
+    } catch (error) {
+      console.error("Error during API request:", error);
+    } finally {
+      setLoading(false); // Hide preloader after completion
+    }
+  };
+  
+
+  const handleConsolidatedFileDownload = async () => {
+    // Ensure a financial year is selected
+    if (!selectedYear) {
+      alert("Please select a financial year.");
+      return;
+    }
+  
+    console.log("Retrieved Cookies:");
+    console.log("State:", state);
+    console.log("Financial Year:", selectedYear);
+  
+    // Prepare the query parameters
+    const queryParams = new URLSearchParams({
+      state,
+      financialYear: selectedYear,
+    });
+  
+    // const apiUrl = `http://localhost:224/api/download_consolidated_file_user?${queryParams}`;
+    const apiUrl = `${BASE_URL}/api/download_consolidated_file_user?${queryParams}`;
+  
+    console.log("Data sent to API via GET:", queryParams.toString());
+  
+    setLoading(true); // Show preloader
+  
+    try {
+      const response = await fetch(apiUrl, {
+        method: "GET",
+      });
+  
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `consolidated_file_${selectedYear}.xlsx`; // Use selectedYear in filename
+        link.click();
+        console.log("File downloaded successfully.");
+      } else {
+        console.error("Failed to download the file. Status:", response.status);
+      }
+    } catch (error) {
+      console.error("Error during API request:", error);
+    } finally {
+      setLoading(false); // Hide preloader after completion
+    }
+  };
+  
+  
   
   return (
     <div className="container997user">
       <div className="buttonContainer997user">
-        <button id="downloadSegregatedFile997user">Download Segregated File</button>
-        <button id="downloadConsolidatedFile997user">Download Consolidated File</button>
+      <button id="downloadSegregatedFile997user" onClick={handleSegregatedFileDownload}>
+        Download Segregated File
+      </button>
+      <button id="downloadConsolidatedFile997user" onClick={handleConsolidatedFileDownload}>
+  Download Consolidated File
+</button>
+
       </div>
 
       <div className="dropdownContainer997user">
@@ -1149,56 +1308,67 @@ const handleOrderTypeClick = async (orderType) => {
 {showModal && (
   <div className="modal-7997user">
     <div className="modal-content-7997user">
-      <button onClick={() => setShowModal(false)}>Close</button>
+    <div className="btn-content-7997">
+           {/* Display the selected order type dynamically */}
+           {clickedOrderType && <h1 className="order-type-heading-7997">{clickedOrderType}</h1>}
+           <button
+  id="download-excel"
+  onClick={() => downloadTableAsExcel()}
+>
+  Download Excel
+</button>
+
+  <button id="closebtn" onClick={() => setShowModal(false)}>Close</button>
+</div>
       {modalData && (
         <div className="data-table-wrapper-7997">
-      <table className="data-table-7997user" id="tbl7997">
-        <thead>
-          <tr>
-            {[
-              "Order No",
-              "Function Loc",
-              "Issue",
-              "Return",
-              "Return Percentage",
-              "Plant",
-              "State",
-              "Area",
-              "Site",
-              "Material",
-              "Storage Location",
-              "Move Type",
-              "Material Document",
-              "Description",
-              "Val Type",
-              "Posting Date",
-              "Entry Date",
-              "Quantity",
-              "Order",
-              "Order Type",
-              "Component",
-              "WTG Model",
-              "Current Oil Change Date",
-              "State Engineering Head",
-              "Area Incharge",
-              "Site Incharge",
-              "State PMO",
-              "Order Status",
-              "Reason",
-              "Action",
-            ].map((header, index) => (
-              <th key={index}>
-                {header}{" "}
-                <FontAwesomeIcon
-                  icon={faFilter}
-                  className="filter-icon-9963"
-                  onClick={() => handleOpenFilterModal9963(header)}
-                />
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
+<table className="data-table-7997user" id="tbl7997">
+  <thead>
+    <tr>
+      {[
+        "Order No",
+        "Function Loc",
+        "Issue",
+        "Return",
+        "Return Percentage",
+        "Plant",
+        "State",
+        "Area",
+        "Site",
+        "Material",
+        "Storage Location",
+        "Move Type",
+        "Material Document",
+        "Description",
+        "Val Type",
+        "Posting Date",
+        "Entry Date",
+        "Quantity",
+        "Order",
+        "Order Type",
+        "Component",
+        "WTG Model",
+        "Current Oil Change Date",
+        "State Engineering Head",
+        "Area Incharge",
+        "Site Incharge",
+        "State PMO",
+        "Order Status",
+        // Conditionally render the "Reason" and "Action" headers if the order type is 'dispute'
+        ...(clickedOrderType === 'dispute' ? ["Reason", "Action"] : [])
+      ].map((header, index) => (
+        <th key={index}>
+          {header}{" "}
+          <FontAwesomeIcon
+            icon={faFilter}
+            className="filter-icon-9963"
+            onClick={() => handleOpenFilterModal9963(header)}
+          />
+        </th>
+      ))}
+    </tr>
+  </thead>
+  <tbody>
     {modalData &&
       modalData.map((item, index) => (
         <tr key={index}>
@@ -1230,115 +1400,111 @@ const handleOrderTypeClick = async (orderType) => {
           <td>{item["siteIncharge"]}</td>
           <td>{item["statePMO"]}</td>
           <td>{item["Order Status"]}</td>
+
+          {/* Conditionally render "Reason" and "Action" columns if the order type is 'dispute' */}
           {clickedOrderType === 'dispute' && (
-                    <>
-            <td>
-            <select
-  value={item["reason"] || "Select"}
-  onChange={(e) => handleReasonChange(e, index)}
->
-  {dropdownOptions.map((option, idx) => (
-    <option key={idx} value={option}>
-      {option}
-    </option>
-  ))}
-</select>
+            <>
+              <td>
+                <select
+                  value={item["reason"] || "Select"}
+                  onChange={(e) => handleReasonChange(e, index)}
+                >
+                  {dropdownOptions.map((option, idx) => (
+                    <option key={idx} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
 
+                {item.reason === "Other" && (
+                  <div>
+                    <input
+                      type="text"
+                      placeholder="Enter custom reason"
+                      value={customReasons[index] || ""}
+                      onChange={(e) => {
+                        const updatedCustomReasons = [...customReasons];
+                        updatedCustomReasons[index] = e.target.value;
+                        setCustomReasons(updatedCustomReasons);
+                      }}
+                    />
+                    <button onClick={() => handleAddCustomReason(index)}>
+                      OK
+                    </button>
+                  </div>
+                )}
+              </td>
 
-              {item.reason === "Other" && (
-              <div>
-                <input
-                  type="text"
-                  placeholder="Enter custom reason"
-                  value={customReasons[index] || ""}
-                  onChange={(e) => {
-                    const updatedCustomReasons = [...customReasons];
-                    updatedCustomReasons[index] = e.target.value;
-                    setCustomReasons(updatedCustomReasons);
-                  }}
-                />
-                <button onClick={() => handleAddCustomReason(index)}>
-                  OK
-                </button>
-              </div>
-    )}
-            </td>
-            {/* <td>
+              <td>
                 <button
-                  // onClick={() => handleSaveReason(index)}
+                  onClick={() => handleSaveReason(index)}
                   className="save-button"
                 >
                   Save
                 </button>
-              </td> */}
-
-                    <button
-                      onClick={() => handleSaveReason(index)}
-                      className="save-button"
-                    >
-                      Save
-                    </button>
-
+              </td>
             </>
-            
           )}
         </tr>
       ))}
   </tbody>
 </table>
 
-      {isFilterModalOpen9963 && (
-        <div className="filter-modal-9963">
-          <div className="filter-modal-content-9963">
-            <h3>Filter by {filterColumn9963}</h3>
 
-        {/* Search Bar */}
-        <input
-          type="text"
-          placeholder="Search options..."
-          value={searchQuery9963}
-          onChange={handleSearchChange9963}
-          className="search-bar"
-        />
-            <div className="filter-options-9963">
-              {filterOptions9963.map((option, index) => (
-                <div key={index} className="filter-option-9963">
-                  <input
-                    type="checkbox"
-                    id={`filter-checkbox-9963-${index}`}
-                    checked={
-                      selectedFilters9963[filterColumn9963]?.includes(option) ||
-                      false
-                    }
-                    onChange={() => handleCheckboxChange9963(option)}
-                  />
-                  <label htmlFor={`filter-checkbox-9963-${index}`}>
-                    {option || "(Empty)"}
-                  </label>
+{isFilterModalOpen9963 && (
+            <div className="filter-modal-9963">
+              <div className="filter-modal-content-9963">
+                <h3>Filter by {filterColumn9963}</h3>
+     
+            {/* Search Bar */}
+            <input
+              type="text"
+              placeholder="Search options..."
+              value={searchQuery9963}
+              onChange={handleSearchChange9963}
+              className="search-bar"
+            />
+<div className="filter-options-9963">
+  {filterOptions9963.map((option, index) => (
+    <div key={index} className="filter-option-9963">
+      <input
+        type="checkbox"
+        id={`filter-checkbox-9963-${index}`}
+        checked={
+          selectedFilters9963[headerToKeyMap[filterColumn9963] || filterColumn9963]?.includes(option) || false
+        }
+        onChange={() => handleCheckboxChange9963(option)}
+      />
+      <label htmlFor={`filter-checkbox-9963-${index}`}>
+        {option || "(Empty)"}
+      </label>
+    </div>
+  ))}
+</div>
+
+                <div className="filter-buttons-9963">
+                  <button onClick={applyFilters9963} className="apply-button-9963">
+                    Apply Filters
+                  </button>
+                  <button onClick={resetFilters9963} className="reset-button-9963">
+                    Reset Filters
+                  </button>
                 </div>
-              ))}
+              </div>
             </div>
-            <div className="filter-buttons-9963">
-              <button onClick={applyFilters9963} className="apply-button-9963">
-                Apply Filters
-              </button>
-              <button onClick={resetFilters9963} className="reset-button-9963">
-                Reset Filters
-              </button>
+          )}
+     
             </div>
+          )}
+        </div>
+      </div>
+    )}
+     
+     
+     
           </div>
         </div>
-      )}
-
-        </div>
-      )}
-    </div>
-  </div>
-)}
-
-      </div>
-    </div>
-  );
-};
-
-export default OilAnalysisTableUser;
+      );
+    };
+     
+    export default OilAnalysisTableUser;

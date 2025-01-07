@@ -32,10 +32,11 @@ function Lubrication_user({ reportData }) {
         );
     };
 
-    const handleDownload = () => {
-        const worksheet = XLSX.utils.json_to_sheet(filteredData);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "LubricationData");
+ const handleDownload = () => {
+        const table = document.querySelector("table");
+        const workbook = XLSX.utils.table_to_book(table, { sheet: "LubricationData" });
+
+        // Trigger the download
         XLSX.writeFile(workbook, "Lubrication_Report.xlsx");
     };
 

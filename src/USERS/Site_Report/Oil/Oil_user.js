@@ -30,9 +30,10 @@ function Oil_user({ reportData }) {
     };
 
     const handleDownload = () => {
-        const worksheet = XLSX.utils.json_to_sheet(filteredData);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "OilData");
+        const table = document.querySelector("table");
+        const workbook = XLSX.utils.table_to_book(table, { sheet: "OilData" });
+
+        // Trigger the download
         XLSX.writeFile(workbook, "Oil_Report.xlsx");
     };
 

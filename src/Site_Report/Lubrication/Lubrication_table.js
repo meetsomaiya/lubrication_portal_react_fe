@@ -2,7 +2,7 @@ import React from 'react';
 import excel_iconpng from '../../assets/excel - Copy.jpg';
 import './Lubrication_table.css';
 import * as XLSX from 'xlsx';
-import { BASE_URL } from '../../config'
+import { BASE_URL } from '../../config';
 
 function Lubrication({ reportData }) {
     // Check if reportData is null or undefined
@@ -34,9 +34,10 @@ function Lubrication({ reportData }) {
     };
 
     const handleDownload = () => {
-        const worksheet = XLSX.utils.json_to_sheet(filteredData);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "LubricationData");
+        const table = document.querySelector("table");
+        const workbook = XLSX.utils.table_to_book(table, { sheet: "LubricationData" });
+
+        // Trigger the download
         XLSX.writeFile(workbook, "Lubrication_Report.xlsx");
     };
 
