@@ -1,24 +1,19 @@
 import React from 'react';
 import excel_iconpng from '../../assets/excel - Copy.jpg';
-import './Lubrication_table.css';
+import './Oil.css'; // Create a separate CSS file for styling
 import * as XLSX from 'xlsx';
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
 
-function Lubrication_user({ reportData }) {
+function Oil({ reportData }) {
     // Check if reportData is null or undefined
     if (!reportData) {
         return <div>Loading...</div>; // You can replace this with a spinner or message
     }
 
-    // Filter the data based on the ZEXT_RNO conditions
+    // Filter the data based on the ZEXT_RNO conditions for Oil
     const filteredData = reportData.filter(item => (
-        item.ZEXT_RNO.startsWith('Q1_LUB_') ||
-        item.ZEXT_RNO.startsWith('Q2_LUB_') ||
-        item.ZEXT_RNO.startsWith('Q3_LUB_') ||
-        item.ZEXT_RNO.startsWith('Q4_LUB_') ||
-        item.ZEXT_RNO.startsWith('HALF1_LUB_') ||
-        item.ZEXT_RNO.startsWith('HALF2_LUB_')
+        item.ZEXT_RNO.startsWith('YD_OIL_') || 
+        item.ZEXT_RNO.startsWith('PD_OIL_') || 
+        item.ZEXT_RNO.startsWith('HYD_OIL_')
     ));
 
     const getCellClass = (percentage) => {
@@ -34,53 +29,25 @@ function Lubrication_user({ reportData }) {
         );
     };
 
-    const handleDownloadExcel = () => {
+    const handleDownload = () => {
         const table = document.querySelector("table");
-        const workbook = XLSX.utils.table_to_book(table, { sheet: "LubricationData" });
+        const workbook = XLSX.utils.table_to_book(table, { sheet: "OilData" });
 
         // Trigger the download
-        XLSX.writeFile(workbook, "Lubrication_Report.xlsx");
-    };
-
-    const handleDownloadPDF = () => {
-        const doc = new jsPDF();
-        const table = document.querySelector("table");
-
-        // Extract table headers
-        const headers = Array.from(table.querySelectorAll('thead tr th')).map(th => th.innerText);
-
-        // Extract table rows
-        const rows = Array.from(table.querySelectorAll('tbody tr')).map(row => {
-            return Array.from(row.querySelectorAll('td')).map(cell => cell.innerText);
-        });
-
-        // Add title
-        doc.text("Lubrication Report", 14, 10);
-
-        // Add the table to the PDF
-        doc.autoTable({
-            head: [headers],
-            body: rows,
-            startY: 20
-        });
-
-        doc.save("Lubrication_Report.pdf");
+        XLSX.writeFile(workbook, "Oil_Report.xlsx");
     };
 
     return (
-        <div className='site_comntainer'>
+        <div className='site_container'>
             <div className="legend-download-container">
                 <div className="legend">
                     <span className="legend-item below-80">Below 80%</span>
                     <span className="legend-item between-80-95">80% to 95%</span>
                     <span className="legend-item above-95">95% to 100%</span>
                 </div>
-                <button className="download-button" onClick={handleDownloadExcel}>
+                <button className="download-button" onClick={handleDownload}>
                     <img src={excel_iconpng} alt="Excel Icon" className="excel-icon" />
-                    Download Excel
-                </button>
-                <button className="download-button" onClick={handleDownloadPDF}>
-                    Download PDF
+                    Download
                 </button>
             </div>
 
@@ -116,4 +83,4 @@ function Lubrication_user({ reportData }) {
     );
 }
 
-export default Lubrication_user;
+export default Oil;

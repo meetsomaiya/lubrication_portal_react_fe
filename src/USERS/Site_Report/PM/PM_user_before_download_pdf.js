@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
 import excel_iconpng from '../../assets/excel - Copy.jpg';
 import './PM.css';
 
-function Site_Report({ reportData }) {
+function PM_user({ reportData }) {
     const [data, setData] = useState([]);
 
     useEffect(() => {
@@ -67,38 +65,13 @@ function Site_Report({ reportData }) {
         );
     };
 
-    const handleDownloadExcel = () => {
+    const handleDownload = () => {
         const worksheet = XLSX.utils.json_to_sheet(data);
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, "Site Report");
         const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
         const dataBlob = new Blob([excelBuffer], { type: "application/octet-stream" });
         saveAs(dataBlob, "PM_report.xlsx");
-    };
-
-    const handleDownloadPDF = () => {
-        const doc = new jsPDF();
-        const table = document.querySelector("table");
-
-        // Extract table headers
-        const headers = Array.from(table.querySelectorAll('thead tr th')).map(th => th.innerText);
-
-        // Extract table rows
-        const rows = Array.from(table.querySelectorAll('tbody tr')).map(row => {
-            return Array.from(row.querySelectorAll('td')).map(cell => cell.innerText);
-        });
-
-        // Add title
-        doc.text("Site Report", 14, 10);
-
-        // Add the table to the PDF
-        doc.autoTable({
-            head: [headers],
-            body: rows,
-            startY: 20
-        });
-
-        doc.save("PM_Report.pdf");
     };
 
     return (
@@ -109,12 +82,9 @@ function Site_Report({ reportData }) {
                     <span className="legend-item between-80-95">80% to 95%</span>
                     <span className="legend-item above-95">95% to 100%</span>
                 </div>
-                <button className="download-button" onClick={handleDownloadExcel}>
+                <button className="download-button" onClick={handleDownload}>
                     <img src={excel_iconpng} alt="Excel Icon" className="excel-icon" />
-                    Download Excel
-                </button>
-                <button className="download-button" onClick={handleDownloadPDF}>
-                    Download PDF
+                    Download
                 </button>
             </div>
 
@@ -150,4 +120,4 @@ function Site_Report({ reportData }) {
     );
 }
 
-export default Site_Report;
+export default PM_user;

@@ -67,9 +67,10 @@ const Login = ({ setAuth }) => {
                         document.cookie = `adminId=${adminData.id}; path=/`;
                         document.cookie = `access=${adminData.access}; path=/`;
                         document.cookie = `adminEmail=${adminData.email}; path=/`;
+                        document.cookie = `adminDomain=${adminData.domain_id}; path=/`;
 
                         // setAuth(true);
-                        navigate('/Home'); // Redirect to admin home if applicable
+                       navigate('/Home'); // Redirect to admin home if applicable
                     } else {
                         // If checkAdmin is false, send request to checkUser.js
                         // const userResponse = await fetch(`http://localhost:224/api/checkUser?DomainId=${DomainId}`);
@@ -91,6 +92,9 @@ const Login = ({ setAuth }) => {
                         document.cookie = `area=${userData.area}; path=/`;
                         document.cookie = `site=${userData.site}; path=/`;
                         document.cookie = `email=${userData.email}; path=/`;
+
+                        // Ensure adminId is null before redirecting
+        document.cookie = `adminId=null; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`; // Remove adminId
 
                             navigate('/Home_user'); // Redirect to normal home if user is not admin
                         } else {

@@ -5,7 +5,7 @@ import cancelIcon from '../assets/close-line-icon.png';
 import clearIcon from '../assets/filter-remove-icon.png';
 import excel_iconpng from '../assets/excel - Copy.jpg';
 // import WTG_Wise_Planning from '../WTG_wise/WTG_Wise_Planning';
-
+import moment from 'moment-timezone';
 import { BASE_URL } from '../../config'
 import * as XLSX from 'xlsx';
 
@@ -43,6 +43,131 @@ const getDelayChip = (delay) => {
 };
 
 const Functional_Loc_user = () => {
+
+                  let entryTime = null;  // Store the entry time (when user stepped into the page)
+                  let exitTime = null;   // Store the exit time (when user left the page)
+                  
+                  const sendCookiesToBackend = async () => {
+                    const cookies = document.cookie.split(';').reduce((acc, cookie) => {
+                      const [key, value] = cookie.trim().split('=');
+                      acc[key] = decodeURIComponent(value);
+                      return acc;
+                    }, {});
+                  
+                    // Get the current pathname
+                    const pathname = window.location.pathname;
+                  
+                    // Get the current time in IST format
+                    const currentTime = moment().tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ss');
+                  
+                    // Prepare the data to send to the backend
+                    const cookieData = {
+                      name: cookies.name || 'Not Set',
+                      userId: cookies.userId || 'Not Set',
+                      access: cookies.access || 'Not Set',
+                      adminEmail: cookies.adminEmail || 'Not Set',
+                      userId: cookies.userId || 'Not Set',
+                      domain_id: cookies.adminDomain || 'Not Set',
+                      state: cookies.state || 'Not Set',
+                      area: cookies.area || 'Not Set',
+                      site: cookies.site || 'Not Set',
+                      email: cookies.email || 'Not Set',
+                      pathname: pathname,  // Add the pathname to the data
+                      entryTime: entryTime, // Include entry time (when user stepped in)
+                      exitTime: exitTime,   // Include exit time (when user leaves)
+                    };
+                  
+                    console.log('Sending the following cookie data to backend:', cookieData);
+                  
+                    try {
+                      // Send data to the backend's heartbeat API
+                      const response = await fetch('http://localhost:224/api/heartbeat', {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(cookieData),
+                      });
+                  
+                      if (response.ok) {
+                        console.log('Cookie data sent to backend successfully.');
+                      } else {
+                        console.error('Error sending cookie data to backend:', response.status);
+                      }
+                    } catch (error) {
+                      console.error('Failed to send cookie data:', error);
+                    }
+                  };
+                  
+                  useEffect(() => {
+                    // Set entry time when the page loads
+                    entryTime = moment().tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ss');
+                    console.log(`Entry Time (IST): ${entryTime}`);
+                  
+                    // Add event listener for beforeunload (browser close / tab close)
+                    const handleBeforeUnload = () => {
+                      exitTime = moment().tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ss');
+                      console.log(`Exit Time (IST): ${exitTime}`);
+                      sendCookiesToBackend();
+                    };
+                  
+                    window.addEventListener('beforeunload', handleBeforeUnload);
+                  
+                    return () => {
+                      // Clean up the event listener when the component unmounts
+                      window.removeEventListener('beforeunload', handleBeforeUnload);
+                    };
+                  }, []);
+                  
+                  useEffect(() => {
+                    const handlePathChange = () => {
+                      // Capture exit time and send cookies when pathname changes
+                      exitTime = moment().tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ss');
+                      console.log(`Exit Time (IST): ${exitTime}`);
+                      sendCookiesToBackend();
+                    };
+                  
+                    // Listen for changes in the pathname using window.history
+                    const windowHistoryPushState = window.history.pushState;
+                    window.history.pushState = function (...args) {
+                      handlePathChange();
+                      return windowHistoryPushState.apply(this, args);
+                    };
+                  
+                    const windowHistoryReplaceState = window.history.replaceState;
+                    window.history.replaceState = function (...args) {
+                      handlePathChange();
+                      return windowHistoryReplaceState.apply(this, args);
+                    };
+                  
+                    return () => {
+                      // Reset window.history methods when component unmounts
+                      window.history.pushState = windowHistoryPushState;
+                      window.history.replaceState = windowHistoryReplaceState;
+                    };
+                  }, []);
+                
+                // Call the polling function on mount
+                useEffect(() => {
+                  // Send cookies on page unload and capture exit time
+                  const handleBeforeUnload = (event) => {
+                    exitTime = moment().tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ss');
+                    console.log(`Exit Time (IST): ${exitTime}`);
+                
+                    // Send cookies and exit time to backend when user is leaving the page
+                    sendCookiesToBackend();
+                  };
+                
+                  // Attach event listener for beforeunload
+                  window.addEventListener('beforeunload', handleBeforeUnload);
+                
+                  // Clean up the event listener on component unmount
+                  return () => {
+                    window.removeEventListener('beforeunload', handleBeforeUnload);
+                  };
+                }, []);
+  
+
   const [rows, setRows] = useState(initialRows);
   const [selectedFunctionLoc, setSelectedFunctionLoc] = useState([]);
   const [selectedPlant, setSelectedPlant] = useState([]);

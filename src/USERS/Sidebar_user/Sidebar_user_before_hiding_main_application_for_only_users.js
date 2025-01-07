@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './Sidebar.css';
 import mainIcon from '../assets/main-grid.png';
+
 import homeIcon from '../assets/home.png';
 import siteReportIcon from '../assets/Sitereport.png';
 import planningIcon from '../assets/WTG.png';
@@ -15,7 +16,6 @@ const Sidebar_user = ({ isOpen, toggleSidebar }) => {
     const location = useLocation();
     const navigate = useNavigate();
     const [activeIndex, setActiveIndex] = useState('');
-    const [adminIdFound, setAdminIdFound] = useState(false); // Track if adminId cookie is found
 
     useEffect(() => {
         const path = location.pathname;
@@ -28,23 +28,6 @@ const Sidebar_user = ({ isOpen, toggleSidebar }) => {
         else if (path.includes('corrective-action-user')) setActiveIndex('corrective-action-user');
         else setActiveIndex('Home');
     }, [location]);
-
-    // Function to log and set the adminId cookie state
-    const logAdminIdCookie = () => {
-        const adminId = getCookie('adminId');
-        if (adminId) {
-            console.log(`Admin ID found on sidebaruser: ${adminId}`);
-            setAdminIdFound(true);  // Set state to true if adminId is found
-        } else {
-            console.log('Admin ID cookie not found.');
-            setAdminIdFound(false); // Set state to false if adminId is not found
-        }
-    };
-
-    // UseEffect to log the cookie value on component load
-    useEffect(() => {
-        logAdminIdCookie();
-    }, []); // Empty dependency array to run only once on component mount
 
     // Function to retrieve a cookie by name
     const getCookie = (cookieName) => {
@@ -61,26 +44,11 @@ const Sidebar_user = ({ isOpen, toggleSidebar }) => {
     // Logout function
     const handleLogout = async () => {
         try {
-            // List of cookies to clear
-            const cookiesToClear = [
-                'name',
-                'adminId',
-                'access',
-                'adminEmail',
-                'userId',
-                'domain_id',
-                'state',
-                'area',
-                'site',
-                'email'
-            ];
+            // Set cookies to send to the API
+            document.cookie = `userId=${userId}; path=/`;
+            document.cookie = `name=${encodeURIComponent(userName)}; path=/`;
 
-            // Expire each cookie
-            cookiesToClear.forEach(cookieName => {
-                document.cookie = `${cookieName}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
-            });
-
-            console.log('Specified cookies have been cleared.');
+            console.log({ userId, name: userName });
 
             // Call the logout API
             const response = await fetch('http://localhost:224/api/logout_user', {
@@ -109,18 +77,16 @@ const Sidebar_user = ({ isOpen, toggleSidebar }) => {
     return (
         <div className={`sidebar ${isOpen ? 'open' : 'closed'}`}>
             <ul className="sidebar-menu">
-                {/* Conditionally render Main Application button */}
-                {adminIdFound && (
-                    <div
-                        style={{ backgroundColor: '#009F89', border: '1px solid #009F89' }}
-                        onClick={handleMainApplicationClick}
-                    >
-                        <li>
-                            <img src={mainIcon} alt="Home" className="icon-WTG icon_S" />
-                            {isOpen && <span style={{ color: '#ffffff' }}>Main Application</span>}
-                        </li>
-                    </div>
-                )}
+                {/* Main Application */}
+                <div 
+                    style={{ backgroundColor: '#009F89', border: '1px solid #009F89' }}
+                    onClick={handleMainApplicationClick}
+                >
+                    <li>
+                        <img src={mainIcon} alt="Home" className="icon-WTG icon_S" />
+                        {isOpen && <span style={{ color: '#ffffff' }}>Main Application</span>}
+                    </li>
+                </div>
 
                 {/* Other Links */}
                 <Link to="/Home_user">

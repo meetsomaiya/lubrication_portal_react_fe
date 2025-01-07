@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 import excel_iconpng from '../../assets/excel - Copy.jpg';
 import './PM.css';
 
@@ -65,7 +67,7 @@ function PM_user({ reportData }) {
         );
     };
 
-    const handleDownload = () => {
+    const handleDownloadExcel = () => {
         const worksheet = XLSX.utils.json_to_sheet(data);
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, "Site Report");
@@ -74,17 +76,49 @@ function PM_user({ reportData }) {
         saveAs(dataBlob, "PM_report.xlsx");
     };
 
+    const handleDownloadPDF = () => {
+        const doc = new jsPDF();
+        
+        // Table headers
+        const headers = ["Order Type", "Total Count", "Planned", "Open", "Completed", "Grace Time"];
+        
+        // Table rows
+        const rows = data.map(row => [
+            row.orderType,
+            row.totalCount,
+            row.planned,
+            row.open,
+            row.completed,
+            row.graceTime,
+        ]);
+
+        // Add title to PDF
+        doc.text("PM Report", 14, 10);
+
+        // Add table to the PDF
+        doc.autoTable({
+            head: [headers],
+            body: rows,
+            startY: 20,
+        });
+
+        doc.save("PM_Report.pdf");
+    };
+
     return (
-        <div className='site_comntainer'>
+        <div className='site_container'>
             <div className="legend-download-container">
                 <div className="legend">
                     <span className="legend-item below-80">Below 80%</span>
                     <span className="legend-item between-80-95">80% to 95%</span>
                     <span className="legend-item above-95">95% to 100%</span>
                 </div>
-                <button className="download-button" onClick={handleDownload}>
+                <button className="download-button" onClick={handleDownloadExcel}>
                     <img src={excel_iconpng} alt="Excel Icon" className="excel-icon" />
-                    Download
+                    Download Excel
+                </button>
+                <button className="download-button" onClick={handleDownloadPDF}>
+                    Download PDF
                 </button>
             </div>
 

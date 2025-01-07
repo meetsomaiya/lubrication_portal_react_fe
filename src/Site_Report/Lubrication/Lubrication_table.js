@@ -2,15 +2,15 @@ import React from 'react';
 import excel_iconpng from '../../assets/excel - Copy.jpg';
 import './Lubrication_table.css';
 import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 import { BASE_URL } from '../../config';
 
 function Lubrication({ reportData }) {
-    // Check if reportData is null or undefined
     if (!reportData) {
-        return <div>Loading...</div>; // You can replace this with a spinner or message
+        return <div>Loading...</div>;
     }
 
-    // Filter the data based on the ZEXT_RNO conditions
     const filteredData = reportData.filter(item => (
         item.ZEXT_RNO.startsWith('Q1_LUB_') ||
         item.ZEXT_RNO.startsWith('Q2_LUB_') ||
@@ -33,12 +33,35 @@ function Lubrication({ reportData }) {
         );
     };
 
-    const handleDownload = () => {
+    const handleDownloadExcel = () => {
         const table = document.querySelector("table");
         const workbook = XLSX.utils.table_to_book(table, { sheet: "LubricationData" });
-
-        // Trigger the download
         XLSX.writeFile(workbook, "Lubrication_Report.xlsx");
+    };
+
+    const handleDownloadPDF = () => {
+        const doc = new jsPDF();
+        const table = document.querySelector("table");
+
+        // Extract table headers
+        const headers = Array.from(table.querySelectorAll('thead tr th')).map(th => th.innerText);
+
+        // Extract table rows
+        const rows = Array.from(table.querySelectorAll('tbody tr')).map(row => {
+            return Array.from(row.querySelectorAll('td')).map(cell => cell.innerText);
+        });
+
+        // Add title
+        doc.text("Lubrication Report", 14, 10);
+
+        // Add the table to the PDF
+        doc.autoTable({
+            head: [headers],
+            body: rows,
+            startY: 20
+        });
+
+        doc.save("Lubrication_Report.pdf");
     };
 
     return (
@@ -49,9 +72,12 @@ function Lubrication({ reportData }) {
                     <span className="legend-item between-80-95">80% to 95%</span>
                     <span className="legend-item above-95">95% to 100%</span>
                 </div>
-                <button className="download-button" onClick={handleDownload}>
+                <button className="download-button" onClick={handleDownloadExcel}>
                     <img src={excel_iconpng} alt="Excel Icon" className="excel-icon" />
-                    Download
+                    Download Excel
+                </button>
+                <button className="download-button" onClick={handleDownloadPDF}>
+                    Download PDF
                 </button>
             </div>
 
@@ -71,12 +97,12 @@ function Lubrication({ reportData }) {
                         <tbody>
                             {filteredData.map((row, index) => (
                                 <tr key={index}>
-                                    <td>{row.ZEXT_RNO}</td> {/* Display ZEXT_RNO as Order Type */}
-                                    <td>{renderCellContent(row.total_count, row.total_percentage)}</td> {/* Display total_count */}
-                                    <td>{renderCellContent(row.planned_count, row.planned_percentage)}</td> {/* Display planned_count */}
-                                    <td>{renderCellContent(row.open_count, row.open_percentage)}</td> {/* Display open_count */}
-                                    <td>{renderCellContent(row.completed_count, row.completed_percentage)}</td> {/* Display completed_count */}
-                                    <td>{renderCellContent(row.grace_count, row.grace_percentage)}</td> {/* Display grace_count */}
+                                    <td>{row.ZEXT_RNO}</td>
+                                    <td>{renderCellContent(row.total_count, row.total_percentage)}</td>
+                                    <td>{renderCellContent(row.planned_count, row.planned_percentage)}</td>
+                                    <td>{renderCellContent(row.open_count, row.open_percentage)}</td>
+                                    <td>{renderCellContent(row.completed_count, row.completed_percentage)}</td>
+                                    <td>{renderCellContent(row.grace_count, row.grace_percentage)}</td>
                                 </tr>
                             ))}
                         </tbody>

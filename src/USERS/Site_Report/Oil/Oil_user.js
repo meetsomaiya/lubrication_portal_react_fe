@@ -2,6 +2,8 @@ import React from 'react';
 import excel_iconpng from '../../assets/excel - Copy.jpg';
 import './Oil.css'; // Create a separate CSS file for styling
 import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 function Oil_user({ reportData }) {
     // Check if reportData is null or undefined
@@ -29,12 +31,37 @@ function Oil_user({ reportData }) {
         );
     };
 
-    const handleDownload = () => {
+    const handleDownloadExcel = () => {
         const table = document.querySelector("table");
         const workbook = XLSX.utils.table_to_book(table, { sheet: "OilData" });
 
         // Trigger the download
         XLSX.writeFile(workbook, "Oil_Report.xlsx");
+    };
+
+    const handleDownloadPDF = () => {
+        const doc = new jsPDF();
+        const table = document.querySelector("table");
+
+        // Extract table headers
+        const headers = Array.from(table.querySelectorAll('thead tr th')).map(th => th.innerText);
+
+        // Extract table rows
+        const rows = Array.from(table.querySelectorAll('tbody tr')).map(row => {
+            return Array.from(row.querySelectorAll('td')).map(cell => cell.innerText);
+        });
+
+        // Add title
+        doc.text("Oil Report", 14, 10);
+
+        // Add the table to the PDF
+        doc.autoTable({
+            head: [headers],
+            body: rows,
+            startY: 20
+        });
+
+        doc.save("Oil_Report.pdf");
     };
 
     return (
@@ -45,9 +72,12 @@ function Oil_user({ reportData }) {
                     <span className="legend-item between-80-95">80% to 95%</span>
                     <span className="legend-item above-95">95% to 100%</span>
                 </div>
-                <button className="download-button" onClick={handleDownload}>
+                <button className="download-button" onClick={handleDownloadExcel}>
                     <img src={excel_iconpng} alt="Excel Icon" className="excel-icon" />
-                    Download
+                    Download Excel
+                </button>
+                <button className="download-button" onClick={handleDownloadPDF}>
+                    Download PDF
                 </button>
             </div>
 
