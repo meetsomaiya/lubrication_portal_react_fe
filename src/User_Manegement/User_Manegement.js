@@ -18,8 +18,8 @@ function UserManagement() {
                   return acc;
                 }, {});
               
-                // Get the current pathname
-                const pathname = window.location.pathname;
+  // Get the current pathname when using HashRouter
+  const pathname = window.location.hash.replace(/^#/, '');
               
                 // Get the current time in IST format
                 const currentTime = moment().tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ss');
@@ -45,7 +45,8 @@ function UserManagement() {
               
                 try {
                   // Send data to the backend's heartbeat API
-                  const response = await fetch('http://localhost:224/api/heartbeat', {
+                //   const response = await fetch('http://localhost:224/api/heartbeat', {
+                    const response = await fetch(`${BASE_URL}/api/heartbeat`, {
                     method: 'POST',
                     headers: {
                       'Content-Type': 'application/json',
@@ -130,6 +131,25 @@ function UserManagement() {
                 window.removeEventListener('beforeunload', handleBeforeUnload);
               };
             }, []);
+
+                                  const checkAdminIdAndRedirect = () => {
+                                    const getCookie = (name) => {
+                                      const value = `; ${document.cookie}`;
+                                      const parts = value.split(`; ${name}=`);
+                                      if (parts.length === 2) return parts.pop().split(';').shift();
+                                    };
+                                  
+                                    const adminId = getCookie('adminId'); // Retrieve the adminId from cookies
+                                  
+                                    if (!adminId) {
+                                      // If adminId is not found, redirect to the default route
+                                      window.location.href = '/'; // Redirect to the home page or default route
+                                    }
+                                  };
+                    
+                                  useEffect(() => {
+                                    checkAdminIdAndRedirect(); // Check adminId and redirect if not found
+                                  }, []); // Empty dependency array to ensure this runs only once on mount
             
     const [showAddModal, setShowAddModal] = useState(false);
     const [showUpdateModal, setShowUpdateModal] = useState(false);
@@ -167,7 +187,8 @@ function UserManagement() {
        
      // Fetch users from the API when the component mounts
      useEffect(() => {
-        fetch('http://localhost:224/api/fetch_users')
+        // fetch('http://localhost:224/api/fetch_users')
+        fetch(`${BASE_URL}/api/fetch_users`)
             .then((response) => response.json())
             .then((data) => {
                 if (data.success) {
@@ -204,7 +225,8 @@ function UserManagement() {
     
         // Send the domainId to the backend
         try {
-            const response = await fetch('http://localhost:224/api/delete_user', {
+            // const response = await fetch('http://localhost:224/api/delete_user', {
+                const response = await fetch(`${BASE_URL}/api/delete_user`, {
                 method: 'POST', // Use POST for sending data securely
                 headers: {
                     'Content-Type': 'application/json',
@@ -523,7 +545,8 @@ const removeBubble = (dropdown, valueToRemove) => {
     
         // Send data to the API
         try {
-            const response = await fetch('http://localhost:224/api/register_user', {
+            // const response = await fetch('http://localhost:224/api/register_user', {
+                const response = await fetch(`${BASE_URL}/api/register_user`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -795,7 +818,8 @@ function UpdateModal({ user, onClose, onSave }) {
     
         // Send the data to the backend
         try {
-            const response = await fetch('http://localhost:224/api/update_user_details', {
+            // const response = await fetch('http://localhost:224/api/update_user_details', {
+                const response = await fetch(`${BASE_URL}/api/update_user_details`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -54,8 +54,8 @@ const Functional_Loc_user = () => {
                       return acc;
                     }, {});
                   
-                    // Get the current pathname
-                    const pathname = window.location.pathname;
+  // Get the current pathname when using HashRouter
+  const pathname = window.location.hash.replace(/^#/, '');
                   
                     // Get the current time in IST format
                     const currentTime = moment().tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ss');
@@ -65,9 +65,11 @@ const Functional_Loc_user = () => {
                       name: cookies.name || 'Not Set',
                       userId: cookies.userId || 'Not Set',
                       access: cookies.access || 'Not Set',
-                      adminEmail: cookies.adminEmail || 'Not Set',
+                    //  adminEmail: cookies.adminEmail || 'Not Set',
+                      adminEmail: cookies.email || 'Not Set',
                       userId: cookies.userId || 'Not Set',
-                      domain_id: cookies.adminDomain || 'Not Set',
+                     // domain_id: cookies.adminDomain || 'Not Set',
+                     domain_id: cookies.domain_id || 'Not Set',  // Use the state for domain_id
                       state: cookies.state || 'Not Set',
                       area: cookies.area || 'Not Set',
                       site: cookies.site || 'Not Set',
@@ -81,7 +83,8 @@ const Functional_Loc_user = () => {
                   
                     try {
                       // Send data to the backend's heartbeat API
-                      const response = await fetch('http://localhost:224/api/heartbeat', {
+                      // const response = await fetch('http://localhost:224/api/heartbeat', {
+                        const response = await fetch(`${BASE_URL}/api/heartbeat`, {
                         method: 'POST',
                         headers: {
                           'Content-Type': 'application/json',
@@ -167,7 +170,8 @@ const Functional_Loc_user = () => {
                   };
                 }, []);
   
-
+                
+  const [totalRows, setTotalRows] = useState(0);             
   const [rows, setRows] = useState(initialRows);
   const [selectedFunctionLoc, setSelectedFunctionLoc] = useState([]);
   const [selectedPlant, setSelectedPlant] = useState([]);
@@ -312,49 +316,59 @@ const [searchTermOrderNo, setSearchTermOrderNo] = useState('');
 //   setSites(siteCookie ? siteCookie.split(',').map(site => site.trim()) : []);
 // }, []);
 
+// Cookie utility functions
+const setCookie = (name, value, days = 7) => {
+  const d = new Date();
+  d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000)); // Expiration time
+  const expires = `expires=${d.toUTCString()}`;
+  document.cookie = `${name}=${encodeURIComponent(value)};${expires};path=/`;
+};
+
+const getCookie = (name) => {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+};
+
+const decodeCookie = (cookieValue) => (cookieValue ? decodeURIComponent(cookieValue) : '');
+
 useEffect(() => {
-  // Function to get cookie by name
-  const getCookie = (name) => {
-      const value = `; ${document.cookie}`;
-      const parts = value.split(`; ${name}=`);
-      if (parts.length === 2) return parts.pop().split(';').shift();
-  };
-
-  // Retrieve and parse cookies
-  const stateCookie = getCookie('state');
-  const areaCookie = getCookie('area');
-  const siteCookie = getCookie('site');
-
-  // Usage Example
-const domainId = getCookie("domain_id");
-setdomainId007(domainId)
-const userName = getCookie("name");
-setname007(userName)
-const state = getCookie("state");
-
-console.log("Retrieved Cookies:");
-console.log("Domain ID:", domainId);
-console.log("User Name:", userName);
-console.log("State:", state);
-
+  // Retrieve and decode cookies
+  const stateCookie = decodeCookie(getCookie('state'));
+  const areaCookie = decodeCookie(getCookie('area'));
+  const siteCookie = decodeCookie(getCookie('site'));
+  const domainId = decodeCookie(getCookie('domain_id'));
+  const userName = decodeCookie(getCookie('name'));
 
   // Split cookie values by comma and trim spaces
   const parsedStates = stateCookie ? stateCookie.split(',').map(state => state.trim()) : [];
   const parsedAreas = areaCookie ? areaCookie.split(',').map(area => area.trim()) : [];
   const parsedSites = siteCookie ? siteCookie.split(',').map(site => site.trim()) : [];
 
+  // Set state with parsed values
   setStates(parsedStates);
   setAreas(parsedAreas);
   setSites(parsedSites);
+  setdomainId007(domainId);
+  setname007(userName);
 
-  // Set first values for state and area if they exist
+  // Set default values for selectedOption2, selectedOption3, selectedOption4
   if (parsedStates.length > 0) {
-      setSelectedOption2(parsedStates[0]); // Set first state as selected
+    setSelectedOption2(parsedStates[0]);
   }
+
   if (parsedAreas.length > 0) {
-      setSelectedOption3(parsedAreas[0]); // Set first area as selected
+    setSelectedOption3(parsedAreas[0]);
   }
+
+  if (parsedSites.length > 0) {
+    setSelectedOption4(parsedSites[0]);
+  }
+
+  console.log("Retrieved Cookies:", { parsedStates, parsedAreas, parsedSites, domainId, userName });
+
 }, []);
+
 
   const handleSelectChangeFunctionLoc = (event) => {
     const value = event.target.value;
@@ -449,6 +463,9 @@ console.log("State:", state);
       return [...new Set(totalData.map(row => row[key]))];
     };
 
+    
+    
+
      // Function to handle checkbox changes
      const handleCheckboxChange = (e, filterType) => {
       const value = e.target.value;
@@ -513,8 +530,9 @@ const handleButtonClick = () => {
      // Function to fetch the total WTG count
      const fetchTotalWtgCount = async () => {
       // const url = new URL('http://localhost:224/api/get_total_wtg_count');
-
       const url = new URL(`${BASE_URL}/api/get_total_wtg_count`);
+
+      // const url = new URL(`${BASE_URL}/api/get_total_wtg_count`);
 
       const params = {
           orderType: selectedOption1,
@@ -1026,9 +1044,9 @@ const fetchOpenStateWiseCount = async () => {
 
     // Convert params object to URL search parameters
     const queryString = new URLSearchParams(params).toString();
-    const url = `http://localhost:224/api/get_open_status_wtg_data?${queryString}`;
+ //   const url = `http://localhost:224/api/get_open_status_wtg_data?${queryString}`;
 
-    // const url = `${BASE_URL}/api/get_open_status_wtg_data?${queryString}`;
+    const url = `${BASE_URL}/api/get_open_status_wtg_data?${queryString}`;
 
     try {
         const response = await fetch(url);
@@ -1159,7 +1177,8 @@ const fetchOpenStateWiseCount = async () => {
     });
   
     try {
-      const response = await fetch('http://localhost:224/api/insert_reason_for_wtg_planning', {
+      // const response = await fetch('http://localhost:224/api/insert_reason_for_wtg_planning', {
+        const response = await fetch(`${BASE_URL}/api/insert_reason_for_wtg_planning`, {
         // const response = await fetch('http://localhost:3001/api/insert_reason_for_wtg_planning', {
         method: 'POST',
         headers: {
@@ -1562,9 +1581,14 @@ const fetchOpenStateWiseCount = async () => {
               <img src={excel_iconpng} alt="Excel Icon" className="excel-icon_Lub" />
               Download
             </button>
-            <div className="legend_lubcount">
+            {/* <div className="legend_lubcount">
               <span className="legend_count">Count: {filteredCount}</span>
-            </div>
+            </div> */}
+
+<div className="legend_lubcount">
+  <span className="legend_count">Count: {filterData().length}</span>
+</div>
+
           </div>
           
           <div className="Table-Lub-table">

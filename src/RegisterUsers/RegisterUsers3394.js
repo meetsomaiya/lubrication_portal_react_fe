@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./RegisterUsers3394.css";
 import moment from 'moment-timezone';
+import { BASE_URL } from '../config'
 
 const RegisterUsers3394 = () => {
    let entryTime = null;  // Store the entry time (when user stepped into the page)
@@ -13,8 +14,8 @@ const RegisterUsers3394 = () => {
                       return acc;
                     }, {});
                   
-                    // Get the current pathname
-                    const pathname = window.location.pathname;
+  // Get the current pathname when using HashRouter
+  const pathname = window.location.hash.replace(/^#/, '');
                   
                     // Get the current time in IST format
                     const currentTime = moment().tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ss');
@@ -40,7 +41,8 @@ const RegisterUsers3394 = () => {
                   
                     try {
                       // Send data to the backend's heartbeat API
-                      const response = await fetch('http://localhost:224/api/heartbeat', {
+                      // const response = await fetch('http://localhost:224/api/heartbeat', {
+                        const response = await fetch(`${BASE_URL}/api/heartbeat`, {
                         method: 'POST',
                         headers: {
                           'Content-Type': 'application/json',
@@ -125,6 +127,25 @@ const RegisterUsers3394 = () => {
                     window.removeEventListener('beforeunload', handleBeforeUnload);
                   };
                 }, []);
+
+                                             const checkAdminIdAndRedirect = () => {
+                                                                          const getCookie = (name) => {
+                                                                            const value = `; ${document.cookie}`;
+                                                                            const parts = value.split(`; ${name}=`);
+                                                                            if (parts.length === 2) return parts.pop().split(';').shift();
+                                                                          };
+                                                                        
+                                                                          const adminId = getCookie('adminId'); // Retrieve the adminId from cookies
+                                                                        
+                                                                          if (!adminId) {
+                                                                            // If adminId is not found, redirect to the default route
+                                                                            window.location.href = '/'; // Redirect to the home page or default route
+                                                                          }
+                                                                        };
+                                                          
+                                                                        useEffect(() => {
+                                                                          checkAdminIdAndRedirect(); // Check adminId and redirect if not found
+                                                                        }, []); // Empty dependency array to ensure this runs only once on mount
                 
   const [file3394, setFile3394] = useState(null);
 
@@ -135,7 +156,8 @@ const RegisterUsers3394 = () => {
 
   const handleDownloadFormat = () => {
     // Trigger the download by requesting the file from the backend
-    fetch('http://localhost:224/api/user-registration-excel-format') // Update with your actual API endpoint
+    // fetch('http://localhost:224/api/user-registration-excel-format') 
+    fetch(`${BASE_URL}/api/user-registration-excel-format`)
       .then((response) => {
         if (!response.ok) {
           throw new Error('Failed to download the file');
@@ -169,8 +191,9 @@ const RegisterUsers3394 = () => {
 
       try {
         // Make POST request using fetch
-        const response = await fetch(
-          "http://localhost:224/api/register-users-via-excel",
+        // const response = await fetch(
+        //   "http://localhost:224/api/register-users-via-excel",
+        const response = await fetch(`${BASE_URL}/api/register-users-via-excel`,
           {
             method: "POST",
             body: formData,

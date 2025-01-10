@@ -49,8 +49,8 @@ function Functional_Loc_user() {
                         return acc;
                       }, {});
                     
-                      // Get the current pathname
-                      const pathname = window.location.pathname;
+  // Get the current pathname when using HashRouter
+  const pathname = window.location.hash.replace(/^#/, '');
                     
                       // Get the current time in IST format
                       const currentTime = moment().tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ss');
@@ -62,11 +62,13 @@ function Functional_Loc_user() {
                         access: cookies.access || 'Not Set',
                         adminEmail: cookies.adminEmail || 'Not Set',
                         userId: cookies.userId || 'Not Set',
-                        domain_id: cookies.adminDomain || 'Not Set',
+                        // domain_id: cookies.adminDomain || 'Not Set',
+                        domain_id: cookies.domainId || 'Not Set',
                         state: cookies.state || 'Not Set',
                         area: cookies.area || 'Not Set',
                         site: cookies.site || 'Not Set',
-                        email: cookies.email || 'Not Set',
+                        // email: cookies.email || 'Not Set',
+                        adminEmail: cookies.email || 'Not Set',
                         pathname: pathname,  // Add the pathname to the data
                         entryTime: entryTime, // Include entry time (when user stepped in)
                         exitTime: exitTime,   // Include exit time (when user leaves)
@@ -76,7 +78,8 @@ function Functional_Loc_user() {
                     
                       try {
                         // Send data to the backend's heartbeat API
-                        const response = await fetch('http://localhost:224/api/heartbeat', {
+                        // const response = await fetch('http://localhost:224/api/heartbeat', {
+                          const response = await fetch(`${BASE_URL}/api/heartbeat`, {
                           method: 'POST',
                           headers: {
                             'Content-Type': 'application/json',
@@ -172,6 +175,14 @@ function Functional_Loc_user() {
   const [selectedOrderNo, setSelectedOrderNo] = useState([]);
   const [selectedPlant, setSelectedPlant] = useState([]);
 
+  // Filtered data based on selected plants and order numbers
+const [filteredData, setFilteredData] = useState([]);
+
+// States to hold selected plants and order numbers
+const [selectedPlants, setSelectedPlants] = useState([]);
+const [selectedOrderNos, setSelectedOrderNos] = useState([]);
+// const [scheduleData, setScheduleData] = useState([]);
+
   const [showPlantDropdown, setShowPlantDropdown] = useState(false);
   const [showOrderNoDropdown, setShowOrderNoDropdown] = useState(false);
 
@@ -185,6 +196,10 @@ function Functional_Loc_user() {
 
   const [selectedState, setSelectedState] = useState("Select"); // State for selected state
 
+  // State to hold unique plants and order numbers
+const [uniquePlants, setUniquePlants] = useState([]);
+const [uniqueOrderNos, setUniqueOrderNos] = useState([]);
+
 
 
   useEffect(() => {
@@ -195,16 +210,19 @@ function Functional_Loc_user() {
         if (parts.length === 2) return parts.pop().split(';').shift();
     };
 
-    // Retrieve and parse cookies
-    const stateCookie = getCookie('state');
-    const areaCookie = getCookie('area');
-    const siteCookie = getCookie('site');
+    // Retrieve and decode cookies
+    const decodeCookie = (cookieValue) => (cookieValue ? decodeURIComponent(cookieValue) : '');
+
+    const stateCookie = decodeCookie(getCookie('state'));
+    const areaCookie = decodeCookie(getCookie('area'));
+    const siteCookie = decodeCookie(getCookie('site'));
 
     // Split cookie values by comma and trim spaces
     const parsedStates = stateCookie ? stateCookie.split(',').map(state => state.trim()) : [];
     const parsedAreas = areaCookie ? areaCookie.split(',').map(area => area.trim()) : [];
     const parsedSites = siteCookie ? siteCookie.split(',').map(site => site.trim()) : [];
 
+    // Set states with parsed values
     setStates(parsedStates);
     setSelectedState(parsedStates);
     setAreas(parsedAreas);
@@ -217,7 +235,18 @@ function Functional_Loc_user() {
     if (parsedAreas.length > 0) {
         setSelectedSite1(parsedAreas[0]); // Set first area as selected
     }
+
+    // Log decoded and parsed cookie values for debugging
+    console.log("Retrieved Cookies:");
+    console.log("State Cookie (Decoded):", stateCookie);
+    console.log("Parsed States:", parsedStates);
+    console.log("Area Cookie (Decoded):", areaCookie);
+    console.log("Parsed Areas:", parsedAreas);
+    console.log("Site Cookie (Decoded):", siteCookie);
+    console.log("Parsed Sites:", parsedSites);
+
 }, []);
+
 
   const handleSelectChangeArea = (e) => {
     setSelectedArea(e.target.value);
@@ -267,41 +296,36 @@ function Functional_Loc_user() {
   
 
    // Handle selection change
-   const handleSelectChangeSite3 = async (event) => {
-    const funcLoc = event.target.value;
-    setSelectedSite3(funcLoc);
+   // To be used for fetching the data
+const handleSelectChangeSite3 = async (event) => {
+  const funcLoc = event.target.value;
+  setSelectedSite3(funcLoc);
 
-    // If funcLoc is selected, proceed to fetch the data
-    if (funcLoc && funcLoc !== 'Select') {
-        try {
-            // Construct the URL
-            // const apiUrl = `http://localhost:224/api/fetch_schedule_plan_lubrication?func_loc=${funcLoc}`;
+  if (funcLoc && funcLoc !== "Select") {
+    try {
+      const apiUrl = `${BASE_URL}/api/fetch_schedule_plan_lubrication?func_loc=${funcLoc}`;
+      console.log(`API URL: ${apiUrl}`);
 
-            const apiUrl = `${BASE_URL}/api/fetch_schedule_plan_lubrication?func_loc=${funcLoc}`;
-            
-            // Log the API URL
-            console.log(`API URL: ${apiUrl}`);
+      const response = await fetch(apiUrl);
 
-            // Make the request using node-fetch
-            const response = await fetch(apiUrl);
-            
-            // Check if response is ok
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
-            // Parse the JSON response
-            const data = await response.json();
-            
-            // Log the response data
-            console.log('API Response:', data);
+      const data = await response.json();
+      console.log("API Response:", data);
 
-            // Set the fetched data to scheduleData state
-            setScheduleData(data);
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
+      setScheduleData(data); // Store the original schedule data
+
+      const uniquePlants = [...new Set(data.map((item) => item.PLANT))];
+      const uniqueOrderNos = [...new Set(data.map((item) => item.CRM_ORDERH))];
+
+      setUniquePlants(uniquePlants);
+      setUniqueOrderNos(uniqueOrderNos);
+    } catch (error) {
+      console.error("Error fetching data:", error);
     }
+  }
 };
 
   const handleDownload = () => {
@@ -313,32 +337,46 @@ function Functional_Loc_user() {
     XLSX.writeFile(wb, 'FuntionalLoc_Data.xlsx');
   };
 
-  const handleSelectChangePlant = (event) => {
-    const value = event.target.value;
-    setSelectedPlant((prevSelected) =>
-      prevSelected.includes(value)
-        ? prevSelected.filter((item) => item !== value)
-        : [...prevSelected, value]
-    );
-  };
+  // Handle Plant checkbox change
+const handleSelectChangePlant = (event) => {
+  const value = event.target.value;
+  setSelectedPlants((prevSelected) =>
+    prevSelected.includes(value)
+      ? prevSelected.filter((item) => item !== value) // Deselect if already selected
+      : [...prevSelected, value] // Add if not already selected
+  );
+};
 
-  const handleSelectChangeOrderNo = (event) => {
-    const value = event.target.value;
-    setSelectedOrderNo((prevSelected) =>
-      prevSelected.includes(value)
-        ? prevSelected.filter((item) => item !== value)
-        : [...prevSelected, value]
-    );
-  };
+// Handle Order No checkbox change
+const handleSelectChangeOrderNo = (event) => {
+  const value = event.target.value;
+  setSelectedOrderNos((prevSelected) =>
+    prevSelected.includes(value)
+      ? prevSelected.filter((item) => item !== value) // Deselect if already selected
+      : [...prevSelected, value] // Add if not already selected
+  );
+};
 
-  const clearFilters = () => {
-    setSelectedArea('Select');
-    setSelectedSite1('Select');
-    setSelectedSite2('Select');
-    setSelectedSite3('Select');
-    setSelectedOrderNo([]);
-    setSelectedPlant([]);
-  };
+// Clear all filters
+const clearFilters = () => {
+  setSelectedPlants([]);
+  setSelectedOrderNos([]);
+};
+
+// Apply filtering based on selected plants and order numbers
+useEffect(() => {
+  // Filter the data based on selected plants and order numbers
+  const filterData = scheduleData.filter((row) => {
+    const plantMatch =
+      selectedPlants.length === 0 || selectedPlants.includes(row.PLANT);
+    const orderNoMatch =
+      selectedOrderNos.length === 0 || selectedOrderNos.includes(row.CRM_ORDERH);
+    return plantMatch && orderNoMatch;
+  });
+
+  // Set the filtered data
+  setFilteredData(filterData);
+}, [scheduleData, selectedPlants, selectedOrderNos]);
 
   return (
     <div>
@@ -393,111 +431,126 @@ function Functional_Loc_user() {
       <div className="WTG-WISE-table">
         <div className="WTG-table-container">
         <table>
-            <thead>
-              <tr>
-                <th className="filter-header">
-                  <div className='d-flex align-items-center' style={{ marginLeft: '30px' }}>
-                    <span>Plant</span>
-                    <img
-                      src={filterIcon}
-                      alt="Filter"
-                      className="filter-icon"
-                      onClick={() => setShowPlantDropdown(!showPlantDropdown)}
-                    />
-                  </div>
-                  {showPlantDropdown && (
-                    <div className="filter-container">
-                      <div className="filter-header">
-                        <span>Plant</span>
-                        <img
-                          src={cancelIcon}
-                          alt="Close"
-                          className="close-filter-icon"
-                          onClick={() => setShowPlantDropdown(false)}
-                        />
-                      </div>
+      <thead>
+        <tr>
+          <th className="filter-header">
+            <div className="d-flex align-items-center" style={{ marginLeft: "30px" }}>
+              <span>Plant</span>
+              <img
+                src={filterIcon}
+                alt="Filter"
+                className="filter-icon"
+                onClick={() => setShowPlantDropdown(!showPlantDropdown)}
+              />
+            </div>
+            {showPlantDropdown && (
+              <div className="filter-container">
+                <div className="filter-header">
+                  <span>Plant</span>
+                  <img
+                    src={cancelIcon}
+                    alt="Close"
+                    className="close-filter-icon"
+                    onClick={() => setShowPlantDropdown(false)}
+                  />
+                </div>
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  className="filter-search"
+                  onChange={handleSelectChangePlant}
+                />
+                <div className="multi-select-dropdown">
+                  {uniquePlants.map((plant, index) => (
+                    <div key={index} className="multi-select-checkbox">
                       <input
-                        type="text"
-                        placeholder="Search..."
-                        className="filter-search"
+                        type="checkbox"
+                        id={plant}
+                        value={plant}
+                        checked={selectedPlants.includes(plant)}
                         onChange={handleSelectChangePlant}
                       />
-                      <div className="multi-select-dropdown">
-                        <div className="multi-select-checkbox">
-                          <input type="checkbox" id="4446" value="4446" onChange={handleSelectChangePlant} />
-                          <label htmlFor="4446">4446</label>
-                        </div>
-                        {/* Add more options as needed */}
-                      </div>
-                      <button className="clear-filter-button" onClick={() => setSelectedPlant([])}>
-                        <img src={clearIcon} alt="Clear" className="clear-icon" /> Clear All
-                      </button>
+                      <label htmlFor={plant}>{plant}</label>
                     </div>
-                  )}
-                </th>
-                <th className="filter-header">
-                  <div className='d-flex align-items-center' style={{ marginLeft: '30px' }}>
-                    <span>Order No.</span>
-                    <img
-                      src={filterIcon}
-                      alt="Filter"
-                      className="filter-icon"
-                      onClick={() => setShowOrderNoDropdown(!showOrderNoDropdown)}
-                    />
-                  </div>
-                  {showOrderNoDropdown && (
-                    <div className="filter-container">
-                      <div className="filter-header">
-                        <span>Order No.</span>
-                        <img
-                          src={cancelIcon}
-                          alt="Close"
-                          className="close-filter-icon"
-                          onClick={() => setShowOrderNoDropdown(false)}
-                        />
-                      </div>
+                  ))}
+                </div>
+                <button className="clear-filter-button" onClick={clearFilters}>
+                  <img src={clearIcon} alt="Clear" className="clear-icon" /> Clear All
+                </button>
+              </div>
+            )}
+          </th>
+          <th className="filter-header">
+            <div className="d-flex align-items-center" style={{ marginLeft: "30px" }}>
+              <span>Order No.</span>
+              <img
+                src={filterIcon}
+                alt="Filter"
+                className="filter-icon"
+                onClick={() => setShowOrderNoDropdown(!showOrderNoDropdown)}
+              />
+            </div>
+            {showOrderNoDropdown && (
+              <div className="filter-container">
+                <div className="filter-header">
+                  <span>Order No.</span>
+                  <img
+                    src={cancelIcon}
+                    alt="Close"
+                    className="close-filter-icon"
+                    onClick={() => setShowOrderNoDropdown(false)}
+                  />
+                </div>
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  className="filter-search"
+                  onChange={handleSelectChangeOrderNo}
+                />
+                <div className="multi-select-dropdown">
+                  {uniqueOrderNos.map((orderNo, index) => (
+                    <div key={index} className="multi-select-checkbox">
                       <input
-                        type="text"
-                        placeholder="Search..."
-                        className="filter-search"
+                        type="checkbox"
+                        id={orderNo}
+                        value={orderNo}
+                        checked={selectedOrderNos.includes(orderNo)}
                         onChange={handleSelectChangeOrderNo}
                       />
-                      <div className="multi-select-dropdown">
-                        <div className="multi-select-checkbox">
-                          <input type="checkbox" id="0018165907" value="0018165907" onChange={handleSelectChangeOrderNo} />
-                          <label htmlFor="0018165907">0018165907</label>
-                        </div>
-                        {/* Add more options as needed */}
-                      </div>
-                      <button className="clear-filter-button" onClick={() => setSelectedOrderNo([])}>
-                        <img src={clearIcon} alt="Clear" className="clear-icon" /> Clear All
-                      </button>
+                      <label htmlFor={orderNo}>{orderNo}</label>
                     </div>
-                  )}
-                </th>
-                <th>Status</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Order Type</th>
-                <th>PM Start Date</th>
-                <th>Delays</th>
-              </tr>
-            </thead>
-            <tbody>
-              {scheduleData.map((row, index) => (
-                <tr key={index}>
-                  <td>{row.PLANT}</td>
-                  <td>{row.CRM_ORDERH}</td>
-                  <td>{row.ZTEXT1}</td>
-                  <td>{row.ZACTSTDT}</td>
-                  <td>{row.ZACTENDT}</td>
-                  <td>{row.ZEXT_RNO}</td>
-                  <td>{row.ZREQ_SDAT}</td>
-                  <td>{getDelayChip(row.delay)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                  ))}
+                </div>
+                <button className="clear-filter-button" onClick={clearFilters}>
+                  <img src={clearIcon} alt="Clear" className="clear-icon" /> Clear All
+                </button>
+              </div>
+            )}
+          </th>
+          <th>Status</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Order Type</th>
+          <th>PM Start Date</th>
+          <th>Delays</th>
+        </tr>
+      </thead>
+      <tbody>
+        {(filteredData.length ? filteredData : scheduleData).map((row, index) => (
+          <tr key={index}>
+            <td>{row.PLANT}</td>
+            <td>{row.CRM_ORDERH}</td>
+            <td>{row.ZTEXT1}</td>
+            <td>{row.ZACTSTDT}</td>
+            <td>{row.ZACTENDT}</td>
+            <td>{row.ZEXT_RNO}</td>
+            <td>{row.ZREQ_SDAT}</td>
+            <td>{getDelayChip(row.delay)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+);
         </div>
       </div>
     </div>

@@ -21,8 +21,8 @@ const OilAnalysisTable = () => {
         return acc;
       }, {});
     
-      // Get the current pathname
-      const pathname = window.location.pathname;
+   // Get the current pathname when using HashRouter
+const pathname = window.location.hash.replace(/^#/, '');
     
       // Get the current time in IST format
       const currentTime = moment().tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ss');
@@ -48,7 +48,8 @@ const OilAnalysisTable = () => {
     
       try {
         // Send data to the backend's heartbeat API
-        const response = await fetch('http://localhost:224/api/heartbeat', {
+        // const response = await fetch('http://localhost:224/api/heartbeat', {
+          const response = await fetch(`${BASE_URL}/api/heartbeat`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -133,6 +134,25 @@ const OilAnalysisTable = () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, []);
+
+                    const checkAdminIdAndRedirect = () => {
+                      const getCookie = (name) => {
+                        const value = `; ${document.cookie}`;
+                        const parts = value.split(`; ${name}=`);
+                        if (parts.length === 2) return parts.pop().split(';').shift();
+                      };
+                    
+                      const adminId = getCookie('adminId'); // Retrieve the adminId from cookies
+                    
+                      if (!adminId) {
+                        // If adminId is not found, redirect to the default route
+                        window.location.href = '/'; // Redirect to the home page or default route
+                      }
+                    };
+      
+                    useEffect(() => {
+                      checkAdminIdAndRedirect(); // Check adminId and redirect if not found
+                    }, []); // Empty dependency array to ensure this runs only once on mount
   
   const [financialYears, setFinancialYears] = useState([]);
   const [selectedYear, setSelectedYear] = useState('');
@@ -1277,9 +1297,20 @@ const handleConsolidatedFileDownload = () => {
                     </td> */}
                                   <td className="orderTypeLink997">
                     {/* Order Type Link that calls handleOrderTypeClick when clicked */}
-                    <a href="#" onClick={() => handleOrderTypeClick(order.type)}>
+                    {/* <a href="#" onClick={() => handleOrderTypeClick(order.type)}>
                       {order.type}
-                    </a>
+                    </a> */}
+
+<a 
+  href="/" 
+  onClick={(e) => {
+    e.preventDefault(); // Prevent the default anchor behavior
+    handleOrderTypeClick(order.type); // Perform your custom logic
+  }}
+>
+  {order.type}
+</a>
+
                   </td>
                     <td>{order.Karnataka.issue}</td>
                     <td>{order.Karnataka.return}</td>

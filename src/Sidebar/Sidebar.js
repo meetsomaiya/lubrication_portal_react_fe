@@ -35,6 +35,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       console.log('Sending adminId, name, and email:', adminId, name, email);
       try {
         const response = await fetch('http://localhost:224/api/toggle_admin', {
+          // const response = await fetch('http://localhost:3001/api/toggle_admin', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -66,6 +67,8 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
           // Navigate to Home_user page using useNavigate
           navigate('/Home_user');  // This will navigate to Home_user without reloading the page
+          // navigate('/Home_user?reload=true', { replace: true });
+
         } else {
           console.error('Failed to toggle admin:', response.status);
         }

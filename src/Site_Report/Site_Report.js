@@ -21,8 +21,8 @@ function Site_Report() {
       return acc;
     }, {});
   
-    // Get the current pathname
-    const pathname = window.location.pathname;
+  // Get the current pathname when using HashRouter
+  const pathname = window.location.hash.replace(/^#/, '');
   
     // Get the current time in IST format
     const currentTime = moment().tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ss');
@@ -48,7 +48,8 @@ function Site_Report() {
   
     try {
       // Send data to the backend's heartbeat API
-      const response = await fetch('http://localhost:224/api/heartbeat', {
+      // const response = await fetch('http://localhost:224/api/heartbeat', {
+        const response = await fetch(`${BASE_URL}/api/heartbeat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -133,6 +134,26 @@ useEffect(() => {
     window.removeEventListener('beforeunload', handleBeforeUnload);
   };
 }, []);
+
+
+              const checkAdminIdAndRedirect = () => {
+                const getCookie = (name) => {
+                  const value = `; ${document.cookie}`;
+                  const parts = value.split(`; ${name}=`);
+                  if (parts.length === 2) return parts.pop().split(';').shift();
+                };
+              
+                const adminId = getCookie('adminId'); // Retrieve the adminId from cookies
+              
+                if (!adminId) {
+                  // If adminId is not found, redirect to the default route
+                  window.location.href = '/'; // Redirect to the home page or default route
+                }
+              };
+
+              useEffect(() => {
+                checkAdminIdAndRedirect(); // Check adminId and redirect if not found
+              }, []); // Empty dependency array to ensure this runs only once on mount
 
 
     const [selectedArea, setSelectedArea] = useState('Select');

@@ -55,8 +55,8 @@ const WTG_Wise_Planning = () => {
       return acc;
     }, {});
   
-    // Get the current pathname
-    const pathname = window.location.pathname;
+  // Get the current pathname when using HashRouter
+  const pathname = window.location.hash.replace(/^#/, '');
   
     // Get the current time in IST format
     const currentTime = moment().tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ss');
@@ -82,7 +82,8 @@ const WTG_Wise_Planning = () => {
   
     try {
       // Send data to the backend's heartbeat API
-      const response = await fetch('http://localhost:224/api/heartbeat', {
+      // const response = await fetch('http://localhost:224/api/heartbeat', {
+        const response = await fetch(`${BASE_URL}/api/heartbeat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -120,6 +121,7 @@ const WTG_Wise_Planning = () => {
     };
   }, []);
   
+  
   useEffect(() => {
     const handlePathChange = () => {
       // Capture exit time and send cookies when pathname changes
@@ -147,7 +149,27 @@ const WTG_Wise_Planning = () => {
       window.history.replaceState = windowHistoryReplaceState;
     };
   }, []);
+
+                const checkAdminIdAndRedirect = () => {
+                  const getCookie = (name) => {
+                    const value = `; ${document.cookie}`;
+                    const parts = value.split(`; ${name}=`);
+                    if (parts.length === 2) return parts.pop().split(';').shift();
+                  };
+                
+                  const adminId = getCookie('adminId'); // Retrieve the adminId from cookies
+                
+                  if (!adminId) {
+                    // If adminId is not found, redirect to the default route
+                    window.location.href = '/'; // Redirect to the home page or default route
+                  }
+                };
   
+                useEffect(() => {
+                  checkAdminIdAndRedirect(); // Check adminId and redirect if not found
+                }, []); // Empty dependency array to ensure this runs only once on mount
+  
+  const [totalRows, setTotalRows] = useState(0);
   
   const [rows, setRows] = useState(initialRows);
   const [selectedFunctionLoc, setSelectedFunctionLoc] = useState([]);
@@ -235,6 +257,8 @@ const [isTotalStateWiseCountFetched, setTotalStateWiseCountFetched] = useState(f
         setSearchTermOrderNo991(value);
       }
     };
+
+
   
     // Function to handle checkbox changes
     const handleCheckboxChange = (e, filterType) => {
@@ -278,6 +302,11 @@ const [isTotalStateWiseCountFetched, setTotalStateWiseCountFetched] = useState(f
     const getUniqueValues = (key) => {
       return [...new Set(totalData.map(row => row[key]))];
     };
+
+          // Update totalRows whenever filteredData changes
+  useEffect(() => {
+    setTotalRows(filteredData.length);
+  }, [filteredData]);
 
 
       // Calculate the dates for two years back and two years ahead
@@ -617,7 +646,7 @@ const fetchTotalOutOfGraceStateWiseCount = async () => {
 
       // Convert params object to URL search parameters
       const queryString = new URLSearchParams(params).toString();
-      // const url = `http://localhost:224/api/get_total_open_status_wtg_count?${queryString}`;
+      //const url = `http://localhost:224/api/get_total_open_status_wtg_count?${queryString}`;
 
       const url = `${BASE_URL}/api/get_total_open_status_wtg_count?${queryString}`;
 
@@ -651,9 +680,9 @@ const fetchTotalOutOfGraceStateWiseCount = async () => {
   
     // Convert params object to URL search parameters
     const queryString = new URLSearchParams(params).toString();
-    // const url = `http://localhost:224/api/get_total_open_status_wtg_count?${queryString}`;
+   // const url = `http://localhost:224/api/get_total_open_status_wtg_count?${queryString}`;
 
-    const url = `${BASE_URL}/api/get_total_open_status_wtg_count?${queryString}`;
+     const url = `${BASE_URL}/api/get_total_open_status_wtg_count?${queryString}`;
 
   
     try {
@@ -853,9 +882,9 @@ const fetchTotalOutOfGraceStateWiseCount = async () => {
 
       // Convert params object to URL search parameters
       const queryString = new URLSearchParams(params).toString();
-      const url = `http://localhost:224/api/get_open_status_wtg_data?${queryString}`;
+     // const url = `http://localhost:224/api/get_open_status_wtg_data?${queryString}`;
 
-      // const url = `${BASE_URL}/api/get_open_status_wtg_data?${queryString}`;
+      const url = `${BASE_URL}/api/get_open_status_wtg_data?${queryString}`;
 
 
       try {
@@ -1559,7 +1588,7 @@ const handleDownload = () => {
               Download
             </button>
             <div className="legend_lubcount">
-              <span className="legend_count">Count: {filteredCount}</span>
+                <span className="legend_count">Total Rows: {totalRows}</span>
             </div>
           </div>
           

@@ -20,8 +20,8 @@ function Site_Report_user() {
                         return acc;
                       }, {});
                     
-                      // Get the current pathname
-                      const pathname = window.location.pathname;
+  // Get the current pathname when using HashRouter
+  const pathname = window.location.hash.replace(/^#/, '');
                     
                       // Get the current time in IST format
                       const currentTime = moment().tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ss');
@@ -31,9 +31,9 @@ function Site_Report_user() {
                         name: cookies.name || 'Not Set',
                         userId: cookies.userId || 'Not Set',
                         access: cookies.access || 'Not Set',
-                        adminEmail: cookies.adminEmail || 'Not Set',
+                        adminEmail: cookies.email || 'Not Set',
                         userId: cookies.userId || 'Not Set',
-                        domain_id: cookies.adminDomain || 'Not Set',
+                        domain_id: cookies.domain_id || 'Not Set',  // Use the state for domain_id
                         state: cookies.state || 'Not Set',
                         area: cookies.area || 'Not Set',
                         site: cookies.site || 'Not Set',
@@ -47,7 +47,8 @@ function Site_Report_user() {
                     
                       try {
                         // Send data to the backend's heartbeat API
-                        const response = await fetch('http://localhost:224/api/heartbeat', {
+                        // const response = await fetch('http://localhost:224/api/heartbeat', {
+                          const response = await fetch(`${BASE_URL}/api/heartbeat`, {
                           method: 'POST',
                           headers: {
                             'Content-Type': 'application/json',
@@ -219,10 +220,20 @@ function Site_Report_user() {
         const stateCookie = getCookie('state');
         const siteCookie = getCookie('site');
 
-        // Split cookie values by comma
-        setAreas(areaCookie ? areaCookie.split(',') : []);
-        setStates(stateCookie ? stateCookie.split(',') : []);
-        setSites(siteCookie ? siteCookie.split(',') : []);
+        // Decode URL-encoded cookie values
+        const decodedAreaCookie = areaCookie ? decodeURIComponent(areaCookie) : '';
+        const decodedStateCookie = stateCookie ? decodeURIComponent(stateCookie) : '';
+        const decodedSiteCookie = siteCookie ? decodeURIComponent(siteCookie) : '';
+
+        // Log decoded cookie values for verification
+        console.log('Decoded Area Cookie:', decodedAreaCookie);
+        console.log('Decoded State Cookie:', decodedStateCookie);
+        console.log('Decoded Site Cookie:', decodedSiteCookie);
+
+        // Split cookie values by comma and set them to state
+        setAreas(decodedAreaCookie ? decodedAreaCookie.split(',') : []);
+        setStates(decodedStateCookie ? decodedStateCookie.split(',') : []);
+        setSites(decodedSiteCookie ? decodedSiteCookie.split(',') : []);
     }, []);
 
 

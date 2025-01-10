@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { HashRouter as Router, Route, Routes } from 'react-router-dom';
 import Sidebar from './Sidebar/Sidebar';
 import Sidebar_user from './USERS/Sidebar_user/Sidebar_user';
 import Navbar from './Navbarr/Navbarr';
@@ -18,6 +18,7 @@ import Oil from './Site_Report/Oil/Oil';
 import PM from './Site_Report/PM/PM';
 import Lubrication from './Site_Report/Lubrication/Lubrication_table';
 import UploadExcel from './Excel_Upload_Site_Incharge/ExcelUpload';
+import { useLocation } from 'react-router-dom';
 
 import OilAnalysisTable from './Oil_Analysis/Oil_Analysis';
 import SopConsumptionAnalysis8867 from './SOP_CONSUMPTION_ANALYSIS/SOP_CONSUMPTION_ANALYSIS';
@@ -25,7 +26,6 @@ import SopConsumptionAnalysis8867 from './SOP_CONSUMPTION_ANALYSIS/SOP_CONSUMPTI
 import TableComponent9976_admin from './Corrective_Action/Corrective_Action';
 
 import RegisterUsers3394 from './RegisterUsers/RegisterUsers3394';
-
 
 // User Components
 import Site_Report_user from './USERS/Site_Report/Site_Report_user';
@@ -39,22 +39,33 @@ import OilAnalysisTableUser from './USERS/Oil_Analysis_user/Oil_Analysis_user';
 
 import TableComponent9976 from './USERS/Corrective_Action_user/corrective-action-user';
 
+import SopConsumptionAnalysis8867_user from './USERS/SOP_CONSUMPTION_ANALYSIS/SOP_CONSUMPTION_ANALYSIS_user';
+
 const MainApp = ({ sidebarOpen, toggleSidebar }) => {
   // Check if the current route is a user route by looking for `_user` at the end
-  const isUserRoute = window.location.pathname.endsWith('_user');
+  const isUserRoute = () => {
+    // Extract the part of the hash after '?' (query parameters)
+    const hashParams = window.location.hash.split('?')[0]; // Get the part before '?'
+    
+    // Check if the pathname includes '_user'
+    return hashParams.endsWith('_user');
+  };
+  
+ // const isUserRoute = window.location.hash.replace(/^#/, '').endsWith('_user');
+
 
   return (
     <div className={`app-container ${sidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
-      {/* Render Navbar based on Admin or User */}
-      {isUserRoute ? <Navbar_user /> : <Navbar />}
-      
-      <div className="d-flex w-full">
-        {/* Render Sidebar based on Admin or User */}
-        {isUserRoute ? (
-          <Sidebar_user isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
-        ) : (
-          <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
-        )}
+    {/* Render Navbar based on Admin or User */}
+    {isUserRoute() ? <Navbar_user /> : <Navbar />}
+    
+    <div className="d-flex w-full">
+      {/* Render Sidebar based on Admin or User */}
+      {isUserRoute() ? (
+        <Sidebar_user isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
+      ) : (
+        <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
+      )}
         
         <main className="main-content">
           <Routes>
@@ -76,7 +87,6 @@ const MainApp = ({ sidebarOpen, toggleSidebar }) => {
 
             <Route path="/register-users" element={<RegisterUsers3394 />} />
 
-
             {/* User Routes */}
             <Route path="/Home_user" element={<Home_user />} />
             <Route path="/WTG_Wise_Planning_user" element={<WTG_Wise_Planning_user />} />
@@ -87,6 +97,8 @@ const MainApp = ({ sidebarOpen, toggleSidebar }) => {
             <Route path="/Lubrication_user" element={<Lubrication_user />} />
             <Route path="/Oil_Analysis_user" element={<OilAnalysisTableUser />} />
             <Route path="/corrective-action-user" element={<TableComponent9976 />} />
+
+            <Route path="/sop-consumption-user" element={<SopConsumptionAnalysis8867_user />} />
           </Routes>
         </main>
       </div>

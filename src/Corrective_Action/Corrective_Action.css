@@ -1,31 +1,89 @@
 .table-container-9976 {
-    width: 90vw;
-    margin: 5vh auto;
-    padding: 2vh;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
- 
-  .data-table-9976 {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 1.2vw;
-  }
- 
-  .data-table-9976 th,
-  .data-table-9976 td {
-    padding: 1vh;
-    text-align: left;
-    border: 1px solid #ccc;
-  }
- 
-  .data-table-9976 th {
-    background-color: #0d3b66;
-    color: white;
-  }
- 
-  .data-table-9976 tbody tr:nth-child(odd) {
-    background-color: #f2f2f2;
-  }
- 
+  width: 90vw;
+  margin: 5vh auto;
+  padding: 2vh;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.download-btn {
+  margin-right: 10px;
+  border: 1px solid black;
+  color: green;
+}
+
+.data-table-9976 {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1.2vw;
+}
+
+.data-table-9976 th,
+.data-table-9976 td {
+  padding: 1vh;
+  text-align: left;
+  border: 1px solid #ccc;
+}
+
+.data-table-9976 th {
+  background-color: #0d3b66;
+  color: white;
+  position: sticky;
+  top: 0; /* Fixes the header at the top */
+  z-index: 1; /* Ensures the header is above the table body */
+}
+
+/* Make the table body scrollable */
+.data-table-9976-wrapper {
+  width: 100%;
+  height: calc(80vh - 7vh); /* Adjust height based on the header height */
+  overflow-x: auto; /* Allow horizontal scrolling */
+  overflow-y: auto; /* Allow vertical scrolling */
+  display: block; /* Make the tbody part scrollable */
+}
+
+/* Optional: Improve appearance of horizontal scrollbar */
+.data-table-9976-wrapper::-webkit-scrollbar {
+  height: 8px; /* Width of the horizontal scrollbar */
+}
+
+.data-table-9976-wrapper::-webkit-scrollbar-thumb {
+  background-color: #888; /* Color of the scrollbar thumb */
+  border-radius: 4px;
+}
+
+.data-table-9976-wrapper::-webkit-scrollbar-thumb:hover {
+  background-color: #555; /* Darker color on hover */
+}
+
+
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination-btn {
+  padding: 10px 20px;
+  margin: 0 5px;
+  cursor: pointer;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.pagination-btn:disabled {
+  background-color: #d3d3d3;
+  cursor: not-allowed;
+}
+
+.pagination-btn:hover {
+  background-color: #ccc;
+}
+
+.pagination-controls span {
+  align-self: center;
+  margin: 0 10px;
+  font-size: 16px;
+}

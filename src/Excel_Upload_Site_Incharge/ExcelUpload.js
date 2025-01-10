@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './ExcelUpload7756.css';
 import * as XLSX from 'xlsx';
 import moment from 'moment-timezone';
+import { BASE_URL } from '../config'
 
 const UploadExcel = () => {
 
@@ -15,8 +16,8 @@ const UploadExcel = () => {
                     return acc;
                   }, {});
                 
-                  // Get the current pathname
-                  const pathname = window.location.pathname;
+  // Get the current pathname when using HashRouter
+  const pathname = window.location.hash.replace(/^#/, '');
                 
                   // Get the current time in IST format
                   const currentTime = moment().tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ss');
@@ -42,7 +43,8 @@ const UploadExcel = () => {
                 
                   try {
                     // Send data to the backend's heartbeat API
-                    const response = await fetch('http://localhost:224/api/heartbeat', {
+                    // const response = await fetch('http://localhost:224/api/heartbeat', {
+                      const response = await fetch(`${BASE_URL}/api/heartbeat`, {
                       method: 'POST',
                       headers: {
                         'Content-Type': 'application/json',
@@ -128,6 +130,25 @@ const UploadExcel = () => {
                 };
               }, []);
 
+                                                        const checkAdminIdAndRedirect = () => {
+                                                          const getCookie = (name) => {
+                                                            const value = `; ${document.cookie}`;
+                                                            const parts = value.split(`; ${name}=`);
+                                                            if (parts.length === 2) return parts.pop().split(';').shift();
+                                                          };
+                                                        
+                                                          const adminId = getCookie('adminId'); // Retrieve the adminId from cookies
+                                                        
+                                                          if (!adminId) {
+                                                            // If adminId is not found, redirect to the default route
+                                                            window.location.href = '/'; // Redirect to the home page or default route
+                                                          }
+                                                        };
+                                          
+                                                        useEffect(() => {
+                                                          checkAdminIdAndRedirect(); // Check adminId and redirect if not found
+                                                        }, []); // Empty dependency array to ensure this runs only once on mount
+
   const [excelData, setExcelData] = useState(null);
   const [fileName, setFileName] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
@@ -171,6 +192,8 @@ const UploadExcel = () => {
   
     // Send the file to the backend
     fetch('http://localhost:224/api/site_incharge_format_upload', {
+     // fetch('http://localhost:3001/api/site_incharge_format_upload', {
+    //  fetch(`${BASE_URL}/api/site_incharge_format_upload`, {
       method: 'POST',
       body: formData,
     })
@@ -191,7 +214,8 @@ const UploadExcel = () => {
 
   const handleDownloadFormat = () => {
     // Trigger the download by requesting the file from the backend
-    fetch('http://localhost:224/api/site-incharge-excel-format') // Update with your actual API endpoint
+    // fetch('http://localhost:224/api/site-incharge-excel-format') 
+    fetch(`${BASE_URL}/api/site-incharge-excel-format`)
       .then((response) => {
         if (!response.ok) {
           throw new Error('Failed to download the file');

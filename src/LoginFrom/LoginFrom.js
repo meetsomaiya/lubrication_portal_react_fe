@@ -67,7 +67,7 @@ const Login = ({ setAuth }) => {
                         document.cookie = `adminId=${adminData.id}; path=/`;
                         document.cookie = `access=${adminData.access}; path=/`;
                         document.cookie = `adminEmail=${adminData.email}; path=/`;
-                        document.cookie = `adminDomain=${adminData.domain_id}; path=/`;
+                        document.cookie = `domain_id=${adminData.domain_id}; path=/`;
 
                         // setAuth(true);
                        navigate('/Home'); // Redirect to admin home if applicable

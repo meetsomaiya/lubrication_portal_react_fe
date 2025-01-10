@@ -62,8 +62,8 @@ const SopConsumptionAnalysis8867 = () => {
             return acc;
           }, {});
         
-          // Get the current pathname
-          const pathname = window.location.pathname;
+  // Get the current pathname when using HashRouter
+  const pathname = window.location.hash.replace(/^#/, '');
         
           // Get the current time in IST format
           const currentTime = moment().tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ss');

@@ -21,8 +21,8 @@ const OilAnalysisTableUser = () => {
                           return acc;
                         }, {});
                       
-                        // Get the current pathname
-                        const pathname = window.location.pathname;
+  // Get the current pathname when using HashRouter
+  const pathname = window.location.hash.replace(/^#/, '');
                       
                         // Get the current time in IST format
                         const currentTime = moment().tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ss');
@@ -34,11 +34,13 @@ const OilAnalysisTableUser = () => {
                           access: cookies.access || 'Not Set',
                           adminEmail: cookies.adminEmail || 'Not Set',
                           userId: cookies.userId || 'Not Set',
-                          domain_id: cookies.adminDomain || 'Not Set',
+                       //   domain_id: cookies.adminDomain || 'Not Set',
+                       domain_id: cookies.domain_id || 'Not Set',  // Use the state for domain_id
                           state: cookies.state || 'Not Set',
                           area: cookies.area || 'Not Set',
                           site: cookies.site || 'Not Set',
-                          email: cookies.email || 'Not Set',
+                         // email: cookies.email || 'Not Set',
+                         adminEmail: cookies.email || 'Not Set',
                           pathname: pathname,  // Add the pathname to the data
                           entryTime: entryTime, // Include entry time (when user stepped in)
                           exitTime: exitTime,   // Include exit time (when user leaves)
@@ -48,7 +50,8 @@ const OilAnalysisTableUser = () => {
                       
                         try {
                           // Send data to the backend's heartbeat API
-                          const response = await fetch('http://localhost:224/api/heartbeat', {
+                          // const response = await fetch('http://localhost:224/api/heartbeat', {
+                            const response = await fetch(`${BASE_URL}/api/heartbeat`, {
                             method: 'POST',
                             headers: {
                               'Content-Type': 'application/json',
@@ -146,6 +149,8 @@ const OilAnalysisTableUser = () => {
   // ];
 
   const [stateValue, setStateValue] = useState("");
+
+  const [stateValue2, setStateValue2] = useState("");
 
   const [financialYears, setFinancialYears] = useState([]);
   const [selectedYear, setSelectedYear] = useState('');
@@ -300,15 +305,24 @@ const getCookie = (cookieName) => {
   return targetCookie ? decodeURIComponent(targetCookie.split("=")[1]) : null;
 };
 
+// Helper function to parse and trim cookie values
+const parseCookieValues = (cookieValue) => {
+  return cookieValue ? cookieValue.split(",").map(value => value.trim()) : [];
+};
+
 // Usage Example
 const domainId = getCookie("domain_id");
 const userName = getCookie("name");
 const state = getCookie("state");
 
+// Parse state cookie if it exists
+const parsedStates = parseCookieValues(state);
+
 console.log("Retrieved Cookies:");
 console.log("Domain ID:", domainId);
 console.log("User Name:", userName);
-console.log("State:", state);
+console.log("State Cookie (Raw):", state);
+console.log("Parsed States:", parsedStates);
 
 
 
@@ -368,8 +382,10 @@ console.log("State:", state);
     
       if (year) {
         // Construct the URL with encoded year
-        // const url = `http://localhost:224/api/fetch_yd_oil_change_state_wise_data?year=${encodeURIComponent(year)}`;
-        const url = `${BASE_URL}/api/fetch_yd_oil_change_state_wise_data?year=${encodeURIComponent(year)}`;
+      //  const url = `http://localhost:224/api/fetch_yd_oil_change_state_wise_data?year=${encodeURIComponent(year)}`;
+         const url = `${BASE_URL}/api/fetch_yd_oil_change_state_wise_data?year=${encodeURIComponent(year)}`;
+
+        //const url = `http://localhost:3001/api/fetch_yd_oil_change_state_wise_data?year=${encodeURIComponent(year)}`;
         // Log the encoded URL
         console.log("Request URL:", url);
     
@@ -1191,7 +1207,7 @@ const handleOrderTypeClick = async (orderType) => {
   const apiEndpoint = orderTypeApiMap[orderType];
   // const url = `http://localhost:224/api/${apiEndpoint}?order_type=${encodeURIComponent(orderType)}&financial_year=${encodeURIComponent(selectedYear)}`;
 
-  const url = `${BASE_URL}/api/${apiEndpoint}?order_type=${encodeURIComponent(orderType)}&financial_year=${encodeURIComponent(selectedYear)}&state=${encodeURIComponent(stateValue)}`;
+  const url = `${BASE_URL}/api/${apiEndpoint}?order_type=${encodeURIComponent(orderType)}&financial_year=${encodeURIComponent(selectedYear)}&state=${encodeURIComponent(stateValue2)}`;
 
   setLoading(true); // Show loader
 
@@ -1223,10 +1239,23 @@ const handleOrderTypeClick = async (orderType) => {
     // Retrieve 'state' value from the cookie and set it in the state
     const state = getCookieValue("state");
     if (state) {
-      setStateValue(state);
+      setStateValue(normalizeStateName(state)); // Normalize the state name when setting stateValue
+      setStateValue2(state);
     }
   }, []);
-
+  // Utility function to normalize state names
+const normalizeStateName = (stateName) => {
+  const stateMap = {
+    "Karnataka": "Karnataka",
+    "Andhra Pradesh": "AP",
+    "Maharashtra": "Maharashtra",
+    "GJ - Saurashtra": "GJ",
+    "Rajasthan": "Rajasthan",
+    "Tamil nadu": "TamilNadu",
+    "GJ - Kutch": "GJ2",
+  };
+  return stateMap[stateName] || stateName;
+};
   const handleSegregatedFileDownload = async () => {
     // Ensure a financial year is selected
     if (!selectedYear) {
@@ -1292,7 +1321,7 @@ const handleOrderTypeClick = async (orderType) => {
       financialYear: selectedYear,
     });
   
-    // const apiUrl = `http://localhost:224/api/download_consolidated_file_user?${queryParams}`;
+   // const apiUrl = `http://localhost:224/api/download_consolidated_file_user?${queryParams}`;
     const apiUrl = `${BASE_URL}/api/download_consolidated_file_user?${queryParams}`;
   
     console.log("Data sent to API via GET:", queryParams.toString());
@@ -1378,7 +1407,7 @@ const handleOrderTypeClick = async (orderType) => {
           <thead>
             <tr>
               <th className="orderTypeHeader997user">Order Type</th>
-              <th colSpan="3">{stateValue}</th>
+              <th colSpan="3">{stateValue2}</th>
             </tr>
             <tr>
               <th></th>
@@ -1395,9 +1424,20 @@ const handleOrderTypeClick = async (orderType) => {
       </td> */}
                                     <td className="orderTypeLink997user">
                 {/* Order Type Link that calls handleOrderTypeClick when clicked */}
-                <a href="#" onClick={() => handleOrderTypeClick(order.type)}>
+                {/* <a href="/" onClick={() => handleOrderTypeClick(order.type)}>
                   {order.type}
-                </a>
+                </a> */}
+
+<a 
+  href="/" 
+  onClick={(e) => {
+    e.preventDefault(); // Prevent the default anchor behavior
+    handleOrderTypeClick(order.type); // Perform your custom logic
+  }}
+>
+  {order.type}
+</a>
+
               </td>
       {/* Conditionally display the state data based on the state from the cookie */}
       {stateValue && order[stateValue] ? (
@@ -1525,37 +1565,43 @@ const handleOrderTypeClick = async (orderType) => {
 
           {/* Conditionally render "Reason" and "Action" columns if the order type is 'dispute' */}
           {clickedOrderType === 'dispute' && (
-            <>
-              <td>
-                <select
-                  value={item["reason"] || "Select"}
-                  onChange={(e) => handleReasonChange(e, index)}
-                >
-                  {dropdownOptions.map((option, idx) => (
-                    <option key={idx} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
+  <>
+    <td>
+      <select
+        value={item["reason"] && !dropdownOptions.includes(item["reason"]) ? item["reason"] : "Select"}
+        onChange={(e) => handleReasonChange(e, index)}
+      >
+        {/* Render all dropdown options */}
+        {dropdownOptions.map((option, idx) => (
+          <option key={idx} value={option}>
+            {option}
+          </option>
+        ))}
+        
+        {/* If the reason is not in the dropdown options, add it dynamically */}
+        {item["reason"] && !dropdownOptions.includes(item["reason"]) && (
+          <option value={item["reason"]}>{item["reason"]}</option>
+        )}
+      </select>
 
-                {item.reason === "Other" && (
-                  <div>
-                    <input
-                      type="text"
-                      placeholder="Enter custom reason"
-                      value={customReasons[index] || ""}
-                      onChange={(e) => {
-                        const updatedCustomReasons = [...customReasons];
-                        updatedCustomReasons[index] = e.target.value;
-                        setCustomReasons(updatedCustomReasons);
-                      }}
-                    />
-                    <button onClick={() => handleAddCustomReason(index)}>
-                      OK
-                    </button>
-                  </div>
-                )}
-              </td>
+      {item.reason === "Other" && (
+        <div>
+          <input
+            type="text"
+            placeholder="Enter custom reason"
+            value={customReasons[index] || ""}
+            onChange={(e) => {
+              const updatedCustomReasons = [...customReasons];
+              updatedCustomReasons[index] = e.target.value;
+              setCustomReasons(updatedCustomReasons);
+            }}
+          />
+          <button onClick={() => handleAddCustomReason(index)}>
+            OK
+          </button>
+        </div>
+      )}
+    </td>
 
               <td>
                 <button

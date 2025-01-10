@@ -26,6 +26,7 @@ const Sidebar_user = ({ isOpen, toggleSidebar }) => {
         else if (path.includes('Admin_management_user')) setActiveIndex('Admin_management_user');
         else if (path.includes('Oil_Analysis_user')) setActiveIndex('Oil_Analysis_user');
         else if (path.includes('corrective-action-user')) setActiveIndex('corrective-action-user');
+        else if (path.includes('sop-consumption-user')) setActiveIndex('sop-consumption-user');
         else setActiveIndex('Home');
     }, [location]);
 
@@ -158,6 +159,14 @@ const Sidebar_user = ({ isOpen, toggleSidebar }) => {
                     <li className={activeIndex === 'corrective-action-user' ? 'active' : ''}>
                         <img src={locationIcon} alt="corrective-action-user" className="icon-Fun icon_S" />
                         {isOpen && <span>Corrective Action</span>}
+                    </li>
+                </Link>
+
+
+                <Link to="/sop-consumption-user">
+                    <li className={activeIndex === 'sop-consumption-user' ? 'active' : ''}>
+                        <img src={locationIcon} alt="sop-consumption-user" className="icon-Fun icon_S" />
+                        {isOpen && <span>SOP Consumption</span>}
                     </li>
                 </Link>
 

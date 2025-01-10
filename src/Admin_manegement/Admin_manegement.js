@@ -3,6 +3,7 @@ import './Admin_manegement.css';
 import add_admin from '../assets/plus-circle.png';
 import cancel_icon from '../assets/close.png';
 import moment from 'moment-timezone';
+import { BASE_URL } from '../config'
 
 function AdminManagement() {
 
@@ -16,8 +17,8 @@ function AdminManagement() {
               return acc;
             }, {});
           
-            // Get the current pathname
-            const pathname = window.location.pathname;
+  // Get the current pathname when using HashRouter
+  const pathname = window.location.hash.replace(/^#/, '');
           
             // Get the current time in IST format
             const currentTime = moment().tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ss');
@@ -43,7 +44,8 @@ function AdminManagement() {
           
             try {
               // Send data to the backend's heartbeat API
-              const response = await fetch('http://localhost:224/api/heartbeat', {
+            //   const response = await fetch('http://localhost:224/api/heartbeat', {
+                const response = await fetch(`${BASE_URL}/api/heartbeat`, {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -128,6 +130,26 @@ function AdminManagement() {
             window.removeEventListener('beforeunload', handleBeforeUnload);
           };
         }, []);
+
+                                          const checkAdminIdAndRedirect = () => {
+                                            const getCookie = (name) => {
+                                              const value = `; ${document.cookie}`;
+                                              const parts = value.split(`; ${name}=`);
+                                              if (parts.length === 2) return parts.pop().split(';').shift();
+                                            };
+                                          
+                                            const adminId = getCookie('adminId'); // Retrieve the adminId from cookies
+                                          
+                                            if (!adminId) {
+                                              // If adminId is not found, redirect to the default route
+                                              window.location.href = '/'; // Redirect to the home page or default route
+                                            }
+                                          };
+                            
+                                          useEffect(() => {
+                                            checkAdminIdAndRedirect(); // Check adminId and redirect if not found
+                                          }, []); // Empty dependency array to ensure this runs only once on mount
+                                          
     const [showModal, setShowModal] = useState(false);
     const [users, setUsers] = useState([
         { name: 'Pratik', domainId: 'Domain Id', access: 'User' },
@@ -176,7 +198,8 @@ function AdminManagement() {
             const requestData = { domainId };
             console.log('Data being sent to API:', requestData); // Log the data being sent
     
-            const response = await fetch('http://localhost:224/api/delete_admin', {
+            // const response = await fetch('http://localhost:224/api/delete_admin', {
+                const response = await fetch(`${BASE_URL}/api/delete_admin`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -209,7 +232,8 @@ function AdminManagement() {
         const fetchUsers = async () => {
             try {
                 // Send GET request to fetch the users data
-                const response = await fetch('http://localhost:224/api/fetch_admins');
+                // const response = await fetch('http://localhost:224/api/fetch_admins');
+                const response = await fetch(`${BASE_URL}/api/fetch_admins`);
 
                 if (!response.ok) {
                     throw new Error('Failed to fetch users');
@@ -367,7 +391,8 @@ function AdminModal({
         console.log("Sending the following data to API:", data);
 
         try {
-            const response = await fetch('http://localhost:3001/api/register_admin', {
+            // const response = await fetch('http://localhost:224/api/register_admin', {
+                const response = await fetch(`${BASE_URL}/api/register_admin`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
