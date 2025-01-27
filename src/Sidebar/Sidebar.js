@@ -12,6 +12,8 @@ import logoutIcon from '../assets/log-out (2).png';
 import toggleIcon from '../assets/toggle.png';
 import { useNavigate } from 'react-router-dom';  // Import useNavigate from react-router-dom
 
+import { BASE_URL } from '../config'
+
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   const location = useLocation();
   const [activeIndex, setActiveIndex] = useState('');
@@ -34,7 +36,8 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     if (adminId && name && email) {
       console.log('Sending adminId, name, and email:', adminId, name, email);
       try {
-        const response = await fetch('http://localhost:224/api/toggle_admin', {
+        // const response = await fetch('http://localhost:224/api/toggle_admin', {
+          const response = await fetch(`${BASE_URL}/api/toggle_admin`, {
           // const response = await fetch('http://localhost:3001/api/toggle_admin', {
           method: 'POST',
           headers: {
@@ -66,7 +69,8 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           console.log('Cookies set successfully!');
 
           // Navigate to Home_user page using useNavigate
-          navigate('/Home_user');  // This will navigate to Home_user without reloading the page
+         // navigate('/Home_user');  // This will navigate to Home_user without reloading the page
+          navigate('/Oil_Analysis');  // This will navigate to Home_user without reloading the page
           // navigate('/Home_user?reload=true', { replace: true });
 
         } else {
