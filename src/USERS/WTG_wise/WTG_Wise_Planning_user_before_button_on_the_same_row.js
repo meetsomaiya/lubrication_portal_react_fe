@@ -1351,79 +1351,82 @@ const fetchOpenStateWiseCount = async () => {
         </div>
       )}
       <div className='container'>
-        {/* <div className='dropdown_lubmain flex ' style={{justifyContent:'space-between',marginTop:'-9px',marginLeft:'-9px'}}> */}
-<div className="containerinsidewtg">
-  <div className="lub-dropdown">
-    <select onChange={handleSelectChange1} value={selectedOption1} className="searchWTG_dropicon">
-      <option value="Select">Type of Order</option>
-      {options.map((option, index) => (
-        <option key={index} value={option.ZEXT_RNO}>
-          {option.ZEXT_RNO}
-        </option>
-      ))}
-    </select>
-  </div>
+        <div className='dropdown_lubmain flex ' style={{justifyContent:'space-between',marginTop:'-9px',marginLeft:'-9px'}}>
+        <div className="lub-dropdown">
+            <select onChange={handleSelectChange1} value={selectedOption1} className="searchWTG_dropicon">
+                <option value="Select">Type of Order</option>
+                {options.map((option, index) => (
+                    <option key={index} value={option.ZEXT_RNO}> 
+                        {option.ZEXT_RNO}
+                    </option>
+                ))}
+            </select>
+        </div>
+        <div className="lub-dropdown">
+                <input 
+                    type="date" 
+                    onChange={handleStartDateChange} 
+                    value={startDate} 
+                    placeholder="From" 
+                />
+            </div>
+            <div className="lub-dropdown">
+                <input 
+                    type="date" 
+                    onChange={handleEndDateChange} 
+                    value={endDate} 
+                    placeholder="To" 
+                />
+            </div>
+          <div className="lub-dropdown">
+                <select onChange={handleSelectChange2} value={selectedOption2} className="searchWTG_dropicon">
+                    {/* <option value="Select">State</option> */}
+                    {states.map((state, index) => (
+                        <option key={index} value={state}>{state}</option>
+                    ))}
+                </select>
+            </div>
+            <div className="lub-dropdown">
+                <select onChange={handleSelectChange3} value={selectedOption3} className="searchWTG_dropicon">
+                    {/* <option value="Select">Area</option> */}
+                    {areas.map((area, index) => (
+                        <option key={index} value={area}>{area}</option>
+                    ))}
+                </select>
+            </div>
+            <div className="lub-dropdown">
+                <select onChange={handleSelectChange4} value={selectedOption4} className="searchWTG_dropicon">
+                    <option value="Select">Site</option>
+                    {sites.map((site, index) => (
+                        <option key={index} value={site}>{site}</option>
+                    ))}
+                </select>
 
-  <div className="lub-dropdown">
-    <input 
-      type="date" 
-      onChange={handleStartDateChange} 
-      value={startDate} 
-      placeholder="From" 
-    />
-  </div>
+                <button
+    className="buttonrockongoodmyfriend"
+    style={{
+        backgroundColor: 'black',
+        color: 'silver',
+        border: '2px solid silver',
+        borderRadius: '12px',
+        padding: '10px 20px',
+        fontSize: '16px',
+        cursor: 'pointer',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+        // position: 'fixed', // Fixed position for center alignment
+         position: 'relative', // Fixed position for center alignment
+        top: '33%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)' // Center it exactly
+    }}
+    // onClick={fetchTotalWtgCount}
+    onClick={handleButtonClick}
+>
+    Search
+</button>
 
-  <div className="lub-dropdown">
-    <input 
-      type="date" 
-      onChange={handleEndDateChange} 
-      value={endDate} 
-      placeholder="To" 
-    />
-  </div>
-
-  <div className="lub-dropdown">
-    <select onChange={handleSelectChange2} value={selectedOption2} className="searchWTG_dropicon">
-      {states.map((state, index) => (
-        <option key={index} value={state}>
-          {state}
-        </option>
-      ))}
-    </select>
-  </div>
-
-  <div className="lub-dropdown">
-    <select onChange={handleSelectChange3} value={selectedOption3} className="searchWTG_dropicon">
-      {areas.map((area, index) => (
-        <option key={index} value={area}>
-          {area}
-        </option>
-      ))}
-    </select>
-  </div>
-
-  <div className="lub-dropdown">
-    <select onChange={handleSelectChange4} value={selectedOption4} className="searchWTG_dropicon">
-      <option value="Select">Site</option>
-      {sites.map((site, index) => (
-        <option key={index} value={site}>
-          {site}
-        </option>
-      ))}
-    </select>
-  </div>
-
-  {/* Button in the same row */}
-  <div className="lub-dropdown">
-    <button
-      className="buttonrockongoodmyfriend"
-      onClick={handleButtonClick}
-    >
-      Search
-    </button>
-  </div>
-</div>
-
+            </div>
+        </div>
         <div className='card-container'>
       {/* <div className='card-allheader'>
         <span className='card-header'>April - June, 2024</span>

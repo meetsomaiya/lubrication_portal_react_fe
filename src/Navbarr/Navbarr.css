@@ -49,6 +49,7 @@
   margin-left: 20px;
   position: relative;
   overflow: hidden; 
+  margin-top: 1.1rem;
 }
 
 .logo::after {
@@ -106,6 +107,7 @@
   margin-left: 15px;
   margin-right: 5px;
 }
+
 
 .header-text {
   display: flex;

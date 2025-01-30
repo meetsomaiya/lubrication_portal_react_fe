@@ -1211,38 +1211,6 @@ const handleConsolidatedFileDownload = () => {
           console.log('Updated modalData:', modalData);
         }
       }, [modalData]); // This effect will run every time modalData changes
-
-      const handleChange = (event) => {
-        const value = event.target.value;
-        setSelectedFinancialYear(value);
-    
-        // Call fetch functions
-        fetchDataForYDOilChange(event);
-        fetchDataForPDOilChange(event);
-        fetchDataForGBOilChange(event);
-        fetchDataForFCOilChange(event);
-        fetchDataForGbTopup(event);
-        fetchDataForFCTopup(event);
-        fetchDataForYDPDTopUp(event);
-        fetchDataForDispute(event);
-        fetchDataForPendingTeco(event);
-      };
-    
-      useEffect(() => {
-        // Wait for 1 second before selecting the first dropdown value
-        const timer = setTimeout(() => {
-          if (financialYears.length > 0) {
-            const firstYear = financialYears[0];
-            setSelectedFinancialYear(firstYear);
-    
-            // Call the handleChange manually to trigger the associated functions
-            const syntheticEvent = { target: { value: firstYear } }; // Mimic an event object
-            handleChange(syntheticEvent);
-          }
-        }, 1000);
-    
-        return () => clearTimeout(timer); // Cleanup the timer on component unmount
-      }, [financialYears]);
      
      
       return (
@@ -1255,17 +1223,26 @@ const handleConsolidatedFileDownload = () => {
           <div className="dropdownContainer997">
             {/* <label htmlFor="financialYear997">Select Financial Year:</label> */}
             <select
-        id="financialYear997"
-        value={selectedFinancialYear}
-        onChange={handleChange}
-      >
-        <option value="">Select Financial Year</option>
-        {financialYears.map((year, index) => (
-          <option key={index} value={year}>
-            {year}
-          </option>
-        ))}
-      </select>
+                    id="financialYear997"
+                    value={selectedFinancialYear}
+                    onChange={(event) => {
+                        fetchDataForYDOilChange(event);
+                        fetchDataForPDOilChange(event);
+                        fetchDataForGBOilChange(event);
+                        fetchDataForFCOilChange(event);
+                        fetchDataForGbTopup(event);
+                        fetchDataForFCTopup(event);
+                        fetchDataForYDPDTopUp(event);
+                        fetchDataForDispute(event);
+                        fetchDataForPendingTeco(event);
+                        setSelectedFinancialYear(event.target.value);
+                    }}
+                >
+      <option value="">Select Financial Year</option>
+      {financialYears.map((year, index) => (
+        <option key={index} value={year}>{year}</option>
+      ))}
+    </select>
      
     <button id="downloadSegregatedFile997" onClick={handleSegregatedFileDownload}>
                     Download Segregated File

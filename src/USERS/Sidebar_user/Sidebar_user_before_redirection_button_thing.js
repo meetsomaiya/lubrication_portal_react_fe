@@ -55,9 +55,6 @@ const Sidebar_user = ({ isOpen, toggleSidebar }) => {
         return cookieString ? decodeURIComponent(cookieString.split('=')[1]) : null;
     };
 
-      // Retrieve isadmin value from cookies
-  const isAdmin = getCookie('isadmin') === 'true';
-
     // Retrieve userId and name from cookies
     const userName = getCookie('name') || "Guest";
     const userId = getCookie('userId') || "Unknown User";
@@ -119,17 +116,17 @@ const Sidebar_user = ({ isOpen, toggleSidebar }) => {
         <div className={`sidebar ${isOpen ? 'open' : 'closed'}`}>
             <ul className="sidebar-menu">
                 {/* Conditionally render Main Application button */}
-                {(adminIdFound || isAdmin) && (
-    <div
-        style={{ backgroundColor: '#009F89', border: '1px solid #009F89' }}
-        onClick={handleMainApplicationClick}
-    >
-        <li>
-            <img src={mainIcon} alt="Home" className="icon-WTG icon_S" />
-            {isOpen && <span style={{ color: '#ffffff' }}>Main Application</span>}
-        </li>
-    </div>
-)}
+                {adminIdFound && (
+                    <div
+                        style={{ backgroundColor: '#009F89', border: '1px solid #009F89' }}
+                        onClick={handleMainApplicationClick}
+                    >
+                        <li>
+                            <img src={mainIcon} alt="Home" className="icon-WTG icon_S" />
+                            {isOpen && <span style={{ color: '#ffffff' }}>Main Application</span>}
+                        </li>
+                    </div>
+                )}
 
                 {/* Other Links */}
                 <Link to="/Home_user" onClick={handleLinkClick}>

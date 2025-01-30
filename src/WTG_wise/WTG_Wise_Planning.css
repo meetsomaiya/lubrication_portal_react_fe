@@ -138,8 +138,43 @@
 
 .container {
   padding: 10px;
-  margin-left: -23px
+  margin-left: -23px;
+  width: 80vw;
 }
+
+.containerinsidewtg {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between; /* Distribute space evenly between items */
+  flex-wrap: nowrap; /* Prevent wrapping of elements into new lines */
+  align-items: center; /* Vertically align all items */
+}
+
+.containerinsidewtg > .lub-dropdown {
+  flex-grow: 1; /* Ensures all items grow to occupy the space evenly */
+  margin: 0 10px; /* Optional: space between elements */
+ /* min-width: 150px; /* Prevents too much shrinking */
+ min-width: 50px;
+}
+
+.buttonrockongoodmyfriend {
+  margin-left: 10px;
+  background-color: black;
+  color: silver;
+  border: 2px solid silver;
+  border-radius: 12px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: auto; /* Let the button take up only the space it needs */
+}
+
+.searchWTG_dropicon {
+  width: 100%; /* Ensure the select and input take up full width */
+  padding: 5px;
+}
+
 
 /* .dropdown_lubmain{
   margin-left: -10px;
@@ -275,10 +310,6 @@ label {
   border: 3px solid blue; /* Blue border for active card */
 }
 
-
-.card-container {
-  margin-top: 30px;
-}
 
 .progress-main {
   margin-top: 10px;
@@ -459,6 +490,10 @@ label {
 }
 
 .state_wise_container {
+  margin-top: 30px;
+}
+
+.card-container {
   margin-top: 30px;
 }
 

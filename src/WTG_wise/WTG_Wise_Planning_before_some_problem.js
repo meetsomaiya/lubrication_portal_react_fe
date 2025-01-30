@@ -246,11 +246,6 @@ const [isTotalStateWiseCountFetched, setTotalStateWiseCountFetched] = useState(f
   const [searchTermPlant991, setSearchTermPlant991] = useState('');
   const [searchTermOrderNo991, setSearchTermOrderNo991] = useState('');
 
-  const [hasRun9998, setHasRun9998] = useState(false); // Track if effect has executed
-
-  const hasRunRef = useRef(false); // Tracks if effect has already run
-  const [isInitialized, setIsInitialized] = useState(false); // Ensures effect runs only once
-
     // Function to handle changes in the search input
     const handleSearchChange = (e, filterType) => {
       const value = e.target.value;
@@ -1315,27 +1310,24 @@ const handleDownload = () => {
       outofGraceCount
     ]);
 
-
-    // useEffect(() => {
-    //   // Wait for 1 second before selecting the first dropdown value
-    //   const timer = setTimeout(() => {
-    //     if (options.length > 0) {
-    //       const firstOption = options[0].ZEXT_RNO;
-    //       setSelectedOption1(firstOption);
+    useEffect(() => {
+      // Wait for 1 second before selecting the first dropdown value
+      const timer = setTimeout(() => {
+        if (options.length > 0) {
+          const firstOption = options[0].ZEXT_RNO;
+          setSelectedOption1(firstOption);
   
-    //       // Create a synthetic event to trigger the handleSelectChange1 manually
-    //       const syntheticEvent = { target: { value: firstOption } };
-    //       handleSelectChange1(syntheticEvent);
+          // Create a synthetic event to trigger the handleSelectChange1 manually
+          const syntheticEvent = { target: { value: firstOption } };
+          handleSelectChange1(syntheticEvent);
   
-    //       // Trigger the button click after the dropdown value is set
-    //       handleButtonClick();
-    //     }
-    //   }, 1000);
+          // Trigger the button click after the dropdown value is set
+          handleButtonClick();
+        }
+      }, 1000);
   
-    //   return () => clearTimeout(timer); // Cleanup the timer on component unmount
-    // }, [options, handleSelectChange1, handleButtonClick]);
-
-    
+      return () => clearTimeout(timer); // Cleanup the timer on component unmount
+    }, [options, handleSelectChange1, handleButtonClick]);
     
 
   return (

@@ -57,45 +57,42 @@ function Home_user() {
   };
 
   // Function to send the AJAX request to api_for_auto_login
-// Function to send the AJAX request to api_for_auto_login
-const sendAutoLoginRequest = async (domainId) => {
-  try {
-    // Log the data being sent
-    console.log('Sending data to auto login API:', { domain_id: domainId });
-
-    const response = await fetch('http://localhost:224/api/api_for_auto_login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ domain_id: domainId }),
-    });
-
-    if (response.ok) {
-      const userData = await response.json(); // Assuming the response is in JSON format
-      console.log('Auto login API request successful', userData);
-
-      // Encode each field properly before storing in cookies to handle special characters (like commas)
-      document.cookie = `userId=${encodeURIComponent(userData.id)}; path=/`;
-      document.cookie = `domain_id=${encodeURIComponent(userData.domain_id)}; path=/`;
-      document.cookie = `name=${encodeURIComponent(userData.name)}; path=/`;
-      document.cookie = `email=${encodeURIComponent(userData.email)}; path=/`;
-      document.cookie = `state=${encodeURIComponent(userData.state)}; path=/`;
-      document.cookie = `area=${encodeURIComponent(userData.area)}; path=/`;
-      document.cookie = `site=${encodeURIComponent(userData.site)}; path=/`;
-      document.cookie = `access=${encodeURIComponent(userData.access)}; path=/`;
-      
-      // Directly store the isadmin flag from API response
-      document.cookie = `isadmin=${userData.isadmin}; path=/`;
-
-    } else {
-      console.error('Error sending auto login request:', response.status);
+  const sendAutoLoginRequest = async (domainId) => {
+    try {
+      // Log the data being sent
+      console.log('Sending data to auto login API:', { domain_id: domainId });
+  
+     const response = await fetch('http://localhost:224/api/api_for_auto_login', {
+        // const response = await fetch('http://localhost:3001/api/api_for_auto_login', {
+        // const response = await fetch(`${BASE_URL}/api/api_for_auto_login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ domain_id: domainId }),
+      });
+  
+      if (response.ok) {
+        const userData = await response.json();  // Assuming the response is in JSON format
+        console.log('Auto login API request successful', userData);
+  
+        // Encode each field properly before storing in cookies to handle special characters (like commas)
+        document.cookie = `userId=${encodeURIComponent(userData.id)}; path=/`;
+        document.cookie = `domain_id=${encodeURIComponent(userData.domain_id)}; path=/`;
+        document.cookie = `name=${encodeURIComponent(userData.name)}; path=/`;
+        document.cookie = `email=${encodeURIComponent(userData.email)}; path=/`;
+        document.cookie = `state=${encodeURIComponent(userData.state)}; path=/`;
+        document.cookie = `area=${encodeURIComponent(userData.area)}; path=/`;
+        document.cookie = `site=${encodeURIComponent(userData.site)}; path=/`;
+        document.cookie = `access=${encodeURIComponent(userData.access)}; path=/`;
+  
+      } else {
+        console.error('Error sending auto login request:', response.status);
+      }
+    } catch (error) {
+      console.error('Failed to send auto login request:', error);
     }
-  } catch (error) {
-    console.error('Failed to send auto login request:', error);
-  }
-};
-
+  };
   
   // Function to retrieve and decode cookie values
   const getCookie = (name) => {

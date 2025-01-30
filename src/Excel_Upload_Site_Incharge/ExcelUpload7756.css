@@ -2,9 +2,10 @@
   max-width: 800px; /* Increased width */
   margin: 30px auto; /* Adjusted margin */
   padding: 30px; /* Increased padding */
-  background-color: #f9f9f9;
+  /* background-color: #f9f9f9; */
   border-radius: 12px; /* Slightly more rounded corners */
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); /* Slightly stronger shadow */
+  /* Slightly stronger shadow */
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); 
   font-family: Arial, sans-serif;
 }
 

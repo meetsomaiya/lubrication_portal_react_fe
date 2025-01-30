@@ -16,10 +16,6 @@
     margin-bottom: 2vmax;
 }
 
-.sitereport-dropdown select {
-    width: 10vw !important;
-}
-
 .sitereport-dropdown select,
 .sitereport-dropdown input[type="date"] {
     padding: 10px;
@@ -33,14 +29,6 @@
     border-radius: 4px;
     outline: none;
     line-height: 16px;
-}
-
-.searchsite_dropicon {
-    padding-left: 10px !important;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    background: url("../assets/dropdown\ arrow.png") white no-repeat calc(100% - 15px) !important;
 }
 
 .sitereport-dropdown input[type="date"]::before {
@@ -95,3 +83,10 @@ label {
     border-bottom: 3px solid teal;
 }
 
+.searchsite_dropicon {
+    padding-left: 10px !important;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: url("../assets/dropdown\ arrow.png") white no-repeat calc(100% - 15px) !important;
+}

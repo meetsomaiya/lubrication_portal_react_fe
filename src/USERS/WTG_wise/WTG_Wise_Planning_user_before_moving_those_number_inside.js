@@ -1352,7 +1352,7 @@ const fetchOpenStateWiseCount = async () => {
       )}
       <div className='container'>
         {/* <div className='dropdown_lubmain flex ' style={{justifyContent:'space-between',marginTop:'-9px',marginLeft:'-9px'}}> */}
-<div className="containerinsidewtg">
+        <div className="containerinsidewtg">
   <div className="lub-dropdown">
     <select onChange={handleSelectChange1} value={selectedOption1} className="searchWTG_dropicon">
       <option value="Select">Type of Order</option>

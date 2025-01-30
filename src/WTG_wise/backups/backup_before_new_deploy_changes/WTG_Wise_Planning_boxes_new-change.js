@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import './WTG_Wise_Planning.css';
 import filterIcon from '../assets/filter.png';
 import cancelIcon from '../assets/close-line-icon.png';
@@ -245,11 +245,6 @@ const [isTotalStateWiseCountFetched, setTotalStateWiseCountFetched] = useState(f
   const [searchTermFunctionLoc991, setSearchTermFunctionLoc991] = useState('');
   const [searchTermPlant991, setSearchTermPlant991] = useState('');
   const [searchTermOrderNo991, setSearchTermOrderNo991] = useState('');
-
-  const [hasRun9998, setHasRun9998] = useState(false); // Track if effect has executed
-
-  const hasRunRef = useRef(false); // Tracks if effect has already run
-  const [isInitialized, setIsInitialized] = useState(false); // Ensures effect runs only once
 
     // Function to handle changes in the search input
     const handleSearchChange = (e, filterType) => {
@@ -1314,28 +1309,6 @@ const handleDownload = () => {
       completedCount,
       outofGraceCount
     ]);
-
-
-    // useEffect(() => {
-    //   // Wait for 1 second before selecting the first dropdown value
-    //   const timer = setTimeout(() => {
-    //     if (options.length > 0) {
-    //       const firstOption = options[0].ZEXT_RNO;
-    //       setSelectedOption1(firstOption);
-  
-    //       // Create a synthetic event to trigger the handleSelectChange1 manually
-    //       const syntheticEvent = { target: { value: firstOption } };
-    //       handleSelectChange1(syntheticEvent);
-  
-    //       // Trigger the button click after the dropdown value is set
-    //       handleButtonClick();
-    //     }
-    //   }, 1000);
-  
-    //   return () => clearTimeout(timer); // Cleanup the timer on component unmount
-    // }, [options, handleSelectChange1, handleButtonClick]);
-
-    
     
 
   return (
@@ -1378,81 +1351,93 @@ const handleDownload = () => {
         </div>
       )}
       <div className='container'>
-        {/* <div className='dropdown_lubmain flex ' style={{justifyContent:'space-between',marginTop:'-9px',marginLeft:'-9px'}}> */}
-        <div className="containerinsidewtg">
-  <div className="lub-dropdown">
-    <select onChange={handleSelectChange1} value={selectedOption1} className="searchWTG_dropicon">
-      <option value="Select">Type of Order</option>
-      {options.map((option, index) => (
-        <option key={index} value={option.ZEXT_RNO}>
-          {option.ZEXT_RNO}
-        </option>
-      ))}
-    </select>
-  </div>
+        <div className='dropdown_lubmain flex ' style={{justifyContent:'space-between',marginTop:'-9px',marginLeft:'-9px'}}>
+        <div className="lub-dropdown">
+            <select onChange={handleSelectChange1} value={selectedOption1} className="searchWTG_dropicon">
+                <option value="Select">Type of Order</option>
+                {options.map((option, index) => (
+                    <option key={index} value={option.ZEXT_RNO}> 
+                        {option.ZEXT_RNO}
+                    </option>
+                ))}
+            </select>
+        </div>
+        <div className="lub-dropdown">
+                <input 
+                    type="date" 
+                    onChange={handleStartDateChange} 
+                    value={startDate} 
+                    placeholder="From" 
+                />
+            </div>
+            <div className="lub-dropdown">
+                <input 
+                    type="date" 
+                    onChange={handleEndDateChange} 
+                    value={endDate} 
+                    placeholder="To" 
+                />
+            </div>
+          <div className="lub-dropdown">
+            <select onChange={handleSelectChange2} value={selectedOption2} className="searchWTG_dropicon">
+                {/* <option value="Select">State</option> */}
+                <option value="Select">IB Level</option>
+                {states.map((state, index) => (
+                    <option key={index} value={state.name}> {/* Adjust 'name' based on your actual data structure */}
+                        {state.name} {/* Display the state name in the dropdown */}
+                    </option>
+                ))}
+            </select>
+        </div>
+        <div className="lub-dropdown">
+                <select onChange={handleSelectChange3} value={selectedOption3} className="searchWTG_dropicon">
+                    <option value="Select">Area</option>
+                    {areas.map((area, index) => (
+                        <option key={index} value={area.area}> {/* Accessing the 'area' property */}
+                            {area.area} {/* Display the area name in the dropdown */}
+                        </option>
+                    ))}
+                </select>
+            </div>
+            
+            {/* Site Dropdown */}
+            <div className="lub-dropdown">
+                <select onChange={handleSelectChange4} value={selectedOption4} className="searchWTG_dropicon">
+                    <option value="Select">Site</option>
+                    {sites.map((site, index) => (
+                        <option key={index} value={site.site}>
+                            {site.site}
+                        </option>
+                    ))}
+                </select>
+                
+                <button
+    className="buttonrockongoodmyfriend"
+    style={{
+        backgroundColor: 'black',
+        color: 'silver',
+        border: '2px solid silver',
+        borderRadius: '12px',
+        padding: '10px 20px',
+        fontSize: '16px',
+        cursor: 'pointer',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+        // position: 'fixed', // Fixed position for center alignment
+         position: 'relative', // Fixed position for center alignment
+        top: '33%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)' // Center it exactly
+    }}
+    // onClick={fetchTotalWtgCount}
+    onClick={handleButtonClick}
+>
+    Search
+</button>
 
-  <div className="lub-dropdown">
-    <input 
-      type="date" 
-      onChange={handleStartDateChange} 
-      value={startDate} 
-      placeholder="From" 
-    />
-  </div>
 
-  <div className="lub-dropdown">
-    <input 
-      type="date" 
-      onChange={handleEndDateChange} 
-      value={endDate} 
-      placeholder="To" 
-    />
-  </div>
+            </div>
 
-  <div className="lub-dropdown">
-    <select onChange={handleSelectChange2} value={selectedOption2} className="searchWTG_dropicon">
-      <option value="Select">IB Level</option>
-      {states.map((state, index) => (
-        <option key={index} value={state.name}>
-          {state.name}
-        </option>
-      ))}
-    </select>
-  </div>
-
-  <div className="lub-dropdown">
-    <select onChange={handleSelectChange3} value={selectedOption3} className="searchWTG_dropicon">
-      <option value="Select">Area</option>
-      {areas.map((area, index) => (
-        <option key={index} value={area.area}>
-          {area.area}
-        </option>
-      ))}
-    </select>
-  </div>
-
-  <div className="lub-dropdown">
-    <select onChange={handleSelectChange4} value={selectedOption4} className="searchWTG_dropicon">
-      <option value="Select">Site</option>
-      {sites.map((site, index) => (
-        <option key={index} value={site.site}>
-          {site.site}
-        </option>
-      ))}
-    </select>
-  </div>
-
-  {/* Button placed in the same row as other items */}
-  <div className="lub-dropdown">
-    <button
-      className="buttonrockongoodmyfriend"
-      onClick={handleButtonClick}
-    >
-      Search
-    </button>
-  </div>
-</div>
-
+        </div>
         <div className='card-container'>
       {/* <div className='card-allheader'>
         <span className='card-header'>April - June, 2024</span>
@@ -1478,13 +1463,11 @@ const handleDownload = () => {
         <div className="flex justify-between">
           <h2>Total</h2>
           <h3>{totalCount}</h3>
-          <div style={{ width: `${totalPercentage}%` }}></div>
-          {/* <p style={{ color: '#009F89' }}>{totalPercentage}%</p> */}
         </div>
         <div className="progress-main">
           <p style={{ color: '#009F89' }}>{totalPercentage}%</p>
           <div className="progress-bar">
-            {/* <div style={{ width: `${totalPercentage}%` }}></div> */}
+            <div style={{ width: `${totalPercentage}%` }}></div>
           </div>
         </div>
       </div>
@@ -1501,12 +1484,11 @@ const handleDownload = () => {
         <div className="flex justify-between">
           <h2>Planned</h2>
           <h3>{plannedCount !== null ? plannedCount : '0'}</h3>
-          <div style={{ width: `${plannedPercentage}%` }}></div>
         </div>
         <div className="progress-main">
           <p style={{ color: '#013B72' }}>{plannedPercentage.toFixed(0)}%</p> {/* Display calculated percentage */}
           <div className="progress-bar">
-            {/* <div style={{ width: `${plannedPercentage}%` }}></div> */}
+            <div style={{ width: `${plannedPercentage}%` }}></div>
           </div>
         </div>
       </div>
@@ -1525,12 +1507,11 @@ const handleDownload = () => {
         <div className="flex justify-between">
           <h2>Open</h2>
           <h3>{openCount !== null ? openCount : '0'}</h3>
-          <div style={{ width: `${openPercentage}%` }}></div>
         </div>
         <div className="progress-main">
           <p style={{ color: '#E95060' }}>{openPercentage.toFixed(0)}%</p> {/* Display calculated percentage */}
           <div className="progress-bar">
-            {/* <div style={{ width: `${openPercentage}%` }}></div> */}
+            <div style={{ width: `${openPercentage}%` }}></div>
           </div>
         </div>
       </div>
@@ -1548,12 +1529,11 @@ const handleDownload = () => {
         <div className="flex justify-between">
           <h2>Completed</h2>
           <h3>{completedCount !== null ? completedCount : '0'}</h3>
-          <div style={{ width: `${completedPercentage}%` }}></div>
         </div>
         <div className="progress-main">
           <p style={{ color: '#00AD48' }}>{completedPercentage.toFixed(0)}%</p> {/* Display calculated percentage */}
           <div className="progress-bar">
-            {/* <div style={{ width: `${completedPercentage}%` }}></div> */}
+            <div style={{ width: `${completedPercentage}%` }}></div>
           </div>
         </div>
       </div>
@@ -1577,7 +1557,7 @@ const handleDownload = () => {
         <div className="progress-main">
           <p style={{ color: '#CE6301' }}>{gracePercentage.toFixed(0)}%</p> {/* Display calculated percentage */}
           <div className="progress-bar">
-            {/* <div style={{ width: `${gracePercentage}%` }}></div> */}
+            <div style={{ width: `${gracePercentage}%` }}></div>
           </div>
         </div>
       </div>

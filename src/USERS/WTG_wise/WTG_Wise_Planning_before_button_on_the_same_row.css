@@ -141,14 +141,6 @@
   margin-left: -23px
 }
 
-.searchWTG_dropicon{
-  padding-left: 10px !important;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    background: url("../assets/dropdown\ arrow.png") white no-repeat calc(100% - 15px) !important; 
-}
-
 /* .dropdown_lubmain{
   margin-left: -10px;
 } */
@@ -727,4 +719,11 @@ label {
 }
 .horizontal-line {
   border-bottom: 1px solid #000; 
+}
+.searchWTG_dropicon{
+  padding-left: 10px !important;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: url("../assets/dropdown\ arrow.png") white no-repeat calc(100% - 15px) !important; 
 }

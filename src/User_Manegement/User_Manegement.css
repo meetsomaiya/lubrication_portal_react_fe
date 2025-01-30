@@ -52,6 +52,9 @@
     overflow: hidden;
     border: 1px solid #ddd;
     margin-top: 0.3rem; 
+
+    /* new line added */
+    font-size: 1.3rem;
 }
 
 .customerListTable table {

@@ -83,6 +83,11 @@
   .orderTypeHeader997user {
     text-align: left;
   }
+
+  .orderTypeLink997user {
+    white-space: nowrap;
+    
+  }
   
   .orderTypeLink997user a {
     color: #1a73e8;

@@ -73,9 +73,6 @@ const OilAnalysisTableUser = () => {
                         // Set entry time when the page loads
                         entryTime = moment().tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ss');
                         console.log(`Entry Time (IST): ${entryTime}`);
-
-                            // Call the function to extract domain_id from URL
-    extractDomainIdFromUrl();
                       
                         // Add event listener for beforeunload (browser close / tab close)
                         const handleBeforeUnload = () => {
@@ -177,8 +174,6 @@ const OilAnalysisTableUser = () => {
   const [searchQuery, setSearchQuery] = useState(""); // Search query state
 
   const [searchQuery9963, setSearchQuery9963] = useState('');
-
-  const [domainId, setDomainId] = useState(null);  // State to store the domain_id
   
   
 
@@ -293,10 +288,6 @@ const OilAnalysisTableUser = () => {
     //   return Number.isNaN(number) ? "0.00" : number.toFixed(2);
     // };
 
-    const formatToTwoDecimals = (value) => {
-      return Number(value).toFixed(2);
-    };
-
     // Helper function to format values to 2 decimal places and return absolute value
 const formatValue = (value) => {
   const number = parseFloat(value);
@@ -305,93 +296,6 @@ const formatValue = (value) => {
   }
   const absoluteValue = Math.abs(number);
   return absoluteValue.toFixed(2);
-};
-
-// Function to extract domain_id from URL and decode it
-const extractDomainIdFromUrl = () => {
-  try {
-    const hash = window.location.hash;
-    console.log('Window location hash:', hash);
-
-    // Split the hash to get query string after the first '?'
-    const [path, queryString] = hash.split('?');
-    if (!queryString) {
-      console.error('Hash does not contain query parameters');
-      return null;
-    }
-
-    console.log('Query string:', queryString);
-
-    // Parse the query string using URLSearchParams
-    const urlParams = new URLSearchParams(queryString);
-
-    // Get the domain_id from the query string
-    const domainIdFromUrl = urlParams.get('domain_id');
-    console.log('Encoded Domain ID from URL:', domainIdFromUrl);
-
-    if (domainIdFromUrl) {
-      // Decode the Base64 encoded domain_id
-      const decodedDomainId = atob(domainIdFromUrl);
-      console.log('Decoded Domain ID:', decodedDomainId);
-
-      // Set the decoded domain_id to the state
-      setDomainId(decodedDomainId);
-
-      // Set the domain_id as a cookie
-      document.cookie = `domain_id=${decodedDomainId}; path=/`;
-
-      // Send the AJAX request to the API for auto login
-      sendAutoLoginRequest(decodedDomainId);
-
-      return decodedDomainId;
-    } else {
-      console.error('domain_id not found in URL');
-      return null;
-    }
-  } catch (error) {
-    console.error('Error extracting or decoding domain_id:', error);
-    return null;
-  }
-};
-
-// Function to send the AJAX request to api_for_auto_login
-// Function to send the AJAX request to api_for_auto_login
-const sendAutoLoginRequest = async (domainId) => {
-try {
-  // Log the data being sent
-  console.log('Sending data to auto login API:', { domain_id: domainId });
-
-  const response = await fetch('http://localhost:224/api/api_for_auto_login', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ domain_id: domainId }),
-  });
-
-  if (response.ok) {
-    const userData = await response.json(); // Assuming the response is in JSON format
-    console.log('Auto login API request successful', userData);
-
-    // Encode each field properly before storing in cookies to handle special characters (like commas)
-    document.cookie = `userId=${encodeURIComponent(userData.id)}; path=/`;
-    document.cookie = `domain_id=${encodeURIComponent(userData.domain_id)}; path=/`;
-    document.cookie = `name=${encodeURIComponent(userData.name)}; path=/`;
-    document.cookie = `email=${encodeURIComponent(userData.email)}; path=/`;
-    document.cookie = `state=${encodeURIComponent(userData.state)}; path=/`;
-    document.cookie = `area=${encodeURIComponent(userData.area)}; path=/`;
-    document.cookie = `site=${encodeURIComponent(userData.site)}; path=/`;
-    document.cookie = `access=${encodeURIComponent(userData.access)}; path=/`;
-    
-    // Directly store the isadmin flag from API response
-    document.cookie = `isadmin=${userData.isadmin}; path=/`;
-
-  } else {
-    console.error('Error sending auto login request:', response.status);
-  }
-} catch (error) {
-  console.error('Failed to send auto login request:', error);
-}
 };
 
 
@@ -407,7 +311,7 @@ const parseCookieValues = (cookieValue) => {
 };
 
 // Usage Example
-// const domainId = getCookie("domain_id");
+const domainId = getCookie("domain_id");
 const userName = getCookie("name");
 const state = getCookie("state");
 
@@ -1446,63 +1350,6 @@ const normalizeStateName = (stateName) => {
       setLoading(false); // Hide preloader after completion
     }
   };
-
-  const handleChange = (event) => {
-    const value = event.target.value;
-    setSelectedYear(value);
-
-    // Call fetch functions
-    fetchDataForYDOilChange(event);
-    fetchDataForPDOilChange(event);
-    fetchDataForGBOilChange(event);
-    fetchDataForFCOilChange(event);
-    fetchDataForGbTopup(event);
-    fetchDataForFCTopup(event);
-    fetchDataForYDPDTopUp(event);
-    fetchDataForDispute(event);
-    fetchDataForPendingTeco(event);
-  };
-
-    useEffect(() => {
-      // Use setTimeout to delay the execution by 2 seconds
-      const timer = setTimeout(() => {
-        // Extract the query parameters from the hash
-        const hashParams = window.location.hash.split('?')[1];
-      
-        // Check if the reload query parameter is present
-        if (!hashParams || !hashParams.includes('reload=true')) {
-          // Append the reload query parameter to the hash
-          const baseHash = window.location.hash.split('?')[0]; // Get the base part of the hash
-          const updatedHash = `${baseHash}?reload=true`;
-      
-          // Update the hash and reload the page
-          window.location.hash = updatedHash;
-          window.location.reload(); // Reload the page
-        }
-      }, 2000); // 2000ms = 2 seconds
-      
-      // Cleanup the timeout on component unmount
-      return () => clearTimeout(timer);
-    
-    }, []);
-
-  useEffect(() => {
-    // Wait for 1 second before selecting the first dropdown value
-    const timer = setTimeout(() => {
-      if (financialYears.length > 0) {
-        const firstYear = financialYears[0];
-        setSelectedYear(firstYear);
-
-        // Call the handleChange manually to trigger the associated functions
-        const syntheticEvent = { target: { value: firstYear } }; // Mimic an event object
-        handleChange(syntheticEvent);
-      }
-    }, 1000);
-
-    return () => clearTimeout(timer); // Cleanup the timer on component unmount
-  }, [financialYears]);
-
-  
   
   
   
@@ -1526,17 +1373,29 @@ const normalizeStateName = (stateName) => {
         </select> */}
 
 <select
-        id="financialYear997user"
-        value={selectedYear}
-        onChange={handleChange}
-      >
-        <option value="">Select Financial Year</option>
-        {financialYears.map((year, index) => (
-          <option key={index} value={year}>
-            {year}
-          </option>
-        ))}
-      </select>
+      id="financialYear997user"
+      value={selectedYear}
+      onChange={(event) => {
+        const newSelectedYear = event.target.value;
+        setSelectedYear(newSelectedYear);
+        
+        // Uncomment and call your fetchData functions if needed:
+        fetchDataForYDOilChange(event);
+        fetchDataForPDOilChange(event);
+        fetchDataForGBOilChange(event);
+        fetchDataForFCOilChange(event);
+        fetchDataForGbTopup(event);
+        fetchDataForFCTopup(event);
+        fetchDataForYDPDTopUp(event);
+        fetchDataForDispute(event);
+        fetchDataForPendingTeco(event);
+      }}
+    >
+      <option value="">Select Financial Year</option>
+      {financialYears.map((year, index) => (
+        <option key={index} value={year}>{year}</option>
+      ))}
+    </select>
 
 
       </div>
@@ -1683,14 +1542,9 @@ const normalizeStateName = (stateName) => {
         <tr key={index}>
           <td>{item["Order No"]}</td>
           <td>{item["Function Loc"]}</td>
-          {/* <td>{item["Issue"]}</td>
+          <td>{item["Issue"]}</td>
           <td>{item["Return"]}</td>
-          <td>{item["Return Percentage"]}</td> */}
-
-              <td>{formatToTwoDecimals(item["Issue"])}</td>
-              <td>{formatToTwoDecimals(item["Return"])}</td>
-              <td>{formatToTwoDecimals(item["Return Percentage"])}</td>
-
+          <td>{item["Return Percentage"]}</td>
           <td>{item["Plant"]}</td>
           <td>{item["State"]}</td>
           <td>{item["Area"]}</td>

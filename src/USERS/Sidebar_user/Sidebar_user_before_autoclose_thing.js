@@ -55,9 +55,6 @@ const Sidebar_user = ({ isOpen, toggleSidebar }) => {
         return cookieString ? decodeURIComponent(cookieString.split('=')[1]) : null;
     };
 
-      // Retrieve isadmin value from cookies
-  const isAdmin = getCookie('isadmin') === 'true';
-
     // Retrieve userId and name from cookies
     const userName = getCookie('name') || "Guest";
     const userId = getCookie('userId') || "Unknown User";
@@ -107,71 +104,66 @@ const Sidebar_user = ({ isOpen, toggleSidebar }) => {
     };
 
     const handleMainApplicationClick = () => {
-        toggleSidebar(); // Close sidebar when clicked
         navigate('/Home');
-    };
-
-    const handleLinkClick = () => {
-        toggleSidebar(); // Close sidebar automatically on any link click
     };
 
     return (
         <div className={`sidebar ${isOpen ? 'open' : 'closed'}`}>
             <ul className="sidebar-menu">
                 {/* Conditionally render Main Application button */}
-                {(adminIdFound || isAdmin) && (
-    <div
-        style={{ backgroundColor: '#009F89', border: '1px solid #009F89' }}
-        onClick={handleMainApplicationClick}
-    >
-        <li>
-            <img src={mainIcon} alt="Home" className="icon-WTG icon_S" />
-            {isOpen && <span style={{ color: '#ffffff' }}>Main Application</span>}
-        </li>
-    </div>
-)}
+                {adminIdFound && (
+                    <div
+                        style={{ backgroundColor: '#009F89', border: '1px solid #009F89' }}
+                        onClick={handleMainApplicationClick}
+                    >
+                        <li>
+                            <img src={mainIcon} alt="Home" className="icon-WTG icon_S" />
+                            {isOpen && <span style={{ color: '#ffffff' }}>Main Application</span>}
+                        </li>
+                    </div>
+                )}
 
                 {/* Other Links */}
-                <Link to="/Home_user" onClick={handleLinkClick}>
+                <Link to="/Home_user">
                     <li className={activeIndex === 'Home' ? 'active' : ''}>
                         <img src={homeIcon} alt="Home" className="icon-Home icon_S" />
                         {isOpen && <span>Home</span>}
                     </li>
                 </Link>
-                <Link to="/Site_Report_user" onClick={handleLinkClick}>
+                <Link to="/Site_Report_user">
                     <li className={activeIndex === 'Site_Report_user' ? 'active' : ''}>
                         <img src={siteReportIcon} alt="Site Report" className="icon-Site icon_S" />
                         {isOpen && <span>Site Report</span>}
                     </li>
                 </Link>
-                <Link to="/WTG_Wise_Planning_user" onClick={handleLinkClick}>
+                <Link to="/WTG_Wise_Planning_user">
                     <li className={activeIndex === 'WTG_Wise_Planning_user' ? 'active' : ''}>
                         <img src={planningIcon} alt="WTG-Wise Planning" className="icon-WTG icon_S" />
                         {isOpen && <span>WTG-Wise Planning</span>}
                     </li>
                 </Link>
-                <Link to="/Functional_Loc_user" onClick={handleLinkClick}>
+                <Link to="/Functional_Loc_user">
                     <li className={activeIndex === 'Functional_Loc_user' ? 'active' : ''}>
                         <img src={locationIcon} alt="Functional Location Wise Planning" className="icon-Fun icon_S" />
                         {isOpen && <span>Functional Location Wise Planning</span>}
                     </li>
                 </Link>
-                <Link to="/Oil_Analysis_user" onClick={handleLinkClick}>
+                <Link to="/Oil_Analysis_user">
                     <li className={activeIndex === 'Oil_Analysis_user' ? 'active' : ''}>
                         <img src={locationIcon} alt="Oil Analysis" className="icon-Fun icon_S" />
                         {isOpen && <span>Oil Analysis</span>}
                     </li>
                 </Link>
 
-                <Link to="/corrective-action-user" onClick={handleLinkClick}>
+                <Link to="/corrective-action-user">
                     <li className={activeIndex === 'corrective-action-user' ? 'active' : ''}>
                         <img src={locationIcon} alt="corrective-action-user" className="icon-Fun icon_S" />
-                        {/* {isOpen && <span>Corrective Action</span>} */}
-                        {isOpen && <span>Site Corrective Action</span>}
+                        {isOpen && <span>Corrective Action</span>}
                     </li>
                 </Link>
 
-                <Link to="/sop-consumption-user" onClick={handleLinkClick}>
+
+                <Link to="/sop-consumption-user">
                     <li className={activeIndex === 'sop-consumption-user' ? 'active' : ''}>
                         <img src={locationIcon} alt="sop-consumption-user" className="icon-Fun icon_S" />
                         {isOpen && <span>SOP Consumption</span>}

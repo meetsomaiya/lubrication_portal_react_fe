@@ -267,8 +267,7 @@ function Site_Report_user() {
 
     return (
         <div className='site_container'>
-        {/* <div className='flex mt-1.4' style={{ justifyContent: 'space-between' }}> */}
-        <div className='flex mt-1.4'>
+        <div className='flex mt-1.4' style={{ justifyContent: 'space-between' }}>
         <div className="sitereport-dropdown">
                 <select onChange={handleSelectChangeSite1} value={selectedSite1} className="searchsite_dropicon">
                     <option value="Select">State</option>

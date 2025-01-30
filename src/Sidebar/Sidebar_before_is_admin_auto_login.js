@@ -64,8 +64,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           console.log('Cookies set successfully!');
 
           // Navigate to Oil_Analysis page
-          // navigate('/Oil_Analysis');
-          navigate('/Home_user');
+          navigate('/Oil_Analysis');
         } else {
           console.error('Failed to toggle admin:', response.status);
         }
@@ -104,7 +103,11 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           <div style={{ backgroundColor: '#009F89', border: '1px bold #009F89' }}>
             <li>
               <img src={mainIcon} alt="Home" className="icon-WTG icon_S" />
-              {isOpen && <span style={{ color: '#ffffff' }}>Main Application</span>}
+              {/* {isOpen && <span style={{ color: '#ffffff' }}>Main Application</span>} */}
+              {(isOpen || (document.cookie.includes('isadmin=true'))) && (
+  <span style={{ color: '#ffffff' }}>Main Application</span>
+)}
+
             </li>
           </div>
         </Link>

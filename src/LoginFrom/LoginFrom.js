@@ -95,8 +95,9 @@ const Login = ({ setAuth }) => {
 
                         // Ensure adminId is null before redirecting
         document.cookie = `adminId=null; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`; // Remove adminId
-
-                            navigate('/Home_user'); // Redirect to normal home if user is not admin
+ // Redirect to normal home if user is not admin
+                            // navigate('/Home_user');
+                            navigate('/Oil_Analysis_user');
                         } else {
                             const userErrorData = await userResponse.json();
                             console.error('User check failed:', userErrorData);
