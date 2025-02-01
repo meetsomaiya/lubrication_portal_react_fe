@@ -4,6 +4,8 @@ import '../App.css';
 import myImage from '../assets/image.png';
 import myImage_1 from '../assets/Clip path group.png';
 
+import { BASE_URL } from '../config';
+
 const Navbar = () => {
     // Function to get the name from the cookies
     const getNameFromCookie = () => {
@@ -45,7 +47,8 @@ const Navbar = () => {
 
         // Sending the data to the logout_admin API
         try {
-            const response = await fetch('http://localhost:224/api/logout_admin', {
+            // const response = await fetch('http://localhost:224/api/logout_admin', {
+                const response = await fetch(`${BASE_URL}/api/logout_admin`, {
             // const response = await fetch('http://localhost:224/api/logout_admin', {
                 method: 'POST',
                 headers: {
@@ -60,7 +63,9 @@ const Navbar = () => {
                 document.cookie = 'name=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC';
                 document.cookie = 'adminId=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC';
                 document.cookie = 'access=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC';
-                window.location.href = '/'; // Redirect to login page
+            // window.location.href = '/'; // Redirect to login page
+            window.location.href = "/LubricationPortal"; // Redirect to the login page
+             //   window.location.href = 'https://suzomsuatapps.suzlon.com/LubricationPortal/index.html#/'; // Redirect to login page
             } else {
                 console.error('Logout failed');
             }

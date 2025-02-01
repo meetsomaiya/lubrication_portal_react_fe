@@ -141,7 +141,8 @@ const UploadExcel = () => {
                                                         
                                                           if (!adminId) {
                                                             // If adminId is not found, redirect to the default route
-                                                            window.location.href = '/'; // Redirect to the home page or default route
+                                                         //   window.location.href = '/'; // Redirect to the home page or default route
+                                                          window.location.href = '/LubricationPortal'; // Redirect to the home page or default route
                                                           }
                                                         };
                                           
@@ -175,46 +176,81 @@ const UploadExcel = () => {
     }
   };
 
-  const handleUploadClick = () => {
-    if (!selectedFile) {
-      alert('suzoms.suzlon.com says\n\nPlease select a file first.');
-      return;
-    }
+  // const handleUploadClick = () => {
+  //   if (!selectedFile) {
+  //     alert('suzoms.suzlon.com says\n\nPlease select a file first.');
+  //     return;
+  //   }
   
-    // Create FormData and append the file
-    const formData = new FormData();
-    formData.append('file', selectedFile);
+  //   // Create FormData and append the file
+  //   const formData = new FormData();
+  //   formData.append('file', selectedFile);
   
-    // Log the contents of FormData by iterating through entries
-    for (let [key, value] of formData.entries()) {
-      console.log(`${key}:`, value);  // Logs the file name and data
-    }
+  //   // Log the contents of FormData by iterating through entries
+  //   for (let [key, value] of formData.entries()) {
+  //     console.log(`${key}:`, value);  // Logs the file name and data
+  //   }
   
-    // Send the file to the backend
-    //fetch('http://localhost:224/api/site_incharge_format_upload', {
-     // fetch('http://localhost:3001/api/site_incharge_format_upload', {
-     fetch(`${BASE_URL}/api/site_incharge_format_upload`, {
-      method: 'POST',
-      body: formData,
+  //   // Send the file to the backend
+  //   //fetch('http://localhost:224/api/site_incharge_format_upload', {
+  //    // fetch('http://localhost:3001/api/site_incharge_format_upload', {
+  //    fetch(`${BASE_URL}/api/site_incharge_format_upload`, {
+  //     method: 'POST',
+  //     body: formData,
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       if (data.success) {
+  //         alert('File uploaded successfully!');
+  //       } else {
+  //         alert('File upload failed. Please try again.');
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error uploading file:', error);
+  //       alert('An error occurred while uploading the file.');
+  //     });
+  // };
+  
+  const [loading, setLoading] = useState(false); // State for preloader
+
+const handleUploadClick = () => {
+  if (!selectedFile) {
+    alert('suzoms.suzlon.com says\n\nPlease select a file first.');
+    return;
+  }
+
+  setLoading(true); // Show preloader
+
+  const formData = new FormData();
+  formData.append('file', selectedFile);
+
+  fetch(`${BASE_URL}/api/site_incharge_format_upload`, {
+    //fetch('http://localhost:3001/api/site_incharge_format_upload', {
+    method: 'POST',
+    body: formData,
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      setLoading(false); // Hide preloader
+      if (data.success) {
+        alert('✅ File uploaded successfully!');
+      } else {
+        alert('❌ File upload failed. Please try again.');
+      }
     })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.success) {
-          alert('File uploaded successfully!');
-        } else {
-          alert('File upload failed. Please try again.');
-        }
-      })
-      .catch((error) => {
-        console.error('Error uploading file:', error);
-        alert('An error occurred while uploading the file.');
-      });
-  };
-  
+    .catch((error) => {
+      setLoading(false); // Hide preloader
+      console.error('Error uploading file:', error);
+      alert('⚠️ An error occurred while uploading the file.');
+    });
+};
+
 
   const handleDownloadFormat = () => {
     // Trigger the download by requesting the file from the backend
     // fetch('http://localhost:224/api/site-incharge-excel-format') 
+    // fetch('http://localhost:3001/api/site-incharge-excel-format') 
     fetch(`${BASE_URL}/api/site-incharge-excel-format`)
       .then((response) => {
         if (!response.ok) {
@@ -243,6 +279,14 @@ const UploadExcel = () => {
         <label htmlFor="file-upload" className="choose-file7756">
           Choose File
         </label>
+
+        {loading && (
+  <div className="preloader-overlay">
+    <div className="spinner"></div>
+    <p>Uploading... Please wait</p>
+  </div>
+)}
+
         <input
           id="file-upload"
           type="file"
@@ -266,6 +310,8 @@ const UploadExcel = () => {
       )} */}
     </div>
   );
+
+  
 };
 
 export default UploadExcel;

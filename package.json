@@ -2,6 +2,8 @@
   "name": "Lubrication Portal",
   "version": "0.1.0",
   "private": true,
+  "homepage": "/LubricationPortal", 
+
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
@@ -31,6 +33,8 @@
     "styled-components": "^6.1.8",
     "web-vitals": "^2.1.4",
     "xlsx": "^0.18.5"
+
+    
   },
   "scripts": {
     "start": "react-scripts start",

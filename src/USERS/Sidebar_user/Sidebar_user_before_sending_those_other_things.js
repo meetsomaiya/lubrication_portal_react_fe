@@ -11,8 +11,6 @@ import adminIcon from '../assets/admin.png';
 import logoutIcon from '../assets/log-out (2).png';
 import toggleIcon from '../assets/toggle.png';
 
-import { BASE_URL } from '../../config'
-
 const Sidebar_user = ({ isOpen, toggleSidebar }) => {
     const location = useLocation();
     const navigate = useNavigate();
@@ -89,8 +87,7 @@ const Sidebar_user = ({ isOpen, toggleSidebar }) => {
             console.log('Specified cookies have been cleared.');
 
             // Call the logout API
-            // const response = await fetch('http://localhost:224/api/logout_user', {
-                const response = await fetch(`${BASE_URL}/api/logout_user`, {
+            const response = await fetch('http://localhost:224/api/logout_user', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -100,9 +97,7 @@ const Sidebar_user = ({ isOpen, toggleSidebar }) => {
 
             if (response.ok) {
                 console.log('Logout successful');
-               // navigate('/'); // Redirect to login page
-
-               window.location.href = 'https://suzomsuatapps.suzlon.com/LubricationPortal/index.html#/'; // Redirect to login page
+                navigate('/'); // Redirect to login page
             } else {
                 console.error('Logout failed:', await response.text());
             }
@@ -111,96 +106,10 @@ const Sidebar_user = ({ isOpen, toggleSidebar }) => {
         }
     };
 
-    // const handleMainApplicationClick = () => {
-    //     toggleSidebar(); // Close sidebar when clicked
-    //     navigate('/Home');
-    // };
-
-    // const handleMainApplicationClick = () => {
-    //     toggleSidebar(); // Close sidebar when clicked
-    
-    //     // Retrieve cookies
-    //     const name = getCookie('name');
-    //     const domainId = getCookie('domain_id');
-    
-    //     // Prepare data to send
-    //     const requestData = {
-    //         name,
-    //         domainId
-    //     };
-    
-    //     // Log the data being sent
-    //     console.log('Sending data to fleet manager login api:', requestData);
-    
-    //     // Send data to API (example using fetch)
-    //     fetch('http://localhost:224/api/fleet_manager_login', {  // Corrected URL format
-    //   // fetch('http://localhost:3001/api/fleet_manager_login', {  // Corrected URL format
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //         },
-    //         body: JSON.stringify(requestData)
-    //     })
-    //     .then(response => response.json())
-    //     .then(data => {
-    //         console.log('Success:', data);
-    //     })
-    //     .catch(error => {
-    //         console.error('Error:', error);
-    //     });
-    
-    //    // navigate('/Home');
-    // };
-
     const handleMainApplicationClick = () => {
         toggleSidebar(); // Close sidebar when clicked
-    
-        // Retrieve cookies
-        const name = getCookie('name');
-        const domainId = getCookie('domain_id');
-    
-        // Prepare data to send
-        const requestData = {
-            name,
-            domainId
-        };
-    
-        // Log the data being sent
-        console.log('Sending data to fleet manager login API:', requestData);
-    
-        // Send data to API
-        // fetch('http://localhost:224/api/fleet_manager_login', {  // Ensure the correct API URL
-        fetch(`${BASE_URL}/api/fleet_manager_login`, {  // Ensure the correct API URL
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(requestData)
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Success:', data);
-    
-            if (data.success) {
-                // Set cookies with the correct values
-                document.cookie = `name=${encodeURIComponent(data.data.name)}; path=/`;
-                document.cookie = `adminId=${encodeURIComponent(data.data.sessionId)}; path=/`;
-                document.cookie = `access=${encodeURIComponent(data.data.access)}; path=/`;
-                document.cookie = `adminEmail=${encodeURIComponent(data.data.email)}; path=/`;
-                document.cookie = `domain_id=${encodeURIComponent(data.data.domainId)}; path=/`;
-            } else {
-                console.error('API response error:', data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    
-        navigate('/Home'); // Uncomment if navigation is needed
+        navigate('/Home');
     };
-    
-    
-    
 
     const handleLinkClick = () => {
         toggleSidebar(); // Close sidebar automatically on any link click

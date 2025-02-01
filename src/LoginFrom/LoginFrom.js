@@ -73,8 +73,9 @@ const Login = ({ setAuth }) => {
                        navigate('/Home'); // Redirect to admin home if applicable
                     } else {
                         // If checkAdmin is false, send request to checkUser.js
-                        // const userResponse = await fetch(`http://localhost:224/api/checkUser?DomainId=${DomainId}`);
-                        const userResponse = await fetch(`${BASE_URL}/api/checkUser?DomainId=${DomainId}&Name=${encodeURIComponent(Name)}&EmailId=${encodeURIComponent(EmailId)}`);
+                         const userResponse = await fetch(`http://localhost:224/api/checkUser?DomainId=${DomainId}`);
+                        // const userResponse = await fetch(`http://localhost:3001/api/checkUser?DomainId=${DomainId}`);
+                        //const userResponse = await fetch(`${BASE_URL}/api/checkUser?DomainId=${DomainId}&Name=${encodeURIComponent(Name)}&EmailId=${encodeURIComponent(EmailId)}`);
                         
                         if (userResponse.ok) {
                             const userData = await userResponse.json();

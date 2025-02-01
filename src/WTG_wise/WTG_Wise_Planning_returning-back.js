@@ -1519,8 +1519,7 @@ const handleDownload = () => {
           fetchTotalStateWiseCount();
         }}
       >
-        {/* <div className="flex justify-between"> */}
-        <div className='flex justify-start'>
+        <div className="flex justify-between">
           <h2>Total</h2>
           <h3>{totalCount}</h3>
           <div style={{ width: `${totalPercentage}%` }}></div>
@@ -1529,7 +1528,7 @@ const handleDownload = () => {
         <div className="progress-main">
           <p style={{ color: '#009F89' }}>{totalPercentage}%</p>
           <div className="progress-bar">
-            <div style={{ width: `${totalPercentage}%` }}></div>
+            {/* <div style={{ width: `${totalPercentage}%` }}></div> */}
           </div>
         </div>
       </div>
@@ -1543,8 +1542,7 @@ const handleDownload = () => {
           fetchTotalPlannedStateWiseCount();
         }}
       >
-        {/* <div className="flex justify-between"> */}
-        <div className='flex justify-start'>
+        <div className="flex justify-between">
           <h2>Planned</h2>
           <h3>{plannedCount !== null ? plannedCount : '0'}</h3>
           <div style={{ width: `${plannedPercentage}%` }}></div>
@@ -1552,7 +1550,7 @@ const handleDownload = () => {
         <div className="progress-main">
           <p style={{ color: '#013B72' }}>{plannedPercentage.toFixed(0)}%</p> {/* Display calculated percentage */}
           <div className="progress-bar">
-            <div style={{ width: `${plannedPercentage}%` }}></div>
+            {/* <div style={{ width: `${plannedPercentage}%` }}></div> */}
           </div>
         </div>
       </div>
@@ -1568,8 +1566,7 @@ const handleDownload = () => {
           
         }}
       >
-        {/* <div className="flex justify-between"> */}
-        <div className='flex justify-start'>
+        <div className="flex justify-between">
           <h2>Open</h2>
           <h3>{openCount !== null ? openCount : '0'}</h3>
           <div style={{ width: `${openPercentage}%` }}></div>
@@ -1577,7 +1574,7 @@ const handleDownload = () => {
         <div className="progress-main">
           <p style={{ color: '#E95060' }}>{openPercentage.toFixed(0)}%</p> {/* Display calculated percentage */}
           <div className="progress-bar">
-            <div style={{ width: `${openPercentage}%` }}></div>
+            {/* <div style={{ width: `${openPercentage}%` }}></div> */}
           </div>
         </div>
       </div>
@@ -1592,8 +1589,7 @@ const handleDownload = () => {
           fetchTotalCompletedStateWiseCount();
         }}
       >
-        {/* <div className="flex justify-between"> */}
-        <div className='flex justify-start'>
+        <div className="flex justify-between">
           <h2>Completed</h2>
           <h3>{completedCount !== null ? completedCount : '0'}</h3>
           <div style={{ width: `${completedPercentage}%` }}></div>
@@ -1601,7 +1597,7 @@ const handleDownload = () => {
         <div className="progress-main">
           <p style={{ color: '#00AD48' }}>{completedPercentage.toFixed(0)}%</p> {/* Display calculated percentage */}
           <div className="progress-bar">
-            <div style={{ width: `${completedPercentage}%` }}></div>
+            {/* <div style={{ width: `${completedPercentage}%` }}></div> */}
           </div>
         </div>
       </div>
@@ -1615,8 +1611,7 @@ const handleDownload = () => {
           fetchTotalOutOfGraceStateWiseCount();
         }}
       >
-        {/* <div className="flex justify-between"> */}
-        <div className='flex justify-start'>
+        <div className="flex justify-between">
           <h2>Grace Time</h2>
           <h3>{outofGraceCount !== null ? outofGraceCount : '0'}</h3>
         </div>
@@ -1626,7 +1621,7 @@ const handleDownload = () => {
         <div className="progress-main">
           <p style={{ color: '#CE6301' }}>{gracePercentage.toFixed(0)}%</p> {/* Display calculated percentage */}
           <div className="progress-bar">
-            <div style={{ width: `${gracePercentage}%` }}></div>
+            {/* <div style={{ width: `${gracePercentage}%` }}></div> */}
           </div>
         </div>
       </div>

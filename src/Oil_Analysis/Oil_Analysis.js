@@ -146,7 +146,8 @@ const pathname = window.location.hash.replace(/^#/, '');
                     
                       if (!adminId) {
                         // If adminId is not found, redirect to the default route
-                        window.location.href = '/'; // Redirect to the home page or default route
+                       // window.location.href = '/'; // Redirect to the home page or default route
+                       window.location.href = '/LubricationPortal'; // Redirect to the home page or default route
                       }
                     };
       
@@ -1232,7 +1233,8 @@ const handleConsolidatedFileDownload = () => {
         // Wait for 1 second before selecting the first dropdown value
         const timer = setTimeout(() => {
           if (financialYears.length > 0) {
-            const firstYear = financialYears[0];
+            // const firstYear = financialYears[0];
+            const firstYear = financialYears[1];
             setSelectedFinancialYear(firstYear);
     
             // Call the handleChange manually to trigger the associated functions

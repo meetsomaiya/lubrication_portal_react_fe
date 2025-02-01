@@ -1478,8 +1478,7 @@ const fetchOpenStateWiseCount = async () => {
   }}
 >
 
-            {/* <div className='flex justify-between'> */}
-            <div className='flex justify-start'>
+            <div className='flex justify-between'>
               <h2>Total</h2>
               <h3>{totalCount}</h3> {/* Display total count from state */}
             </div>
@@ -1502,8 +1501,7 @@ const fetchOpenStateWiseCount = async () => {
             }}
             
           >
-            {/* <div className='flex justify-between'> */}
-            <div className='flex justify-start'>
+            <div className='flex justify-between'>
               <h2>Planned</h2>
               {/* <h3>185</h3> */}
               <h3>{plannedCount !== null ? plannedCount : '0'}</h3>
@@ -1525,8 +1523,7 @@ const fetchOpenStateWiseCount = async () => {
     fetchTotalOpenStateWiseCount();
   }}
 >
-            {/* <div className='flex justify-between'> */}
-            <div className='flex justify-start'>
+            <div className='flex justify-between'>
               <h2>Open</h2>
               {/* <h3>185</h3> */}
               <h3>{openCount !== null ? openCount : '0'}</h3>
@@ -1548,8 +1545,7 @@ const fetchOpenStateWiseCount = async () => {
     fetchTotalCompletedStateWiseCount();
   }}
 >
-            {/* <div className='flex justify-between'> */}
-            <div className='flex justify-start'>
+            <div className='flex justify-between'>
               <h2>Completed</h2>
               {/* <h3>185</h3> */}
               <h3>{completedCount !== null ? completedCount : '0'}</h3>
@@ -1571,8 +1567,7 @@ const fetchOpenStateWiseCount = async () => {
     fetchTotalOutOfGraceStateWiseCount();
   }}
 >
-            {/* <div className='flex justify-between'> */}
-            <div className='flex justify-start'>
+            <div className='flex justify-between'>
               <h2>Grace Time</h2>
               {/* <h3>185</h3> */}
               <h3>{outofGraceCount !== null ? outofGraceCount : '0'}</h3>

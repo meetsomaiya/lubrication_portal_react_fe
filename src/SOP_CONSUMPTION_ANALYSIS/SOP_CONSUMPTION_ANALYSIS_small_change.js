@@ -118,94 +118,73 @@ const SopConsumptionAnalysis8867 = () => {
           }
         };
         
-              useEffect(() => {
-                // Set entry time when the page loads
-                entryTime = moment().tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ss');
-                console.log(`Entry Time (IST): ${entryTime}`);
-              
-                // Add event listener for beforeunload (browser close / tab close)
-                const handleBeforeUnload = () => {
-                  exitTime = moment().tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ss');
-                  console.log(`Exit Time (IST): ${exitTime}`);
-                  sendCookiesToBackend();
-                };
-              
-                window.addEventListener('beforeunload', handleBeforeUnload);
-              
-                return () => {
-                  // Clean up the event listener when the component unmounts
-                  window.removeEventListener('beforeunload', handleBeforeUnload);
-                };
-              }, []);
-              
-              useEffect(() => {
-                const handlePathChange = () => {
-                  // Capture exit time and send cookies when pathname changes
-                  exitTime = moment().tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ss');
-                  console.log(`Exit Time (IST): ${exitTime}`);
-                  sendCookiesToBackend();
-                };
-              
-                // Listen for changes in the pathname using window.history
-                const windowHistoryPushState = window.history.pushState;
-                window.history.pushState = function (...args) {
-                  handlePathChange();
-                  return windowHistoryPushState.apply(this, args);
-                };
-              
-                const windowHistoryReplaceState = window.history.replaceState;
-                window.history.replaceState = function (...args) {
-                  handlePathChange();
-                  return windowHistoryReplaceState.apply(this, args);
-                };
-              
-                return () => {
-                  // Reset window.history methods when component unmounts
-                  window.history.pushState = windowHistoryPushState;
-                  window.history.replaceState = windowHistoryReplaceState;
-                };
-              }, []);
-            
-            // Call the polling function on mount
-            useEffect(() => {
-              // Send cookies on page unload and capture exit time
-              const handleBeforeUnload = (event) => {
-                exitTime = moment().tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ss');
-                console.log(`Exit Time (IST): ${exitTime}`);
-            
-                // Send cookies and exit time to backend when user is leaving the page
-                sendCookiesToBackend();
-              };
-            
-              // Attach event listener for beforeunload
-              window.addEventListener('beforeunload', handleBeforeUnload);
-            
-              // Clean up the event listener on component unmount
-              return () => {
-                window.removeEventListener('beforeunload', handleBeforeUnload);
-              };
-            }, []);
-
-                                  const checkAdminIdAndRedirect = () => {
-                                    const getCookie = (name) => {
-                                      const value = `; ${document.cookie}`;
-                                      const parts = value.split(`; ${name}=`);
-                                      if (parts.length === 2) return parts.pop().split(';').shift();
-                                    };
-                                  
-                                    const adminId = getCookie('adminId'); // Retrieve the adminId from cookies
-                                  
-                                    if (!adminId) {
-                                      // If adminId is not found, redirect to the default route
-                                     // window.location.href = '/'; // Redirect to the home page or default route
-                                     window.location.href = '/LubricationPortal'; // Redirect to the home page or default route
-                                    }
-                                  };
-                    
-                                  useEffect(() => {
-                                    checkAdminIdAndRedirect(); // Check adminId and redirect if not found
-                                  }, []); // Empty dependency array to ensure this runs only once on mount
-            
+        useEffect(() => {
+          // Set entry time when the page loads
+          entryTime = moment().tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ss');
+          console.log(`Entry Time (IST): ${entryTime}`);
+        
+          // Add event listener for beforeunload (browser close / tab close)
+          const handleBeforeUnload = () => {
+            exitTime = moment().tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ss');
+            console.log(`Exit Time (IST): ${exitTime}`);
+            sendCookiesToBackend();
+          };
+        
+          window.addEventListener('beforeunload', handleBeforeUnload);
+        
+          return () => {
+            // Clean up the event listener when the component unmounts
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+          };
+        }, []);
+        
+        useEffect(() => {
+          const handlePathChange = () => {
+            // Capture exit time and send cookies when pathname changes
+            exitTime = moment().tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ss');
+            console.log(`Exit Time (IST): ${exitTime}`);
+            sendCookiesToBackend();
+          };
+        
+          // Listen for changes in the pathname using window.history
+          const windowHistoryPushState = window.history.pushState;
+          window.history.pushState = function (...args) {
+            handlePathChange();
+            return windowHistoryPushState.apply(this, args);
+          };
+        
+          const windowHistoryReplaceState = window.history.replaceState;
+          window.history.replaceState = function (...args) {
+            handlePathChange();
+            return windowHistoryReplaceState.apply(this, args);
+          };
+        
+          return () => {
+            // Reset window.history methods when component unmounts
+            window.history.pushState = windowHistoryPushState;
+            window.history.replaceState = windowHistoryReplaceState;
+          };
+        }, []);
+      
+      // Call the polling function on mount
+      useEffect(() => {
+        // Send cookies on page unload and capture exit time
+        const handleBeforeUnload = (event) => {
+          exitTime = moment().tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ss');
+          console.log(`Exit Time (IST): ${exitTime}`);
+      
+          // Send cookies and exit time to backend when user is leaving the page
+          sendCookiesToBackend();
+        };
+      
+        // Attach event listener for beforeunload
+        window.addEventListener('beforeunload', handleBeforeUnload);
+      
+        // Clean up the event listener on component unmount
+        return () => {
+          window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+      }, []);
 
   const [fullImageSrc8867, setFullImageSrc8867] = useState("");
   const [isModalActive8867, setIsModalActive8867] = useState(false);

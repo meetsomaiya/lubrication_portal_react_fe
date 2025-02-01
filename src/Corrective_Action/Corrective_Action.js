@@ -73,7 +73,8 @@ const TableComponent9976_admin = () => {
                       
                         if (!adminId) {
                           // If adminId is not found, redirect to the default route
-                          window.location.href = '/'; // Redirect to the home page or default route
+                         // window.location.href = '/'; // Redirect to the home page or default route
+                         window.location.href = '/LubricationPortal'; // Redirect to the home page or default route
                         }
                       };
         

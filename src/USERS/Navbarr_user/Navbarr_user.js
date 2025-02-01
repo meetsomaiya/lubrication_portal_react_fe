@@ -3,6 +3,8 @@ import './Navbarr.css';
 import myImage from '../assets/image.png';
 import myImage_1 from '../assets/Clip path group.png';
 
+import { BASE_URL } from '../../config'
+
 const Navbar_user = () => {
     // Function to retrieve a cookie by name
     const getCookie = (cookieName) => {
@@ -44,7 +46,10 @@ const Navbar_user = () => {
 
         // Send data to the logout_user API
         try {
-            const response = await fetch('http://localhost:224/api/logout_user', {
+            // const response = await fetch('http://localhost:224/api/logout_user', {
+                const response = await fetch(`${BASE_URL}/api/logout_user`, {
+
+
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -54,7 +59,11 @@ const Navbar_user = () => {
 
             if (response.ok) {
                 console.log('Logout successful');
-                window.location.href = "/"; // Redirect to the login page
+                // window.location.href = "/"; // Redirect to the login page
+
+                window.location.href = "/LubricationPortal"; // Redirect to the login page
+
+             //  window.location.href = 'https://suzomsuatapps.suzlon.com/LubricationPortal/index.html#/'; // Redirect to login page
             } else {
                 console.error('Logout failed:', await response.text());
             }

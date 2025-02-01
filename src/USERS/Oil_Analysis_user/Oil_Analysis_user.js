@@ -1490,7 +1490,8 @@ const normalizeStateName = (stateName) => {
     // Wait for 1 second before selecting the first dropdown value
     const timer = setTimeout(() => {
       if (financialYears.length > 0) {
-        const firstYear = financialYears[0];
+        // const firstYear = financialYears[0];
+        const firstYear = financialYears[1];
         setSelectedYear(firstYear);
 
         // Call the handleChange manually to trigger the associated functions
