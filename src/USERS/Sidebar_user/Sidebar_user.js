@@ -169,7 +169,8 @@ const Sidebar_user = ({ isOpen, toggleSidebar }) => {
         console.log('Sending data to fleet manager login API:', requestData);
     
         // Send data to API
-        // fetch('http://localhost:224/api/fleet_manager_login', {  // Ensure the correct API URL
+        // /fetch('http://localhost:224/api/fleet_manager_login', {  // Ensure the correct API URL
+     //   fetch('http://localhost:3001/api/fleet_manager_login', {  // Ensure the correct API URL
         fetch(`${BASE_URL}/api/fleet_manager_login`, {  // Ensure the correct API URL
             method: 'POST',
             headers: {
@@ -196,7 +197,9 @@ const Sidebar_user = ({ isOpen, toggleSidebar }) => {
             console.error('Error:', error);
         });
     
-        navigate('/Home'); // Uncomment if navigation is needed
+        // navigate('/Home'); // Uncomment if navigation is needed
+        
+        navigate('LubricationPortal/Home'); // Uncomment if navigation is needed
     };
     
     

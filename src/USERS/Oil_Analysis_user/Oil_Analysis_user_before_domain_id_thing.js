@@ -313,16 +313,10 @@ const extractDomainIdFromUrl = () => {
     const hash = window.location.hash;
     console.log('Window location hash:', hash);
 
-    // Ensure hash is present and contains the query string
-    if (!hash || !hash.includes('?')) {
-      console.error('Hash does not contain query parameters');
-      return null;
-    }
-
     // Split the hash to get query string after the first '?'
     const [path, queryString] = hash.split('?');
     if (!queryString) {
-      console.error('No query parameters in hash');
+      console.error('Hash does not contain query parameters');
       return null;
     }
 
@@ -360,7 +354,6 @@ const extractDomainIdFromUrl = () => {
   }
 };
 
-
 // Function to send the AJAX request to api_for_auto_login
 // Function to send the AJAX request to api_for_auto_login
 const sendAutoLoginRequest = async (domainId) => {
@@ -368,9 +361,7 @@ try {
   // Log the data being sent
   console.log('Sending data to auto login API:', { domain_id: domainId });
 
-  // const response = await fetch('http://localhost:224/api/api_for_auto_login', {
- //  const response = await fetch('http://localhost:3001/api/api_for_auto_login', {
-  const response = await fetch(`${BASE_URL}/api/api_for_auto_login`, {
+  const response = await fetch('http://localhost:224/api/api_for_auto_login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

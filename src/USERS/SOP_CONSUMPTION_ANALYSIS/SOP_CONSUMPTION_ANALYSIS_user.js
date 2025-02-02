@@ -10,6 +10,7 @@ import step7 from "../../sop_image/7.png";
 import { FaTimes } from "react-icons/fa";
 
 import moment from 'moment-timezone';
+import { BASE_URL } from '../../config'
 
 
 const steps = [
@@ -91,7 +92,8 @@ const SopConsumptionAnalysis8867_user = () => {
                        
                          try {
                            // Send data to the backend's heartbeat API
-                           const response = await fetch('http://localhost:224/api/heartbeat', {
+                          //  const response = await fetch('http://localhost:224/api/heartbeat', {
+                            const response = await fetch(`${BASE_URL}/api/heartbeat`, {
                              method: 'POST',
                              headers: {
                                'Content-Type': 'application/json',

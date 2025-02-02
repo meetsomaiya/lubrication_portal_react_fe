@@ -63,7 +63,9 @@ const sendAutoLoginRequest = async (domainId) => {
     // Log the data being sent
     console.log('Sending data to auto login API:', { domain_id: domainId });
 
-    const response = await fetch('http://localhost:224/api/api_for_auto_login', {
+    // const response = await fetch('http://localhost:224/api/api_for_auto_login', {
+    // const response = await fetch('http://localhost:3001/api/api_for_auto_login', {
+       const response = await fetch(`${BASE_URL}/api/api_for_auto_login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
