@@ -37,7 +37,7 @@ import PM_user from './USERS/Site_Report/PM/PM_user';
 import Lubrication_user from './USERS/Site_Report/Lubrication/Lubrication_table_user';
 import OilAnalysisTableUser from './USERS/Oil_Analysis_user/Oil_Analysis_user';
 
-import TableComponent9976 from './USERS/Corrective_Action_user/corrective-action-user';
+import TableComponent9976 from './USERS/Corrective_Action_user/corrective-action_user';
 
 import SopConsumptionAnalysis8867_user from './USERS/SOP_CONSUMPTION_ANALYSIS/SOP_CONSUMPTION_ANALYSIS_user';
 
@@ -96,9 +96,9 @@ const MainApp = ({ sidebarOpen, toggleSidebar }) => {
             <Route path="/PM_user" element={<PM_user />} />
             <Route path="/Lubrication_user" element={<Lubrication_user />} />
             <Route path="/Oil_Analysis_user" element={<OilAnalysisTableUser />} />
-            <Route path="/corrective-action-user" element={<TableComponent9976 />} />
+            <Route path="/corrective-action_user" element={<TableComponent9976 />} />
 
-            <Route path="/sop-consumption-user" element={<SopConsumptionAnalysis8867_user />} />
+            <Route path="/sop-consumption_user" element={<SopConsumptionAnalysis8867_user />} />
           </Routes>
         </main>
       </div>

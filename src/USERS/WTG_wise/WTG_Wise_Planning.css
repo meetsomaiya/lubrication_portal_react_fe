@@ -466,11 +466,18 @@ label {
   margin-top: 30px;
 }
 
-.state_wise_containeruser {
+/* .state_wise_containeruser {
   margin-top: 30px;
 
-  /* new line added */
   width: 200px;
+} */
+
+.state_wise_containeruser {
+  display: flex;
+  flex-wrap: wrap; /* Ensures it grows as needed */
+  width: max-content; /* Expands based on content */
+  max-width: 100%; /* Prevents overflow */
+  margin-top: 30px;
 }
 
 .card-allheader {

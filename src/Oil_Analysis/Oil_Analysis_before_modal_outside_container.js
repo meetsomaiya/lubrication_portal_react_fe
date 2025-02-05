@@ -1398,13 +1398,7 @@ const handleConsolidatedFileDownload = () => {
             </div>
           )}
      
-    
-     
-     
-     
-          </div>
-
-          {/* Modal */}
+    {/* Modal */}
     {showModal && (
       <div className="modal-7997">
         <div className="modal-content-7997">
@@ -1565,6 +1559,10 @@ const handleConsolidatedFileDownload = () => {
         </div>
       </div>
     )}
+     
+     
+     
+          </div>
         </div>
       );
     };

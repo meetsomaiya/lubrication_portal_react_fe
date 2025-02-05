@@ -102,7 +102,9 @@ const Sidebar_user = ({ isOpen, toggleSidebar }) => {
                 console.log('Logout successful');
                // navigate('/'); // Redirect to login page
 
-               window.location.href = 'https://suzomsuatapps.suzlon.com/LubricationPortal/index.html#/'; // Redirect to login page
+               //window.location.href = 'https://suzomsuatapps.suzlon.com/LubricationPortal/index.html#/'; // Redirect to login page
+               window.location.href = 'https://suzomsuatapps.suzlon.com/apps/fleetmanager_fe/index.html#/signin'; // Redirect to login page
+            
             } else {
                 console.error('Logout failed:', await response.text());
             }
@@ -197,9 +199,9 @@ const Sidebar_user = ({ isOpen, toggleSidebar }) => {
             console.error('Error:', error);
         });
     
-        // navigate('/Home'); // Uncomment if navigation is needed
+        navigate('/Home'); // Uncomment if navigation is needed
         
-        navigate('LubricationPortal/Home'); // Uncomment if navigation is needed
+       // navigate('LubricationPortal/Home'); // Uncomment if navigation is needed
     };
     
     
@@ -226,12 +228,12 @@ const Sidebar_user = ({ isOpen, toggleSidebar }) => {
 )}
 
                 {/* Other Links */}
-                <Link to="/Home_user" onClick={handleLinkClick}>
+                {/* <Link to="/Home_user" onClick={handleLinkClick}>
                     <li className={activeIndex === 'Home' ? 'active' : ''}>
                         <img src={homeIcon} alt="Home" className="icon-Home icon_S" />
                         {isOpen && <span>Home</span>}
                     </li>
-                </Link>
+                </Link> */}
                 <Link to="/Site_Report_user" onClick={handleLinkClick}>
                     <li className={activeIndex === 'Site_Report_user' ? 'active' : ''}>
                         <img src={siteReportIcon} alt="Site Report" className="icon-Site icon_S" />
@@ -257,7 +259,8 @@ const Sidebar_user = ({ isOpen, toggleSidebar }) => {
                     </li>
                 </Link>
 
-                <Link to="/corrective-action-user" onClick={handleLinkClick}>
+                {/* <Link to="/corrective-action-user" onClick={handleLinkClick}> */}
+                <Link to="/corrective-action_user" onClick={handleLinkClick}>
                     <li className={activeIndex === 'corrective-action-user' ? 'active' : ''}>
                         <img src={locationIcon} alt="corrective-action-user" className="icon-Fun icon_S" />
                         {/* {isOpen && <span>Corrective Action</span>} */}
@@ -265,7 +268,8 @@ const Sidebar_user = ({ isOpen, toggleSidebar }) => {
                     </li>
                 </Link>
 
-                <Link to="/sop-consumption-user" onClick={handleLinkClick}>
+                {/* <Link to="/sop-consumption-user" onClick={handleLinkClick}> */}
+                <Link to="/sop-consumption_user" onClick={handleLinkClick}>
                     <li className={activeIndex === 'sop-consumption-user' ? 'active' : ''}>
                         <img src={locationIcon} alt="sop-consumption-user" className="icon-Fun icon_S" />
                         {isOpen && <span>SOP Consumption</span>}

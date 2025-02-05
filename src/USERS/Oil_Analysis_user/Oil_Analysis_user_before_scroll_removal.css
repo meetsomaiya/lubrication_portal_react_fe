@@ -4,11 +4,11 @@
     padding: 0;
   }
 
-  html, body {
-    overflow-x: hidden;
+  /* html, body {
+    overflow: hidden;
     width: 100vw;
     height: 100vh;
-  }
+  } */
   
   
   .container997user {
@@ -17,13 +17,6 @@
     font-family: Arial, sans-serif;
     overflow: none;
   }
-
-  .internalcontainer997user {
-    position: absolute;
-    top: 90px; /* Adjust position */
-    right: 379px;
-}
-
   
   .buttonContainer997user {
     display: flex;
@@ -69,18 +62,10 @@
   
   .tableContainer997user {
     overflow-x: auto;
-    width: 100vw; /* Adjust width to prevent horizontal overflow */
-    max-width: 100%; /* Ensure it doesn't exceed the viewport */
-    margin: auto; /* Centers horizontally */
+    width: 100vw;
+    margin: 0 auto;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    
-    /* Centering vertically */
-    position: absolute;
-    top: 62%;
-    left: 70%;
-    transform: translate(-50%, -50%);
-}
-
+  }
   
   .oilAnalysisTable997user {
     width: 70%;
@@ -263,23 +248,11 @@ button.close-modaluser:hover {
   z-index: 10;
 }
 
-/* .data-table-7997user th {
-  background-color: #004d80; 
-  color: white;
-  font-weight: bold;
-} */
-
 .data-table-7997user th {
   background-color: #004d80; /* Dark blue background */
   color: white;
   font-weight: bold;
-  font-size: 1rem; /* Ensure consistent font size */
-  text-align: center; /* Align text centrally */
-  white-space: nowrap; /* Prevent text wrapping */
-  padding: 12px; /* Uniform padding */
-  vertical-align: middle; /* Ensure text stays centered vertically */
 }
-
 
 .data-table-7997user tr:nth-child(even) {
   /* background-color: #f9f9f9; */

@@ -176,10 +176,7 @@ const Functional_Loc_user = () => {
   const [selectedFunctionLoc, setSelectedFunctionLoc] = useState([]);
   const [selectedPlant, setSelectedPlant] = useState([]);
   const [selectedOrderNo, setSelectedOrderNo] = useState([]);
-  // const [selectedOption1, setSelectedOption1] = useState('Select');
-
-    const [selectedOption1, setSelectedOption1] = useState('Q1_LUB_2023');
-
+  const [selectedOption1, setSelectedOption1] = useState('Select');
   // const [selectedOption2, setSelectedOption2] = useState('Select');
   // const [selectedOption3, setSelectedOption3] = useState('Select');
   const [selectedOption2, setSelectedOption2] = useState('');
@@ -281,49 +278,24 @@ const [searchTermOrderNo, setSearchTermOrderNo] = useState('');
          const [stateWiseCount, setStateWiseCount] = useState({}); // Ensure it's an empty object
 
 
-         const buttonRef = useRef(null); // Reference to the button
+  useEffect(() => {
+    // Fetch data from the API on component mount
+    const fetchOptions = async () => {
+        try {
+            // const response = await fetch('http://localhost:224/api/fetch_type_order_for_wtg_wise_planning');
 
-//   useEffect(() => {
-//     // Fetch data from the API on component mount
-//     const fetchOptions = async () => {
-//         try {
-//             // const response = await fetch('http://localhost:224/api/fetch_type_order_for_wtg_wise_planning');
+            const response = await fetch(`${BASE_URL}/api/fetch_type_order_for_wtg_wise_planning`);
 
-//             const response = await fetch(`${BASE_URL}/api/fetch_type_order_for_wtg_wise_planning`);
+            const data = await response.json();
+            // Assuming the response data is an array of objects with a property 'type' to display
+            setOptions(data); 
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    };
 
-//             const data = await response.json();
-//             // Assuming the response data is an array of objects with a property 'type' to display
-//             setOptions(data); 
-//         } catch (error) {
-//             console.error("Error fetching data:", error);
-//         }
-//     };
-
-//     fetchOptions();
-// }, []);
-
-useEffect(() => {
-  // Fetch data from the API on component mount
-  const fetchOptions = async () => {
-    try {
-      // Uncomment the line below for actual API call
-      // const response = await fetch('http://localhost:224/api/fetch_type_order_for_wtg_wise_planning');
-      
-      const response = await fetch(`${BASE_URL}/api/fetch_type_order_for_wtg_wise_planning`);
-      const data = await response.json();
-
-      // Assuming the response data is an array of objects with a property 'ZEXT_RNO'
-      setOptions(data);
-
-      // Set default selected option to the 6th item (index 5)
-      setSelectedOption1(data[6]?.ZEXT_RNO || ""); // Default to 6th item or empty string if not available
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  fetchOptions();
-}, []); // Empty dependency array ensures this runs only once when the component mounts
+    fetchOptions();
+}, []);
 
 // useEffect(() => {
 //   // Function to get cookie by name
@@ -1340,46 +1312,34 @@ const fetchOpenStateWiseCount = async () => {
       ]);
 
       
-      const hasInitialized = useRef(false); // Ensure initialization runs only once
-      const hasClickedButton = useRef(false); // Ensure button click happens only once
+          const hasInitialized = useRef(false); // Ensure initialization runs only once
       
           // First useEffect: Select first dropdown option
-      // First useEffect: Select first dropdown option
-  // useEffect(() => {
-  //   if (!hasInitialized.current && options.length > 0) {
-  //     hasInitialized.current = true; // Mark as initialized
-  //     const firstOption = options[0].ZEXT_RNO;
+          useEffect(() => {
+            if (!hasInitialized.current && options.length > 0) {
+              hasInitialized.current = true; // Mark as initialized
+              const firstOption = options[0].ZEXT_RNO;
+        
+              setSelectedOption1(firstOption);
+        
+              // Simulate a dropdown change event
+              const syntheticEvent = { target: { value: firstOption } };
+              handleSelectChange1(syntheticEvent);
+            }
+          }, [options, handleSelectChange1]);
+        
+          // Second useEffect: Wait for selectedOption1 to update, then trigger button click after 1 second
+          useEffect(() => {
+            if (selectedOption1) {
+              const timer = setTimeout(() => {
+                handleButtonClick();
+              }, 1000);
+        
+              return () => clearTimeout(timer); // Cleanup timeout on re-render/unmount
+            }
+          }, [selectedOption1, handleButtonClick]);
 
-  //     setSelectedOption1(firstOption);
 
-  //     // Simulate a dropdown change event
-  //     const syntheticEvent = { target: { value: firstOption } };
-  //     handleSelectChange1(syntheticEvent);
-  //   }
-  // }, [options, handleSelectChange1]);
-
-  // // Second useEffect: Wait for selectedOption1 to update, then trigger button click only once
-  // useEffect(() => {
-  //   if (selectedOption1 && !hasClickedButton.current) {
-  //     hasClickedButton.current = true; // Mark as clicked so it never triggers again
-
-  //     setTimeout(() => {
-  //       handleButtonClick();
-  //     }, 1000);
-  //   }
-  // }, [selectedOption1, handleButtonClick]); // Button click happens only once
-
-
-  useEffect(() => {
-    // Wait 1 second after page load, then click the button
-    const timer = setTimeout(() => {
-      if (buttonRef.current) {
-        buttonRef.current.click(); // Trigger the button click
-      }
-    }, 1000); // 1-second delay
-
-    return () => clearTimeout(timer); // Cleanup on unmount
-  }, []); // Runs on every page load
       
 
   return (
@@ -1425,22 +1385,14 @@ const fetchOpenStateWiseCount = async () => {
         {/* <div className='dropdown_lubmain flex ' style={{justifyContent:'space-between',marginTop:'-9px',marginLeft:'-9px'}}> */}
 <div className="containerinsidewtg">
   <div className="lub-dropdown">
-    {/* <select onChange={handleSelectChange1} value={selectedOption1} className="searchWTG_dropicon">
+    <select onChange={handleSelectChange1} value={selectedOption1} className="searchWTG_dropicon">
       <option value="Select">Type of Order</option>
       {options.map((option, index) => (
         <option key={index} value={option.ZEXT_RNO}>
           {option.ZEXT_RNO}
         </option>
       ))}
-    </select> */}
-
-    <select onChange={handleSelectChange1} value={selectedOption1} className="searchWTG_dropicon">
-  {options.map((option, index) => (
-    <option key={index} value={option.ZEXT_RNO} selected={index === 6}>
-      {option.ZEXT_RNO}
-    </option>
-  ))}
-</select>
+    </select>
   </div>
 
   <div className="lub-dropdown">
@@ -1491,12 +1443,10 @@ const fetchOpenStateWiseCount = async () => {
       ))}
     </select>
   </div>
-  
 
   {/* Button in the same row */}
   <div className="lub-dropdown">
     <button
-      ref={buttonRef} // Attach the ref to the button
       className="buttonrockongoodmyfriend"
       onClick={handleButtonClick}
     >

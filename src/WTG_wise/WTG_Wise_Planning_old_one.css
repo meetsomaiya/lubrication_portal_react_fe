@@ -489,18 +489,9 @@ label {
   margin-top: 30px;
 }
 
-/* .state_wise_container {
-  margin-top: 30px;
-} */
-
 .state_wise_container {
-  display: flex;
-  flex-wrap: wrap; /* Ensures it grows as needed */
-  width: max-content; /* Expands based on content */
-  max-width: 100%; /* Prevents overflow */
   margin-top: 30px;
 }
-
 
 .card-container {
   margin-top: 30px;

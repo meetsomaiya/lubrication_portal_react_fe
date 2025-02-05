@@ -63,7 +63,8 @@
 .sop-step-image img {
   width: 100%;
   max-height: 200px;
-  object-fit: cover; /* Keep image proportions consistent */
+  /* Keep image proportions consistent */
+  object-fit: cover; 
   border-radius: 10px;
 }
 
@@ -81,11 +82,19 @@
   z-index: 1000;
 }
 
-.sop-modal img {
+/* .sop-modal img {
   max-width: 90%;
   max-height: 90%;
   border-radius: 10px;
+} */
+
+.sop-modal img {
+  width: 70vw;  /* Full viewport width */
+  height: 70vh; /* Full viewport height */
+  object-fit: cover; /* Ensures the image covers the entire area without distortion */
+  border-radius: 0; /* Remove border radius to fit the full screen */
 }
+
 
 .sop-modal-close {
   position: absolute;

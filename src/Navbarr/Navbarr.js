@@ -64,8 +64,14 @@ const Navbar = () => {
                 document.cookie = 'adminId=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC';
                 document.cookie = 'access=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC';
             // window.location.href = '/'; // Redirect to login page
-            window.location.href = "/LubricationPortal"; // Redirect to the login page
-             //   window.location.href = 'https://suzomsuatapps.suzlon.com/LubricationPortal/index.html#/'; // Redirect to login page
+            // window.location.href = "/LubricationPortal"; // Redirect to the login page
+            
+           // window.location.href = "/LubricationPortal/index.html#"; // Redirect to the login page
+
+         //  window.location.href = 'https://suzomsuatapps.suzlon.com/LubricationPortal/index.html#/'; // Redirect to login page
+
+           window.location.href = 'https://suzomsuatapps.suzlon.com/apps/fleetmanager_fe/index.html#/signin'; // Redirect to login page
+
             } else {
                 console.error('Logout failed');
             }

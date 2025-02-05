@@ -303,27 +303,18 @@ const formatValue = (value) => {
         console.error('Error fetching financial years:', error);
       }
     };
-
-    // Mapping short oil change order types to full names
-const oilChangeOrderMapping = {
-  "YD_OIL_CHG_ORDER": "YD Oil Change Order",
-  "PD_OIL_CHG_ORDER": "PD Oil Change Order",
-  "GB_OIL_CHANGE ORDER": "GB Oil Change Order",
-  "FC_OIL_CHANGE ORDER": "FC Oil Change Order"
-};
  
     // Fetch order types on component mount
     const fetchOrderTypes = async () => {
       try {
+        // const response = await fetch('http://localhost:224/api/fetch_order_type');
         const response = await fetch(`${BASE_URL}/api/fetch_order_type`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-    
         const data = await response.json();
-    
         const orderTypes = data.order_types.map(type => ({
-          type: oilChangeOrderMapping[type] || type, // Replace with full name if found in the mapping
+          type,
           Karnataka: { issue: 0, return: 0, percent: "0%" },
           AP: { issue: 0, return: 0, percent: "0%" },
           Maharashtra: { issue: 0, return: 0, percent: "0%" },
@@ -332,7 +323,6 @@ const oilChangeOrderMapping = {
           TamilNadu: { issue: 0, return: 0, percent: "0%" },
           GJ2: { issue: 0, return: 0, percent: "0%" },
         }));
-    
         setOrderData(orderTypes);
       } catch (error) {
         console.error('Error fetching order types:', error);
@@ -367,8 +357,7 @@ const oilChangeOrderMapping = {
         // Update YD_OIL_CHG_ORDER data with fetched statewise data
         setOrderData(prevOrderData =>
           prevOrderData.map(order => {
-            // if (order.type === 'YD_OIL_CHG_ORDER') {
-              if (order.type === 'YD Oil Change Order') {
+            if (order.type === 'YD_OIL_CHG_ORDER') {
               return {
                 ...order,
                 Karnataka: {
@@ -442,8 +431,7 @@ const oilChangeOrderMapping = {
         // Update YD_OIL_CHG_ORDER data with fetched statewise data
         setOrderData(prevOrderData =>
           prevOrderData.map(order => {
-            // if (order.type === 'PD_OIL_CHG_ORDER') {
-              if (order.type === 'PD Oil Change Order') {
+            if (order.type === 'PD_OIL_CHG_ORDER') {
               return {
                 ...order,
                 Karnataka: {
@@ -518,8 +506,7 @@ const oilChangeOrderMapping = {
         // Update YD_OIL_CHG_ORDER data with fetched statewise data
         setOrderData(prevOrderData =>
           prevOrderData.map(order => {
-            // if (order.type === 'GB_OIL_CHANGE ORDER') {
-              if (order.type === 'GB Oil Change Order') {
+            if (order.type === 'GB_OIL_CHANGE ORDER') {
               return {
                 ...order,
                 Karnataka: {
@@ -593,8 +580,7 @@ const oilChangeOrderMapping = {
         // Update YD_OIL_CHG_ORDER data with fetched statewise data
         setOrderData(prevOrderData =>
           prevOrderData.map(order => {
-            // if (order.type === 'FC_OIL_CHANGE ORDER') {
-              if (order.type === 'FC Oil Change Order') {
+            if (order.type === 'FC_OIL_CHANGE ORDER') {
               return {
                 ...order,
                 Karnataka: {
@@ -1063,24 +1049,11 @@ const oilChangeOrderMapping = {
 };
 
 // Mapping of order types to their respective API endpoints
-// const orderTypeApiMap = {
-//   'FC_OIL_CHANGE ORDER': 'fetch_fc_oil_chg_data',
-//   'GB_OIL_CHANGE ORDER': 'fetch_gb_oil_chg_data',
-//   'YD_OIL_CHG_ORDER': 'fetch_yd_oil_chg_data',
-//   'PD_OIL_CHG_ORDER': 'fetch_pd_oil_chg_data',
-//   'gb_topup': 'fetch_gb_topup_data',
-//   'fc_topup': 'fetch_fc_topup_data',
-//   'ydpd_topup': 'fetch_ydpd_topup_data',
-//   'dispute': 'fetch_dispute_data',
-//   'Pending Teco': 'fetch_pending_teco_data',
-//   // Add more order types and their corresponding endpoints as needed
-// };
-
 const orderTypeApiMap = {
-  'FC Oil Change Order': 'fetch_fc_oil_chg_data',
-  'GB Oil Change Order': 'fetch_gb_oil_chg_data',
-  'YD Oil Change Order': 'fetch_yd_oil_chg_data',
-  'PD Oil Change Order': 'fetch_pd_oil_chg_data',
+  'FC_OIL_CHANGE ORDER': 'fetch_fc_oil_chg_data',
+  'GB_OIL_CHANGE ORDER': 'fetch_gb_oil_chg_data',
+  'YD_OIL_CHG_ORDER': 'fetch_yd_oil_chg_data',
+  'PD_OIL_CHG_ORDER': 'fetch_pd_oil_chg_data',
   'gb_topup': 'fetch_gb_topup_data',
   'fc_topup': 'fetch_fc_topup_data',
   'ydpd_topup': 'fetch_ydpd_topup_data',
@@ -1398,13 +1371,7 @@ const handleConsolidatedFileDownload = () => {
             </div>
           )}
      
-    
-     
-     
-     
-          </div>
-
-          {/* Modal */}
+    {/* Modal */}
     {showModal && (
       <div className="modal-7997">
         <div className="modal-content-7997">
@@ -1565,6 +1532,10 @@ const handleConsolidatedFileDownload = () => {
         </div>
       </div>
     )}
+     
+     
+     
+          </div>
         </div>
       );
     };

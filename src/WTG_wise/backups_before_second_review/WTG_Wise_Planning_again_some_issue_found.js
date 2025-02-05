@@ -187,11 +187,7 @@ const WTG_Wise_Planning = () => {
 
   const [options, setOptions] = useState([]); // State to hold dropdown options
 
- // const [selectedOption1, setSelectedOption1] = useState('Select');
-  // const [selectedOption1, setSelectedOption1] = useState(options[6]?.ZEXT_RNO || "");
-
-  const [selectedOption1, setSelectedOption1] = useState('Q1_LUB_2023');
-  
+  const [selectedOption1, setSelectedOption1] = useState('Select');
   const [selectedOption2, setSelectedOption2] = useState('Select');
   const [selectedOption3, setSelectedOption3] = useState('Select');
   const [selectedOption4, setSelectedOption4] = useState('Select');
@@ -255,8 +251,6 @@ const [isTotalStateWiseCountFetched, setTotalStateWiseCountFetched] = useState(f
 
   const hasRunRef = useRef(false); // Tracks if effect has already run
   const [isInitialized, setIsInitialized] = useState(false); // Ensures effect runs only once
-
-  const [clicked, setClicked] = useState(false);
 
     // Function to handle changes in the search input
     const handleSearchChange = (e, filterType) => {
@@ -578,16 +572,6 @@ const fetchTotalOpenStateWiseCount = async () => {
       console.error('Error fetching total planned count:', error);
   }
 };
-
-useEffect(() => {
-  if (options.length >= 7) {
-    setSelectedOption1(options[6].ZEXT_RNO); // Set the 7th option as default
-  }
-}, [options]);
-
-// const handleSelectChange1 = (event) => {
-//   setSelectedOption1(event.target.value);
-// };
 
 const fetchTotalCompletedStateWiseCount = async () => {
   const params = {
@@ -997,51 +981,23 @@ const fetchTotalOutOfGraceStateWiseCount = async () => {
 
 
 
-//   useEffect(() => {
-//     // Fetch data from the API on component mount
-//     const fetchOptions = async () => {
-//         try {
-//             // const response = await fetch('http://localhost:224/api/fetch_type_order_for_wtg_wise_planning');
-//             const response = await fetch(`${BASE_URL}/api/fetch_type_order_for_wtg_wise_planning`);
+  useEffect(() => {
+    // Fetch data from the API on component mount
+    const fetchOptions = async () => {
+        try {
+            // const response = await fetch('http://localhost:224/api/fetch_type_order_for_wtg_wise_planning');
+            const response = await fetch(`${BASE_URL}/api/fetch_type_order_for_wtg_wise_planning`);
 
-//             const data = await response.json();
-//             // Assuming the response data is an array of objects with a property 'type' to display
-//             setOptions(data); 
-//         } catch (error) {
-//             console.error("Error fetching data:", error);
-//         }
-//     };
+            const data = await response.json();
+            // Assuming the response data is an array of objects with a property 'type' to display
+            setOptions(data); 
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    };
 
-//     fetchOptions();
-// }, []);
-
-useEffect(() => {
-  // Fetch data from the API on component mount
-  const fetchOptions = async () => {
-    try {
-      // Uncomment the line below for actual API call
-      // const response = await fetch('http://localhost:224/api/fetch_type_order_for_wtg_wise_planning');
-      
-      const response = await fetch(`${BASE_URL}/api/fetch_type_order_for_wtg_wise_planning`);
-      const data = await response.json();
-
-      // Assuming the response data is an array of objects with a property 'ZEXT_RNO'
-      setOptions(data);
-
-      // Set default selected option to the 6th item (index 5)
-      setSelectedOption1(data[6]?.ZEXT_RNO || ""); // Default to 6th item or empty string if not available
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  fetchOptions();
-}, []); // Empty dependency array ensures this runs only once when the component mounts
-
- // Effect to print selectedOption1 value
- useEffect(() => {
-  console.log("Selected Option:", selectedOption1);
-}, [selectedOption1]); // Runs whenever selectedOption1 changes
+    fetchOptions();
+}, []);
 
     // Fetching states data from the API
     const fetchStates = async () => {
@@ -1399,48 +1355,32 @@ const handleDownload = () => {
     //   }
     // }, [options, handleSelectChange1, handleButtonClick]);
     
-    const hasInitialized = useRef(false);
-    const hasClickedButton = useRef(false); // Ensures the button click happens only once
+    const hasInitialized = useRef(false); // Ensure initialization runs only once
 
     // First useEffect: Select first dropdown option
-    // useEffect(() => {
-    //   if (!hasInitialized.current && options.length > 0) {
-    //     hasInitialized.current = true; // Mark as initialized
-    //     const firstOption = options[0].ZEXT_RNO;
-  
-    //     setSelectedOption1(firstOption);
-  
-    //     // Simulate a dropdown change event
-    //     const syntheticEvent = { target: { value: firstOption } };
-    //     handleSelectChange1(syntheticEvent);
-    //   }
-    // }, [options, handleSelectChange1]);
-  
-    // useEffect(() => {
-    //   if (selectedOption1 && !hasClickedButton.current) {
-    //     hasClickedButton.current = true; // Prevent future executions
-    //     setTimeout(() => {
-    //       handleButtonClick();
-    //     }, 1000);
-    //   }
-    // }, [selectedOption1, handleButtonClick]); // Will never run again after the first trigger
-
-    const buttonRef = useRef(null);
-
-    // useEffect(() => {
-    //   if (buttonRef.current) {
-    //     buttonRef.current.click(); // Simulates a button click on page load
-    //   }
-    // }, []); // Empty dependency array ensures this runs only once when the component mounts
-
     useEffect(() => {
-      // Wait 1 second after page load, then click the button
-      const timer = setTimeout(() => {
-        handleButtonClick();
-      }, 1000); // 1-second delay
+      if (!hasInitialized.current && options.length > 0) {
+        hasInitialized.current = true; // Mark as initialized
+        const firstOption = options[0].ZEXT_RNO;
   
-      return () => clearTimeout(timer); // Cleanup on unmount
-    }, []); // Runs on every page load
+        setSelectedOption1(firstOption);
+  
+        // Simulate a dropdown change event
+        const syntheticEvent = { target: { value: firstOption } };
+        handleSelectChange1(syntheticEvent);
+      }
+    }, [options, handleSelectChange1]);
+  
+    // Second useEffect: Wait for selectedOption1 to update, then trigger button click after 1 second
+    useEffect(() => {
+      if (selectedOption1) {
+        const timer = setTimeout(() => {
+          handleButtonClick();
+        }, 1000);
+  
+        return () => clearTimeout(timer); // Cleanup timeout on re-render/unmount
+      }
+    }, [selectedOption1, handleButtonClick]);
 
   return (
     <div className='main_Lub_container'>
@@ -1485,23 +1425,14 @@ const handleDownload = () => {
         {/* <div className='dropdown_lubmain flex ' style={{justifyContent:'space-between',marginTop:'-9px',marginLeft:'-9px'}}> */}
         <div className="containerinsidewtg">
   <div className="lub-dropdown">
-    {/* <select onChange={handleSelectChange1} value={selectedOption1} className="searchWTG_dropicon">
+    <select onChange={handleSelectChange1} value={selectedOption1} className="searchWTG_dropicon">
       <option value="Select">Type of Order</option>
       {options.map((option, index) => (
         <option key={index} value={option.ZEXT_RNO}>
           {option.ZEXT_RNO}
         </option>
       ))}
-    </select> */}
-
-<select onChange={handleSelectChange1} value={selectedOption1} className="searchWTG_dropicon">
-  {options.map((option, index) => (
-    <option key={index} value={option.ZEXT_RNO} selected={index === 6}>
-      {option.ZEXT_RNO}
-    </option>
-  ))}
-</select>
-
+    </select>
   </div>
 
   <div className="lub-dropdown">
@@ -1557,9 +1488,8 @@ const handleDownload = () => {
 
   {/* Button placed in the same row as other items */}
   <div className="lub-dropdown">
-    {/* <button
-      className="buttonrockongoodmyfriend" */}
-         <button ref={buttonRef} className="buttonrockongoodmyfriend"
+    <button
+      className="buttonrockongoodmyfriend"
       onClick={handleButtonClick}
     >
       Search

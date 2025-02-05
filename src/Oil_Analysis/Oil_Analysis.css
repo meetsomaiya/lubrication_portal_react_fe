@@ -240,10 +240,21 @@ button.close-modal:hover {
   z-index: 10;
 }
 
+/* .data-table-7997 th {
+  background-color: #004d80;
+  color: white;
+  font-weight: bold;
+} */
+
 .data-table-7997 th {
   background-color: #004d80; /* Dark blue background */
   color: white;
   font-weight: bold;
+  font-size: 1rem; /* Ensure consistent font size */
+  text-align: center; /* Align text centrally */
+  white-space: nowrap; /* Prevent text wrapping */
+  padding: 12px; /* Uniform padding */
+  vertical-align: middle; /* Ensure text stays centered vertically */
 }
 
 .data-table-7997 tr:nth-child(even) {

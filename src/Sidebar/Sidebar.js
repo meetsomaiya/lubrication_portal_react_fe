@@ -108,12 +108,12 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             </li>
           </div>
         </Link>
-        <Link to="/Home" onClick={handleLinkClick}>
+        {/* <Link to="/Home" onClick={handleLinkClick}>
           <li className={activeIndex === 'Home' ? 'active' : ''}>
             <img src={homeIcon} alt="Home" className="icon-Home icon_S" />
             {isOpen && <span>Home</span>}
           </li>
-        </Link>
+        </Link> */}
         <Link to="/Site_Report" onClick={handleLinkClick}>
           <li className={activeIndex === 'Site_Report' ? 'active' : ''}>
             <img src={siteReportIcon} alt="Site Report" className="icon-Site icon_S" />

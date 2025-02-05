@@ -1545,7 +1545,6 @@ const normalizeStateName = (stateName) => {
   
   return (
     <div className="container997user">
-         <div className="internalcontainer997user">
       <div className="buttonContainer997user">
       <button id="downloadSegregatedFile997user" onClick={handleSegregatedFileDownload}>
         Download Segregated File
@@ -1576,8 +1575,6 @@ const normalizeStateName = (stateName) => {
         ))}
       </select>
 
-
-      </div>
 
       </div>
 
@@ -1641,13 +1638,7 @@ const normalizeStateName = (stateName) => {
 
         </table>
 
-
-     
-     
-     
-          </div>
-
-                                {/* Preloader */}
+                      {/* Preloader */}
       {loading && (
         <div className="preloaderuser">
           <div className="circleuser"></div>
@@ -1765,23 +1756,22 @@ const normalizeStateName = (stateName) => {
           {clickedOrderType === 'dispute' && (
   <>
     <td>
-    <select
-  value={item["reason"] || "Select"}
-  onChange={(e) => handleReasonChange(e, index)}
->
-  <option value="Select" disabled>Select</option>
-  {dropdownOptions.map((option, idx) => (
-    <option key={idx} value={option}>
-      {option}
-    </option>
-  ))}
-
-  {/* If the selected reason is not in the dropdown, add it dynamically */}
-  {item["reason"] && !dropdownOptions.includes(item["reason"]) && (
-    <option value={item["reason"]}>{item["reason"]}</option>
-  )}
-</select>
-
+      <select
+        value={item["reason"] && !dropdownOptions.includes(item["reason"]) ? item["reason"] : "Select"}
+        onChange={(e) => handleReasonChange(e, index)}
+      >
+        {/* Render all dropdown options */}
+        {dropdownOptions.map((option, idx) => (
+          <option key={idx} value={option}>
+            {option}
+          </option>
+        ))}
+        
+        {/* If the reason is not in the dropdown options, add it dynamically */}
+        {item["reason"] && !dropdownOptions.includes(item["reason"]) && (
+          <option value={item["reason"]}>{item["reason"]}</option>
+        )}
+      </select>
 
       {item.reason === "Other" && (
         <div>
@@ -1866,6 +1856,10 @@ const normalizeStateName = (stateName) => {
         </div>
       </div>
     )}
+     
+     
+     
+          </div>
         </div>
       );
     };
