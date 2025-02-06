@@ -70,7 +70,10 @@ const Login = ({ setAuth }) => {
                         document.cookie = `domain_id=${adminData.domain_id}; path=/`;
 
                         // setAuth(true);
-                       navigate('/Home'); // Redirect to admin home if applicable
+                      //  navigate('/Home'); // Redirect to admin home if applicable
+
+                      navigate('/Oil_Analysis'); // Redirect to admin home if applicable
+
                     } else {
                         // If checkAdmin is false, send request to checkUser.js
                     // const userResponse = await fetch(`http://localhost:224/api/checkUser?DomainId=${DomainId}&Name=${encodeURIComponent(Name)}&EmailId=${encodeURIComponent(EmailId)}`);

@@ -392,7 +392,8 @@ function AdminModal({
         console.log("Sending the following data to API:", data);
 
         try {
-            // const response = await fetch('http://localhost:224/api/register_admin', {
+            //  const response = await fetch('http://localhost:224/api/register_admin', {
+            //    const response = await fetch('http://localhost:3001/api/register_admin', {
                 const response = await fetch(`${BASE_URL}/api/register_admin`, {
                 method: 'POST',
                 headers: {

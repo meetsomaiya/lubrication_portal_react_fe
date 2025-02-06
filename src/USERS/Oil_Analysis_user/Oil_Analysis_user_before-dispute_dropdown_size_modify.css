@@ -476,8 +476,8 @@ button.close-modaluser:hover {
 
 .filter-modal-9963 {
   position: fixed;
-  top: var(--modal-top, 10%);   /* Default value if the variable is not set */
-  left: var(--modal-left, 50%);  /* Default value if the variable is not set */
+  top: 10%;
+  left: 50%;
   transform: translate(-50%, 0);
   width: 50vw;
   background-color: #fff;
@@ -504,7 +504,6 @@ button.close-modaluser:hover {
   gap: 0.5rem;
 }
 
-
 .apply-button-9963,
 .reset-button-9963 {
   padding: 0.5rem 1rem;
@@ -522,33 +521,4 @@ button.close-modaluser:hover {
 
 .filter-icon-9963 {
   cursor: pointer;
-}
-
-.reason-column {
-  max-width: 250px; /* Adjust this width as needed */
-  white-space: nowrap; /* Prevent wrapping */
-  overflow: hidden;
-  text-overflow: ellipsis; /* Adds '...' if content overflows */
-  font-size: 0.9rem; /* Default font size */
-}
-
-/* Dynamically reduce font size for long content */
-.reason-column select {
-  font-size: inherit;
-}
-
-.reason-column input {
-  font-size: inherit;
-}
-
-.reason-column:hover {
-  overflow: visible; /* So user can see the full content on hover */
-  white-space: normal;
-  position: relative; /* Ensure it doesn't affect other layout */
-  z-index: 1; /* Brings it to the front on hover */
-}
-
-
-.reason-select {
-  width: 250px;
 }

@@ -476,8 +476,8 @@ button.close-modaluser:hover {
 
 .filter-modal-9963 {
   position: fixed;
-  top: var(--modal-top, 10%);   /* Default value if the variable is not set */
-  left: var(--modal-left, 50%);  /* Default value if the variable is not set */
+  top: 10%;
+  left: 50%;
   transform: translate(-50%, 0);
   width: 50vw;
   background-color: #fff;
@@ -503,7 +503,6 @@ button.close-modaluser:hover {
   align-items: center;
   gap: 0.5rem;
 }
-
 
 .apply-button-9963,
 .reset-button-9963 {

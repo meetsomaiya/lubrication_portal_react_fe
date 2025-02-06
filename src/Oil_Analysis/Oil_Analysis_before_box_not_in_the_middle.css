@@ -3,29 +3,14 @@
     margin: 0;
     padding: 0;
   }
-
-  html, body {
-    overflow-x: hidden;
-    width: 100vw;
-    height: 100vh;
-  }
   
-  
-  .container997user {
-    width: 90vw;
+  .container997 {
+    width: 60vw;
     padding: 2vh;
     font-family: Arial, sans-serif;
-    overflow: none;
   }
-
-  .internalcontainer997user {
-    position: absolute;
-    top: 90px; /* Adjust position */
-    right: 379px;
-}
-
   
-  .buttonContainer997user {
+  .buttonContainer997 {
     display: flex;
     gap: 1vw;
     margin-bottom: 3vh;
@@ -34,7 +19,7 @@
   
 
   
-  .dropdownContainer997user {
+  .dropdownContainer997 {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -42,7 +27,7 @@
     margin-bottom: 3vh;
   }
   
-  #financialYear997user {
+  #financialYear997 {
     margin-left: 1vw;
     margin-right: 2vw; /* Additional space after dropdown */
     font-size: 1.8vh;
@@ -50,7 +35,7 @@
     border: 1px solid black;
   }
   
-  #downloadSegregatedFile997user, #downloadConsolidatedFile997user {
+  #downloadSegregatedFile997, #downloadConsolidatedFile997 {
     font-size: 2vh;
     padding: 0.75vh 1vw;
     margin-left: 1vw; /* Space between buttons */
@@ -62,78 +47,70 @@
     transition: background-color 0.3s ease;
   }
   
-  #downloadSegregatedFile997user:hover, #downloadConsolidatedFile997user:hover {
+  #downloadSegregatedFile997:hover, #downloadConsolidatedFile997:hover {
     background-color: #1a73e8;
   }
   
   
-  .tableContainer997user {
+  .tableContainer997 {
     overflow-x: auto;
-    width: 100vw; /* Adjust width to prevent horizontal overflow */
-    max-width: 100%; /* Ensure it doesn't exceed the viewport */
-    margin: auto; /* Centers horizontally */
+    width: 70vw;
+    margin: 0 auto;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    
-    /* Centering vertically */
-    position: absolute;
-    top: 62%;
-    left: 70%;
-    transform: translate(-50%, -50%);
-}
-
+  }
   
-  .oilAnalysisTable997user {
-    width: 70%;
+  .oilAnalysisTable997 {
+    width: 50%;
     border-collapse: collapse;
     font-size: 1.6vh;
     color: #333;
   }
   
-  .oilAnalysisTable997user th, .oilAnalysisTable997user td {
+  .oilAnalysisTable997 th, .oilAnalysisTable997 td {
     padding: 1.5vh;
     text-align: center;
     border: 1px solid #ccc;
   }
   
-  .oilAnalysisTable997user th {
+  .oilAnalysisTable997 th {
     background-color: #0d3b66;
     color: #fff;
     font-size: 1.8vh;
     font-weight: bold;
   }
   
-  .orderTypeHeader997user {
+  .orderTypeHeader997 {
     text-align: left;
   }
 
-  .orderTypeLink997user {
+  .orderTypeLink997 {
     white-space: nowrap;
     
   }
   
-  .orderTypeLink997user a {
+  .orderTypeLink997 a {
     color: #1a73e8;
     font-size: 1.8vh;
     text-decoration: none;
     font-weight: bold;
   }
   
-  .orderTypeLink997user a:hover {
+  .orderTypeLink997 a:hover {
     color: #0d3b66;
     text-decoration: underline;
   }
   
-  .oilAnalysisTable997user tbody tr:nth-child(even) {
+  .oilAnalysisTable997 tbody tr:nth-child(even) {
     background-color: #f0f4f8;
   }
   
-  .oilAnalysisTable997user tbody tr:hover {
+  .oilAnalysisTable997 tbody tr:hover {
     background-color: #e1eaf0;
     transition: background-color 0.3s ease;
   }
 
-  .oilAnalysisTable997user td:first-child, /* Fixes the first column to be sticky */
-  .oilAnalysisTable997user th:first-child {
+  .oilAnalysisTable997 td:first-child, /* Fixes the first column to be sticky */
+  .oilAnalysisTable997 th:first-child {
     position: sticky;
     left: 0;
     background-color: #004d80; /* Dark blue background */
@@ -141,12 +118,12 @@
     z-index: 2; /* Make sure it's above the body rows */
   }
   
-  .oilAnalysisTable997user td:first-child a {
+  .oilAnalysisTable997 td:first-child a {
     color: white; /* Ensure the link text is white */
     font-size: 1.8vh; /* Adjust font size if needed */
   }
   
-  .oilAnalysisTable997user td:first-child a:hover {
+  .oilAnalysisTable997 td:first-child a:hover {
     color: #ffcc00; /* Optional: Change the color when hovering */
   }
   
@@ -155,7 +132,7 @@
   /* modal box and inner table */
 
   /* Preloader Circle */
-.preloaderuser {
+.preloader {
   position: fixed;
   top: 0;
   left: 0;
@@ -168,7 +145,7 @@
   z-index: 9999;
 }
 
-.circleuser {
+.circle {
   border: 4px solid #fff;
   border-top: 4px solid transparent;
   border-radius: 50%;
@@ -184,7 +161,7 @@
 }
 
 /* Modal Styling */
-.modal-7997user {
+.modal-7997 {
   position: fixed;
   top: 0;
   left: 0;
@@ -194,26 +171,26 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  /* z-index: 9999; */
   z-index: 100001;
   padding: 2vw;
-  overflow: auto;
+  overflow: hidden;
 }
 
-.modal-content-7997user {
+.modal-content-7997 {
   position: relative;
   width: 100vw;
   height: 100vh;
   background: #fff;
   border-radius: 1vw;
-  /* overflow: auto; */
-  overflow: scroll;
+  overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   display: flex;
   flex-direction: column;
 }
 
 /* Cross Icon Button */
-button.close-modaluser {
+button.close-modal {
   position: absolute;
   top: 1vw;
   right: 1vw;
@@ -228,48 +205,48 @@ button.close-modaluser {
 }
 
 /* Remove Hover Effect */
-button.close-modaluser:hover {
+button.close-modal:hover {
   background-color: transparent;
 }
 
 /* Data Table Wrapper */
-.data-table-wrapper-7997user {
+.data-table-wrapper-7997 {
   height: calc(100% - 2.5vw);
   overflow: auto;
   /* padding: 1vw; */
 }
 
 /* Table Styling */
-.data-table-7997user {
+.data-table-7997 {
   width: 100%;
   border-collapse: collapse;
   min-width: 100%;
   overflow-x: auto;
   box-sizing: border-box;
   font-size: 1vw;
+
 }
 
-.data-table-7997user th, .data-table-7997user td {
+.data-table-7997 th, .data-table-7997 td {
   padding: 1vw;
   text-align: left;
   border: 1px solid #ddd;
 }
 
-
-.data-table-7997user thead {
+.data-table-7997 thead {
   background-color: #f4f4f4;
   position: sticky;
   top: 0;
   z-index: 10;
 }
 
-/* .data-table-7997user th {
-  background-color: #004d80; 
+/* .data-table-7997 th {
+  background-color: #004d80;
   color: white;
   font-weight: bold;
 } */
 
-.data-table-7997user th {
+.data-table-7997 th {
   background-color: #004d80; /* Dark blue background */
   color: white;
   font-weight: bold;
@@ -280,12 +257,11 @@ button.close-modaluser:hover {
   vertical-align: middle; /* Ensure text stays centered vertically */
 }
 
-
-.data-table-7997user tr:nth-child(even) {
+.data-table-7997 tr:nth-child(even) {
   /* background-color: #f9f9f9; */
 }
 
-.data-table-7997user tr:nth-child(odd) {
+.data-table-7997 tr:nth-child(odd) {
   /* background-color: #fff; */
 }
 
@@ -297,7 +273,7 @@ button.close-modaluser:hover {
   z-index: 2;
 } */
 
-.data-table-7997user th:first-child {
+.data-table-7997 th:first-child {
     position: sticky;
     left: 0;
     z-index: 3; /* Ensure it stays above the first column */
@@ -309,7 +285,7 @@ button.close-modaluser:hover {
     color: white; /* Darker color for text */
 }
 
-.data-table-7997user td:first-child {
+.data-table-7997 td:first-child {
   position: sticky;
     left: 0;
     white-space: nowrap; /* Prevents text wrapping */
@@ -321,7 +297,7 @@ button.close-modaluser:hover {
     background-color: white
 }
 
-.data-table-7997user th:nth-child(2) {
+.data-table-7997 th:nth-child(2) {
   position: sticky;
   left: 6rem;
   white-space: nowrap; /* Prevents text wrapping */
@@ -331,7 +307,7 @@ button.close-modaluser:hover {
   font-size: 0.9rem; /* Slightly smaller font for body */
 }
 
-.data-table-7997user td:nth-child(2) {
+.data-table-7997 td:nth-child(2) {
   position: sticky;
   left: 6rem;
   white-space: nowrap; /* Prevents text wrapping */
@@ -343,9 +319,9 @@ button.close-modaluser:hover {
   background-color: white;
 }
 
-.data-table-7997user th:nth-child(3) {
+.data-table-7997 th:nth-child(3) {
   position: sticky;
-  left: 19rem;
+  left: 20rem;
   white-space: nowrap; /* Prevents text wrapping */
   /* padding: 12px 16px; */
   text-align: left;
@@ -353,9 +329,9 @@ button.close-modaluser:hover {
   font-size: 0.9rem; /* Slightly smaller font for body */
 }
 
-.data-table-7997user td:nth-child(3) {
+.data-table-7997 td:nth-child(3) {
   position: sticky;
-  left: 19rem;
+  left: 20rem;
   white-space: nowrap; /* Prevents text wrapping */
   /* padding: 12px 16px; */
   text-align: left;
@@ -365,7 +341,7 @@ button.close-modaluser:hover {
   background-color: white;
 }
 
-.data-table-7997user th:nth-child(4) {
+.data-table-7997 th:nth-child(4) {
   position: sticky;
   left: 24rem;
   white-space: nowrap; /* Prevents text wrapping */
@@ -375,7 +351,7 @@ button.close-modaluser:hover {
   font-size: 0.9rem; /* Slightly smaller font for body */
 }
 
-.data-table-7997user td:nth-child(4) {
+.data-table-7997 td:nth-child(4) {
   position: sticky;
   left: 24rem;
   white-space: nowrap; /* Prevents text wrapping */
@@ -389,166 +365,108 @@ button.close-modaluser:hover {
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .modal-content-7997user {
+  .modal-content-7997 {
     width: 95vw;
     height: 95vh;
   }
 
-  .data-table-7997user th, .data-table-7997 td {
+  .data-table-7997 th, .data-table-7997 td {
     font-size: 2vw;
     padding: 1.5vw;
   }
 
-  button.close-modaluser {
+  button.close-modal {
     padding: 2vw;
     font-size: 3vw;
   }
 }
 
-
-.filter-icon {
-  margin-left: 5px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: transform 0.3s ease;
+#closebtn {
+  background-color: #004d80; /* Red background */
+  color: white;             /* White text */
+  font-size: 18px;          /* Larger text */
+  font-weight: bold;        /* Bold text */
+  border: none;             /* Remove default border */
+  border-radius: 8px;       /* Rounded corners */
+  padding: 12px 20px;       /* Adjust padding for a larger button */
+  cursor: pointer;          /* Pointer cursor on hover */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+  width: 100px;
 }
 
-.filter-icon:hover {
-  transform: scale(1.2);
-}
-
-.modal-backdrop-7997 {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 9998;
+.btn-content-7997 {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  justify-content: flex-end; /* Align buttons to the right */
+  gap: 1.5vw; /* Space between the buttons */
+  padding: 2vh 3vw; /* Space inside the container */
+  background-color: #ffffff; /* Clean white background */
+  border: 1px solid #e0e0e0; /* Subtle light-gray border */
+  border-radius: 8px; /* Slightly rounded corners */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
 }
 
-.filter-modal-7997 {
-  background: white;
-  border-radius: 8px;
-  padding: 20px;
-  width: 400px;
-  max-width: 90%;
-  z-index: 9999;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-}
-
-.checkbox-group-7997 {
-  margin: 20px 0;
-  max-height: 200px;
-  overflow-y: auto;
-}
-
-.checkbox-item-7997 {
-  margin-bottom: 10px;
-}
-
-.modal-actions-7997 {
-  display: flex;
-  justify-content: space-between;
-}
-
-.apply-btn-7997,
-.reset-btn-7997 {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
+#download-excel {
+  padding: 1vh 2vw;
+  font-size: 0.9vw;
+  border: 1px solid #007bff; /* Subtle blue border */
+  border-radius: 6px; /* Slightly rounded corners */
+  background-color: #007bff; /* Blue background */
+  color: #ffffff; /* White text */
+  font-weight: 500;
   cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effects */
 }
 
-.apply-btn-7997 {
-  background: #4caf50;
-  color: white;
+#download-excel:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+  box-shadow: 0 4px 6px rgba(0, 123, 255, 0.3); /* Slight shadow on hover */
 }
 
-.reset-btn-7997 {
-  background: #f44336;
-  color: white;
-}
-
-
-.filter-modal-9963 {
-  position: fixed;
-  top: var(--modal-top, 10%);   /* Default value if the variable is not set */
-  left: var(--modal-left, 50%);  /* Default value if the variable is not set */
-  transform: translate(-50%, 0);
-  width: 50vw;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  z-index: 9999;
-  padding: 1rem;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.filter-modal-content-9963 {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.filter-options-9963 {
-  max-height: 30vh;
-  overflow-y: auto;
-}
-
-.filter-option-9963 {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-
-.apply-button-9963,
-.reset-button-9963 {
-  padding: 0.5rem 1rem;
-  margin: 0.5rem;
-  border: none;
-  background-color: #007bff;
-  color: white;
+#closebtn {
+  padding: 1vh 2vw;
+  font-size: 0.9vw;
+  border: 1px solid #dc3545; /* Subtle red border */
+  border-radius: 6px; /* Slightly rounded corners */
+  background-color: #dc3545; /* Red background */
+  color: #ffffff; /* White text */
+  font-weight: 500;
   cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effects */
 }
 
-.apply-button-9963:hover,
-.reset-button-9963:hover {
-  background-color: #0056b3;
+#closebtn:hover {
+  background-color: #b52a37; /* Darker red on hover */
+  box-shadow: 0 4px 6px rgba(220, 53, 69, 0.3); /* Slight shadow on hover */
 }
 
-.filter-icon-9963 {
-  cursor: pointer;
+.order-type-heading-7997 {
+  font-size: 20px; /* Modest, readable font size */
+  color: #333; /* Slightly softer dark color for text */
+  font-family: 'Helvetica Neue', sans-serif; /* Modern and clean font */
+  text-align: center; /* Center the text */
+  padding: 10px 0; /* Moderate padding for a balanced look */
+  background-color: #f5f5f5; /* Soft, light background */
+  border-radius: 6px; /* Subtle rounded corners */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+  width: 80%; /* Responsive width */
+  max-width: 400px; /* Maximum width to avoid excess stretching */
+  margin: 2vh auto; /* Center the heading with vertical margin */
+  transition: transform 0.2s ease; /* Smooth hover effect */
+  height: 30px;
 }
 
-.reason-column {
-  max-width: 250px; /* Adjust this width as needed */
-  white-space: nowrap; /* Prevent wrapping */
-  overflow: hidden;
-  text-overflow: ellipsis; /* Adds '...' if content overflows */
-  font-size: 0.9rem; /* Default font size */
+/* Hover effect */
+.order-type-heading-7997:hover {
+  transform: translateY(-2px); /* Slight lift effect */
 }
 
-/* Dynamically reduce font size for long content */
-.reason-column select {
-  font-size: inherit;
-}
-
-.reason-column input {
-  font-size: inherit;
-}
-
-.reason-column:hover {
-  overflow: visible; /* So user can see the full content on hover */
-  white-space: normal;
-  position: relative; /* Ensure it doesn't affect other layout */
-  z-index: 1; /* Brings it to the front on hover */
+/* Responsive handling for smaller devices */
+@media (max-width: 768px) {
+  .order-type-heading-7997 {
+    font-size: 22px; /* Slightly smaller font for smaller screens */
+    width: 90%; /* Wider for smaller screens */
+  }
 }
 
 
-.reason-select {
-  width: 250px;
-}

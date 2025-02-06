@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import "./Corrective_Action.css";
 import * as XLSX from "xlsx"; // Import the XLSX library
 import moment from "moment-timezone";
@@ -90,8 +90,6 @@ const TableComponent9976_admin = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10); // You can change this to display more items per page.
 
-  const filterBoxRef = useRef(null);
-
   useEffect(() => {
     // fetch("http://localhost:224/api/fetch_oil_under_supervision_admin")
     fetch(`${BASE_URL}/api/fetch_oil_under_supervision_admin`)
@@ -134,19 +132,6 @@ const TableComponent9976_admin = () => {
       [header]: "",
     }));
   };
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (filterBoxRef.current && !filterBoxRef.current.contains(event.target)) {
-        setFilterBoxes({});
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
 
   const handleSearchChange = (header, searchTerm) => {
     setSearchTerms((prev) => ({
@@ -229,8 +214,7 @@ const TableComponent9976_admin = () => {
                     ⚙️
                   </span>
                   {filterBoxes[header] && (
-                    // <div className="filter-box">
-                    <div ref={filterBoxRef} className="filter-box">
+                    <div className="filter-box">
                       <input
                         type="text"
                         className="filter-search-bar"

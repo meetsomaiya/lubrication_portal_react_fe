@@ -64,8 +64,8 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           console.log('Cookies set successfully!');
 
           // Navigate to Oil_Analysis page
-          // navigate('/Oil_Analysis');
-          navigate('/Home_user');
+          navigate('/Oil_Analysis_user');
+         // navigate('/Home_user');
         } else {
           console.error('Failed to toggle admin:', response.status);
         }

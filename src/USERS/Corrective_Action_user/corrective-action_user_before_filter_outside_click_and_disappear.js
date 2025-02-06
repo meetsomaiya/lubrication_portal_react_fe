@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import "./Corrective_Action.css";
 import * as XLSX from "xlsx";
 import moment from 'moment-timezone';
@@ -139,8 +139,6 @@ const TableComponent9976 = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10); // Set items per page (can be adjusted)
 
-  const filterBoxRef = useRef(null);
-
   const fieldOrder = [
     "SERVICEORDER",
     "Sample_Number",
@@ -201,19 +199,6 @@ const TableComponent9976 = () => {
       [header]: "",
     }));
   };
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (filterBoxRef.current && !filterBoxRef.current.contains(event.target)) {
-        setFilterBoxes({});
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
 
   const handleSearchChange = (header, searchTerm) => {
     setSearchTerms((prev) => ({
@@ -296,8 +281,7 @@ const TableComponent9976 = () => {
                     ⚙️
                   </span>
                   {filterBoxes[header] && (
-                    // <div className="filter-box">
-                    <div ref={filterBoxRef} className="filter-box">
+                    <div className="filter-box">
                       {/* Search Bar */}
                       <input
                         type="text"

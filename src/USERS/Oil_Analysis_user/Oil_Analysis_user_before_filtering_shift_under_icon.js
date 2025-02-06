@@ -192,42 +192,12 @@ const OilAnalysisTableUser = () => {
       )
     : filterOptions9963;
  
-    // const handleOpenFilterModal9963 = (column) => {
-    //   setFilterColumn9963(column);
-    //   const options = generateFilterOptions(modalData, column);
-    //   setFilterOptions9963(options);
-    //   setFilterModalOpen9963(true);
-    // };
-
-    const handleOpenFilterModal9963 = (column, event) => {
-      // Ensure the event is valid
-      if (!event) {
-        console.error('Event is undefined');
-        return;
-      }
-    
-      // Set the filter column
+    const handleOpenFilterModal9963 = (column) => {
       setFilterColumn9963(column);
-    
-      // Generate filter options based on the column
       const options = generateFilterOptions(modalData, column);
       setFilterOptions9963(options);
-    
-      // Set the modal open
       setFilterModalOpen9963(true);
-    
-      // Get the position of the icon (using the event object)
-      const iconRect = event.target.getBoundingClientRect();
-    
-      // Calculate the modal position based on the icon's position
-      const modalTop = iconRect.top + window.scrollY + iconRect.height + 10; // Adding an offset below the icon
-      const modalLeft = iconRect.left + window.scrollX + iconRect.height + 250; // Aligning with the icon's left edge
-    
-      // Set the CSS variables dynamically for modal positioning
-      document.documentElement.style.setProperty('--modal-top', `${modalTop}px`);
-      document.documentElement.style.setProperty('--modal-left', `${modalLeft}px`);
     };
-    
     
     const handleSearchChange9963 = (event) => {
       const query = event.target.value.toLowerCase();
@@ -392,269 +362,52 @@ const extractDomainIdFromUrl = () => {
 
 
 // Function to send the AJAX request to api_for_auto_login
-// const sendAutoLoginRequest = async (domainId) => {
-//   try {
-//     console.log('Sending data to auto login API:', { domain_id: domainId });
-
-//     const response = await fetch(`${BASE_URL}/api/api_for_auto_login`, {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//       body: JSON.stringify({ domain_id: domainId }),
-//     });
-
-//     if (response.ok) {
-//       const userData = await response.json();
-//       console.log('Auto login API request successful', userData);
-
-//       // Check if the response contains valid user data
-//       if (
-//         !userData ||
-//         Object.values(userData).every(value => value === null || value === '' || value === undefined)
-//       ) {
-//         console.warn('API returned empty or null values. Redirecting to login page.');
-//         window.location.href = 'https://suzomsuatapps.suzlon.com/apps/fleetmanager_fe/index.html#/signin';
-//         return;
-//       }
-
-//       // Store user details in cookies
-//       document.cookie = `userId=${encodeURIComponent(userData.id)}; path=/`;
-//       document.cookie = `domain_id=${encodeURIComponent(userData.domain_id)}; path=/`;
-//       document.cookie = `name=${encodeURIComponent(userData.name)}; path=/`;
-//       document.cookie = `email=${encodeURIComponent(userData.email)}; path=/`;
-//       document.cookie = `state=${encodeURIComponent(userData.state)}; path=/`;
-//       document.cookie = `area=${encodeURIComponent(userData.area)}; path=/`;
-//       document.cookie = `site=${encodeURIComponent(userData.site)}; path=/`;
-//       document.cookie = `access=${encodeURIComponent(userData.access)}; path=/`;
-//       document.cookie = `isadmin=${userData.isadmin}; path=/`;
-
-//     } else {
-//       console.error('Error sending auto login request:', response.status);
-//       window.location.href = 'https://suzomsuatapps.suzlon.com/apps/fleetmanager_fe/index.html#/signin';
-//     }
-//   } catch (error) {
-//     console.error('Failed to send auto login request:', error);
-//     window.location.href = 'https://suzomsuatapps.suzlon.com/apps/fleetmanager_fe/index.html#/signin';
-//   }
-// };
-
-// const sendAutoLoginRequest = async (domainId) => {
-//   try {
-//     console.log('Sending data to auto login API:', { domain_id: domainId });
-
-//     const response = await fetch(`${BASE_URL}/api/api_for_auto_login`, {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//       body: JSON.stringify({ domain_id: domainId }),
-//     });
-
-//     if (response.ok) {
-//       const userData = await response.json();
-//       console.log('Auto login API request successful', userData);
-
-//       if (!userData || Object.values(userData).every(value => value === null || value === '' || value === undefined)) {
-//         console.warn('API returned empty or null values. Redirecting to login page.');
-//         window.location.href = 'https://suzomsuatapps.suzlon.com/apps/fleetmanager_fe/index.html#/signin';
-//         return;
-//       }
-
-//       // Store user details in cookies
-//       document.cookie = `userId=${encodeURIComponent(userData.id)}; path=/`;
-//       document.cookie = `domain_id=${encodeURIComponent(userData.domain_id)}; path=/`;
-//       document.cookie = `name=${encodeURIComponent(userData.name)}; path=/`;
-//       document.cookie = `email=${encodeURIComponent(userData.email)}; path=/`;
-//       document.cookie = `state=${encodeURIComponent(userData.state)}; path=/`;
-//       document.cookie = `area=${encodeURIComponent(userData.area)}; path=/`;
-//       document.cookie = `site=${encodeURIComponent(userData.site)}; path=/`;
-//       document.cookie = `access=${encodeURIComponent(userData.access)}; path=/`;
-//       document.cookie = `isadmin=${userData.isadmin}; path=/`;
-
-//       // Ensure reload happens only after cookies are set
-//       setTimeout(() => {
-//         handleReload();
-//       }, 100); // Small delay to ensure cookies are set
-//     } else {
-//       console.error('Error sending auto login request:', response.status);
-//       window.location.href = 'https://suzomsuatapps.suzlon.com/apps/fleetmanager_fe/index.html#/signin';
-//     }
-//   } catch (error) {
-//     console.error('Failed to send auto login request:', error);
-//     window.location.href = 'https://suzomsuatapps.suzlon.com/apps/fleetmanager_fe/index.html#/signin';
-//   }
-// };
-
-// const sendAutoLoginRequest = async (domainId) => {
-//   try {
-//     console.log('Sending data to auto login API:', { domain_id: domainId });
-
-//     const controller = new AbortController(); // Create an AbortController to manually handle timeouts
-//     const signal = controller.signal;
-
-//      const response = await fetch(`${BASE_URL}/api/api_for_auto_login`, {
-//       // const response = await fetch('http://localhost:224/api', {
-//       // const response = await fetch('http://localhost:3001/api', {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//       body: JSON.stringify({ domain_id: domainId }),
-//       signal, // Pass the signal to fetch
-//     });
-
-//     if (response.ok) {
-//       const userData = await response.json();
-//       console.log('Auto login API request successful', userData);
-
-//       if (!userData || Object.values(userData).every(value => value === null || value === '' || value === undefined)) {
-//         console.warn('API returned empty or null values. Redirecting to login page.');
-//       //  window.location.href = 'https://suzomsuatapps.suzlon.com/apps/fleetmanager_fe/index.html#/signin';
-//         return;
-//       }
-
-//       // Store user details in cookies
-//       document.cookie = `userId=${encodeURIComponent(userData.id)}; path=/`;
-//       document.cookie = `domain_id=${encodeURIComponent(userData.domain_id)}; path=/`;
-//       document.cookie = `name=${encodeURIComponent(userData.name)}; path=/`;
-//       document.cookie = `email=${encodeURIComponent(userData.email)}; path=/`;
-//       document.cookie = `state=${encodeURIComponent(userData.state)}; path=/`;
-//       document.cookie = `area=${encodeURIComponent(userData.area)}; path=/`;
-//       document.cookie = `site=${encodeURIComponent(userData.site)}; path=/`;
-//       document.cookie = `access=${encodeURIComponent(userData.access)}; path=/`;
-//       document.cookie = `isadmin=${userData.isadmin}; path=/`;
-
-//       // Ensure reload happens only after cookies are set
-//       setTimeout(() => {
-//         handleReload();
-//       }, 100); // Small delay to ensure cookies are set
-//     } else {
-//       console.error('Error sending auto login request:', response.status);
-//    //   window.location.href = 'https://suzomsuatapps.suzlon.com/apps/fleetmanager_fe/index.html#/signin';
-//     }
-//   } catch (error) {
-//     console.error('Failed to send auto login request:', error);
-//    // window.location.href = 'https://suzomsuatapps.suzlon.com/apps/fleetmanager_fe/index.html#/signin';
-//   }
-// };
-
-// const sendAutoLoginRequest = async (domainId) => {
-//   try {
-//      const response = await fetch(`${BASE_URL}/api/api_for_auto_login`, {
-//     // const response = await fetch('http://localhost:3001/api_for_auto_login', {
-//       method: 'POST',
-//       headers: { 'Content-Type': 'application/json' },
-//       body: JSON.stringify({ domain_id: domainId })
-//     });
-    
-//     if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-    
-//     const userData = await response.json();
-//     if (!userData) return;
-    
-//     document.cookie = `userId=${encodeURIComponent(userData.id)}; path=/`;
-//     document.cookie = `domain_id=${encodeURIComponent(userData.domain_id)}; path=/`;
-//     document.cookie = `name=${encodeURIComponent(userData.name)}; path=/`;
-//     document.cookie = `email=${encodeURIComponent(userData.email)}; path=/`;
-//     document.cookie = `state=${encodeURIComponent(userData.state)}; path=/`;
-//     document.cookie = `area=${encodeURIComponent(userData.area)}; path=/`;
-//     document.cookie = `site=${encodeURIComponent(userData.site)}; path=/`;
-//     document.cookie = `access=${encodeURIComponent(userData.access)}; path=/`;
-//     document.cookie = `isadmin=${userData.isadmin}; path=/`;
-//   } catch (error) {
-//     console.error('Auto login request failed:', error);
-//   }
-// };
-
-// const sendAutoLoginRequest = async (domainId) => {
-//   try {
-//     const response = await fetch(`${BASE_URL}/api/api_for_auto_login?domain_id=${encodeURIComponent(domainId)}`, {
-//       method: 'GET',
-//       headers: { 'Content-Type': 'application/json' }
-//     });
-
-//     if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-
-//     const userData = await response.json();
-//     if (!userData) return;
-
-//     document.cookie = `userId=${encodeURIComponent(userData.id)}; path=/`;
-//     document.cookie = `domain_id=${encodeURIComponent(userData.domain_id)}; path=/`;
-//     document.cookie = `name=${encodeURIComponent(userData.name)}; path=/`;
-//     document.cookie = `email=${encodeURIComponent(userData.email)}; path=/`;
-//     document.cookie = `state=${encodeURIComponent(userData.state)}; path=/`;
-//     document.cookie = `area=${encodeURIComponent(userData.area)}; path=/`;
-//     document.cookie = `site=${encodeURIComponent(userData.site)}; path=/`;
-//     document.cookie = `access=${encodeURIComponent(userData.access)}; path=/`;
-//     document.cookie = `isadmin=${userData.isadmin}; path=/`;
-//   } catch (error) {
-//     console.error('Auto login request failed:', error);
-//   }
-// };
-
 const sendAutoLoginRequest = async (domainId) => {
   try {
-    const response = await fetch(`${BASE_URL}/api/api_for_auto_login?domain_id=${encodeURIComponent(domainId)}`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' }
+    console.log('Sending data to auto login API:', { domain_id: domainId });
+
+    const response = await fetch(`${BASE_URL}/api/api_for_auto_login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ domain_id: domainId }),
     });
 
-    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+    if (response.ok) {
+      const userData = await response.json();
+      console.log('Auto login API request successful', userData);
 
-    const userData = await response.json();
-    
-    // Redirect if response is empty
-    if (!userData || Object.keys(userData).length === 0) {
-      console.error('Empty response received. Redirecting to sign-in page.');
+      // Check if the response contains valid user data
+      if (
+        !userData ||
+        Object.values(userData).every(value => value === null || value === '' || value === undefined)
+      ) {
+        console.warn('API returned empty or null values. Redirecting to login page.');
+        window.location.href = 'https://suzomsuatapps.suzlon.com/apps/fleetmanager_fe/index.html#/signin';
+        return;
+      }
+
+      // Store user details in cookies
+      document.cookie = `userId=${encodeURIComponent(userData.id)}; path=/`;
+      document.cookie = `domain_id=${encodeURIComponent(userData.domain_id)}; path=/`;
+      document.cookie = `name=${encodeURIComponent(userData.name)}; path=/`;
+      document.cookie = `email=${encodeURIComponent(userData.email)}; path=/`;
+      document.cookie = `state=${encodeURIComponent(userData.state)}; path=/`;
+      document.cookie = `area=${encodeURIComponent(userData.area)}; path=/`;
+      document.cookie = `site=${encodeURIComponent(userData.site)}; path=/`;
+      document.cookie = `access=${encodeURIComponent(userData.access)}; path=/`;
+      document.cookie = `isadmin=${userData.isadmin}; path=/`;
+
+    } else {
+      console.error('Error sending auto login request:', response.status);
       window.location.href = 'https://suzomsuatapps.suzlon.com/apps/fleetmanager_fe/index.html#/signin';
-      return;
     }
-
-    // Set cookies
-    document.cookie = `userId=${encodeURIComponent(userData.id)}; path=/`;
-    document.cookie = `domain_id=${encodeURIComponent(userData.domain_id)}; path=/`;
-    document.cookie = `name=${encodeURIComponent(userData.name)}; path=/`;
-    document.cookie = `email=${encodeURIComponent(userData.email)}; path=/`;
-    document.cookie = `state=${encodeURIComponent(userData.state)}; path=/`;
-    document.cookie = `area=${encodeURIComponent(userData.area)}; path=/`;
-    document.cookie = `site=${encodeURIComponent(userData.site)}; path=/`;
-    document.cookie = `access=${encodeURIComponent(userData.access)}; path=/`;
-    document.cookie = `isadmin=${userData.isadmin}; path=/`;
-
-    // Delay for 100ms to ensure cookies are set, then reload
-    setTimeout(() => {
-      handleReload();
-    }, 100);
-
   } catch (error) {
-    console.error('Auto login request failed:', error);
-    
-    // Redirect to sign-in page on error
+    console.error('Failed to send auto login request:', error);
     window.location.href = 'https://suzomsuatapps.suzlon.com/apps/fleetmanager_fe/index.html#/signin';
   }
 };
-
-
-
-
-
-
-const handleReload = () => {
-  // Extract the query parameters from the hash
-  const hashParams = window.location.hash.split('?')[1];
-
-  // Check if the reload query parameter is present
-  if (!hashParams || !hashParams.includes('reload=true')) {
-    const baseHash = window.location.hash.split('?')[0]; // Get the base part of the hash
-    const updatedHash = `${baseHash}?reload=true`;
-
-    // Update the hash and reload the page
-    window.location.hash = updatedHash;
-    window.location.reload();
-  }
-};
-
 
 
 
@@ -1754,28 +1507,28 @@ const normalizeStateName = (stateName) => {
     fetchDataForPendingTeco(event);
   };
 
-    // useEffect(() => {
-    //   // Use setTimeout to delay the execution by 2 seconds
-    //   const timer = setTimeout(() => {
-    //     // Extract the query parameters from the hash
-    //     const hashParams = window.location.hash.split('?')[1];
+    useEffect(() => {
+      // Use setTimeout to delay the execution by 2 seconds
+      const timer = setTimeout(() => {
+        // Extract the query parameters from the hash
+        const hashParams = window.location.hash.split('?')[1];
       
-    //     // Check if the reload query parameter is present
-    //     if (!hashParams || !hashParams.includes('reload=true')) {
-    //       // Append the reload query parameter to the hash
-    //       const baseHash = window.location.hash.split('?')[0]; // Get the base part of the hash
-    //       const updatedHash = `${baseHash}?reload=true`;
+        // Check if the reload query parameter is present
+        if (!hashParams || !hashParams.includes('reload=true')) {
+          // Append the reload query parameter to the hash
+          const baseHash = window.location.hash.split('?')[0]; // Get the base part of the hash
+          const updatedHash = `${baseHash}?reload=true`;
       
-    //       // Update the hash and reload the page
-    //       window.location.hash = updatedHash;
-    //       window.location.reload(); // Reload the page
-    //     }
-    //   }, 2000); // 2000ms = 2 seconds
+          // Update the hash and reload the page
+          window.location.hash = updatedHash;
+          window.location.reload(); // Reload the page
+        }
+      }, 2000); // 2000ms = 2 seconds
       
-    //   // Cleanup the timeout on component unmount
-    //   return () => clearTimeout(timer);
+      // Cleanup the timeout on component unmount
+      return () => clearTimeout(timer);
     
-    // }, []);
+    }, []);
 
   useEffect(() => {
     // Wait for 1 second before selecting the first dropdown value
@@ -1972,8 +1725,7 @@ const normalizeStateName = (stateName) => {
           <FontAwesomeIcon
             icon={faFilter}
             className="filter-icon-9963"
-            // onClick={() => handleOpenFilterModal9963(header)}
-            onClick={(e) => handleOpenFilterModal9963(header, e)} // Pass the event here
+            onClick={() => handleOpenFilterModal9963(header)}
           />
         </th>
       ))}

@@ -171,6 +171,8 @@ const Sidebar_user = ({ isOpen, toggleSidebar }) => {
         console.log('Sending data to fleet manager login API:', requestData);
     
         // Send data to API
+        // /fetch('http://localhost:224/api/fleet_manager_login', {  // Ensure the correct API URL
+     //   fetch('http://localhost:3001/api/fleet_manager_login', {  // Ensure the correct API URL
         fetch(`${BASE_URL}/api/fleet_manager_login`, {  // Ensure the correct API URL
             method: 'POST',
             headers: {
@@ -189,11 +191,6 @@ const Sidebar_user = ({ isOpen, toggleSidebar }) => {
                 document.cookie = `access=${encodeURIComponent(data.data.access)}; path=/`;
                 document.cookie = `adminEmail=${encodeURIComponent(data.data.email)}; path=/`;
                 document.cookie = `domain_id=${encodeURIComponent(data.data.domainId)}; path=/`;
-    
-                // Wait for 2 seconds before redirecting
-                setTimeout(() => {
-                    navigate('/Oil_Analysis');
-                }, 1000);
             } else {
                 console.error('API response error:', data.message);
             }
@@ -201,8 +198,13 @@ const Sidebar_user = ({ isOpen, toggleSidebar }) => {
         .catch(error => {
             console.error('Error:', error);
         });
-    };
     
+        // navigate('/Home'); // Uncomment if navigation is needed
+
+        navigate('/Oil_Analysis');
+        
+       // navigate('LubricationPortal/Home'); // Uncomment if navigation is needed
+    };
     
     
     

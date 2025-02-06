@@ -179,8 +179,6 @@ const pathname = window.location.hash.replace(/^#/, '');
  
   const [selectedFinancialYear, setSelectedFinancialYear] = useState("");
   
-  const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
-
  
 
   
@@ -202,36 +200,12 @@ const pathname = window.location.hash.replace(/^#/, '');
       )
     : filterOptions9963;
  
-    const handleOpenFilterModal9963 = (column, event) => {
-      // Ensure the event is valid
-      if (!event) {
-        console.error('Event is undefined');
-        return;
-      }
-    
-      // Set the filter column
+    const handleOpenFilterModal9963 = (column) => {
       setFilterColumn9963(column);
-    
-      // Generate filter options based on the column
       const options = generateFilterOptions(modalData, column);
       setFilterOptions9963(options);
-    
-      // Set the modal open
       setFilterModalOpen9963(true);
-    
-      // Get the position of the icon (using the event object)
-      const iconRect = event.target.getBoundingClientRect();
-    
-      // Calculate the modal position based on the icon's position
-      const modalTop = iconRect.top + window.scrollY + iconRect.height + 10; // Adding an offset below the icon
-      const modalLeft = iconRect.left + window.scrollX + iconRect.height + 250; // Aligning with the icon's left edge
-    
-      // Set the CSS variables dynamically for modal positioning
-      document.documentElement.style.setProperty('--modal-top', `${modalTop}px`);
-      document.documentElement.style.setProperty('--modal-left', `${modalLeft}px`);
     };
-    
-    
     
     const handleSearchChange9963 = (event) => {
       const query = event.target.value.toLowerCase();
@@ -1518,11 +1492,10 @@ const handleConsolidatedFileDownload = () => {
             <th key={index}>
               {header}{" "}
               <FontAwesomeIcon
-  icon={faFilter}
-  className="filter-icon-9963"
-  onClick={(e) => handleOpenFilterModal9963(header, e)} // Pass the event here
-/>
-
+                icon={faFilter}
+                className="filter-icon-9963"
+                onClick={() => handleOpenFilterModal9963(header)}
+              />
             </th>
           ))}
         </tr>
