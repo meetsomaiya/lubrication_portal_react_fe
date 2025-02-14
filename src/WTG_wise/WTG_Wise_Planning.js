@@ -162,7 +162,11 @@ const WTG_Wise_Planning = () => {
                   if (!adminId) {
                     // If adminId is not found, redirect to the default route
                   //  window.location.href = '/'; // Redirect to the home page or default route
-                  window.location.href = '/LubricationPortal'; // Redirect to the home page or default route
+                 // window.location.href = '/LubricationPortal'; // Redirect to the home page or default route
+
+                // window.location.href = 'https://suzomsuatapps.suzlon.com/apps/fleetmanager_fe/index.html#/signin'; // Redirect to the home page or default route
+
+                window.location.href = 'https://suzoms.suzlon.com/FleetM/#/signin'; // Redirect to the home page or default route     
                   }
                 };
   
@@ -232,6 +236,8 @@ const WTG_Wise_Planning = () => {
     //  const [plannedData, setPlannedData] = useState(null);
 
     const [monthRange, setMonthRange] = useState('');
+
+    const [loading, setLoading] = useState(false); // To track loading state
 
 
     const [isTotalPlannedCountFetched, setTotalPlannedCountFetched] = useState(false);
@@ -352,17 +358,69 @@ const [isTotalStateWiseCountFetched, setTotalStateWiseCountFetched] = useState(f
       };
 
           // New function to call both fetch functions
-    const handleButtonClick = () => {
-      fetchTotalPlannedCount();
-      fetchTotalWtgCount();
-      fetchOpenStatusCount();
-      fetchCompletedStatusCount();
-      fetchOutOfGraceCount();
-      fetchTotalStateWiseCount();
+  //   const handleButtonClick = () => {
+  //     fetchTotalPlannedCount();
+  //     fetchTotalWtgCount();
+  //     fetchOpenStatusCount();
+  //     fetchCompletedStatusCount();
+  //     fetchOutOfGraceCount();
+  //     fetchTotalStateWiseCount();
 
 
-      handleCardClick('Total');  
-  };
+  //     handleCardClick('Total');  
+  // };
+
+//   const handleButtonClick = () => {
+//     // Reset all percentage states to 0
+//     setTotalPercentage(0);
+//     setPlannedPercentage(0);
+//     setOpenPercentage(0);
+//     setCompletedPercentage(0);
+//     setGracePercentage(0);
+
+//     // Call all fetch functions after resetting percentages
+//     fetchTotalPlannedCount();
+//     fetchTotalWtgCount();
+//     fetchOpenStatusCount();
+//     fetchCompletedStatusCount();
+//     fetchOutOfGraceCount();
+//     fetchTotalStateWiseCount();
+
+//     // Handle card click
+//     handleCardClick('Total');
+// };
+
+const handleButtonClick = async () => {
+  setLoading(true); // Start loading before making API calls
+
+  // Reset all percentage states to 0
+  setTotalPercentage(0);
+  setPlannedPercentage(0);
+  setOpenPercentage(0);
+  setCompletedPercentage(0);
+  setGracePercentage(0);
+
+  try {
+      // Wait for all API calls to finish before setting loading to false
+      await Promise.all([
+          fetchTotalPlannedCount(),
+          fetchTotalWtgCount(),
+          fetchOpenStatusCount(),
+          fetchCompletedStatusCount(),
+          fetchOutOfGraceCount(),
+          fetchTotalStateWiseCount(),
+      ]);
+  } catch (error) {
+      console.error("Error in one of the API calls:", error);
+  } finally {
+      setLoading(false); // Stop loading when all API responses arrive
+  }
+
+  // Handle card click
+  handleCardClick('Total');
+};
+
+
 
        // Function to fetch the total WTG count
        const fetchTotalWtgCount = async () => {
@@ -1687,11 +1745,13 @@ const handleDownload = () => {
       >
         {/* <div className="flex justify-between"> */}
         <div className='flex justify-start'>
+          {/* <h2>Grace Time</h2> */}
           <h2>Grace Time</h2>
           <h3>{outofGraceCount !== null ? outofGraceCount : '0'}</h3>
+          <div style={{ width: `${gracePercentage}%` }}></div>
         </div>
         <div style={{ height: '1px' }}>
-          <span style={{ fontSize: '9px', marginRight: '129px' }}>±7 Days</span>
+          {/* <span style={{ fontSize: '9px', marginRight: '129px' }}>±7 Days</span> */}
         </div>
         <div className="progress-main">
           <p style={{ color: '#CE6301' }}>{gracePercentage.toFixed(0)}%</p> {/* Display calculated percentage */}
@@ -1916,6 +1976,13 @@ const handleDownload = () => {
           ))}
         </tbody>
       </table>
+
+                      {/* Preloader */}
+          {loading && (
+            <div className="preloader">
+              <div className="circle"></div>
+            </div>
+          )}
             </div>
           </div>
         </div>

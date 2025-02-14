@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import './Oil_Analysis.css';
 import { BASE_URL } from '../config'
 import * as XLSX from 'xlsx';
 import moment from 'moment-timezone';
+
+
  
 // Import the FontAwesome library
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,6 +12,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilter } from "@fortawesome/free-solid-svg-icons";
  
 const OilAnalysisTable = () => {
+
+  const filterModalRef = useRef(null);
 
     let entryTime = null;  // Store the entry time (when user stepped into the page)
     let exitTime = null;   // Store the exit time (when user left the page)
@@ -147,8 +151,11 @@ const pathname = window.location.hash.replace(/^#/, '');
                       if (!adminId) {
                         // If adminId is not found, redirect to the default route
                        // window.location.href = '/'; // Redirect to the home page or default route
-                       window.location.href = '/LubricationPortal'; // Redirect to the home page or default route
-                      }
+                       // window.location.href = '/LubricationPortal'; // Redirect to the home page or default route
+
+                      // window.location.href = 'https://suzomsuatapps.suzlon.com/apps/fleetmanager_fe/index.html#/signin'; // Redirect to the home page or default route
+                      window.location.href = 'https://suzoms.suzlon.com/FleetM/#/signin'; // Redirect to the home page or default route       
+                    }
                     };
       
                     useEffect(() => {
@@ -181,6 +188,40 @@ const pathname = window.location.hash.replace(/^#/, '');
   
   const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
 
+  const [activeHeader, setActiveHeader] = useState(null);
+
+  const headers = [
+    "Order Number",
+    "Function Location",
+    "Issue Quantity",
+    "Return Quantity",
+    "Return Percentage",
+    "Plant Name",
+    "State Name",
+    "Area Name",
+    "Site Name",
+    "Material Code",
+    "Storage Location",
+    "Movement Type",
+    "Material Document Number",
+    "Material Description",
+    "Valuation Type",
+    "Posting Date",
+    "Entry Date",
+    "Issued Quantity",
+    "Order Reference",
+    "Order Type",
+    "Component Name",
+    "WTG Model",
+    "Current Oil Change Date",
+    "State Engineering Head",
+    "Area Incharge",
+    "Site Incharge",
+    "State PMO",
+    "Order Status",
+    ...(clickedOrderType === "dispute" ? ["Reason"] : []),
+  ];
+
  
 
   
@@ -202,96 +243,195 @@ const pathname = window.location.hash.replace(/^#/, '');
       )
     : filterOptions9963;
  
-    const handleOpenFilterModal9963 = (column, event) => {
-      // Ensure the event is valid
-      if (!event) {
-        console.error('Event is undefined');
-        return;
-      }
+  //   const handleOpenFilterModal9963 = (column, event) => {
+  //     // Ensure the event is valid
+  //     if (!event) {
+  //       console.error('Event is undefined');
+  //       return;
+  //     }
     
-      // Set the filter column
-      setFilterColumn9963(column);
+  //     // Set the filter column
+  //     setFilterColumn9963(column);
     
-      // Generate filter options based on the column
-      const options = generateFilterOptions(modalData, column);
-      setFilterOptions9963(options);
+  //     // Generate filter options based on the column
+  //     const options = generateFilterOptions(modalData, column);
+  //     setFilterOptions9963(options);
     
-      // Set the modal open
-      setFilterModalOpen9963(true);
+  //     // Set the modal open
+  //     setFilterModalOpen9963(true);
     
-      // Get the position of the icon (using the event object)
-      const iconRect = event.target.getBoundingClientRect();
+  //     // Get the position of the icon (using the event object)
+  //     const iconRect = event.target.getBoundingClientRect();
     
-      // Calculate the modal position based on the icon's position
-      const modalTop = iconRect.top + window.scrollY + iconRect.height + 10; // Adding an offset below the icon
-      const modalLeft = iconRect.left + window.scrollX + iconRect.height + 250; // Aligning with the icon's left edge
-    
-      // Set the CSS variables dynamically for modal positioning
-      document.documentElement.style.setProperty('--modal-top', `${modalTop}px`);
-      document.documentElement.style.setProperty('--modal-left', `${modalLeft}px`);
-    };
-    
-    
-    
-    const handleSearchChange9963 = (event) => {
-      const query = event.target.value.toLowerCase();
-      setSearchQuery9963(query);
-      const options = generateFilterOptions(modalData, filterColumn9963).filter((option) =>
-        option.toLowerCase().includes(query)
-      );
-      setFilterOptions9963(options);
-    };
-    
-    const handleCheckboxChange9963 = (option) => {
-      const mappedKey = headerToKeyMap[filterColumn9963] || filterColumn9963;
-    
-      // Ensure the selectedFilters9963 state aligns with available filter options
-      const newFilters = { ...selectedFilters9963 };
-    
-      // Initialize or update the filter array for the specific column
-      if (!newFilters[mappedKey]) {
-        newFilters[mappedKey] = [];
-      }
-    
-      // Add or remove the selected option
-      if (newFilters[mappedKey].includes(option)) {
-        newFilters[mappedKey] = newFilters[mappedKey].filter((item) => item !== option);
-      } else if (filterOptions9963.includes(option)) {
-        // Only add the option if it's a valid filter option
-        newFilters[mappedKey].push(option);
-      }
-    
-      setSelectedFilters9963(newFilters);
-    };
-    
+  //     // Calculate the modal position based on the icon's position
+  //     const modalTop = iconRect.top + window.scrollY + iconRect.height + 10; // Adding an offset below the icon
+  //  //   const modalLeft = iconRect.left + window.scrollX + iconRect.height + 250; // Aligning with the icon's left edge
 
-    const generateFilterOptions = (data, column) => {
-      const mappedKey = headerToKeyMap[column] || column;
-      return [...new Set(data.map((item) => item[mappedKey]))].filter(Boolean); // Unique and non-empty options
-    };
+  //  const modalLeft = iconRect.left + window.scrollX + iconRect.height + 50; 
     
- 
-  const applyFilters9963 = () => {
-    let filteredData = modalData;
-    Object.keys(selectedFilters9963).forEach((column) => {
-      const mappedKey = headerToKeyMap[column] || column; // Use the mapped key or fallback to the column
-      if (selectedFilters9963[column].length > 0) {
-        filteredData = filteredData.filter((row) =>
-          selectedFilters9963[column].includes(row[mappedKey])
-        );
-      }
-    });
-    setModalData(filteredData);
-    setFilterModalOpen9963(false);
+  //     // Set the CSS variables dynamically for modal positioning
+  //     document.documentElement.style.setProperty('--modal-top', `${modalTop}px`);
+  //     document.documentElement.style.setProperty('--modal-left', `${modalLeft}px`);
+  //   };
+
+  const handleOpenFilterModal9963 = (column, event) => {
+    // Ensure the event is valid
+    if (!event) {
+      console.error("Event is undefined");
+      return;
+    }
+  
+    console.log("Opening filter modal for column:", column);
+  
+    // Ensure "Reason" column exists in modalData
+    const columnExists = modalData.some((row) => row.hasOwnProperty(column));
+    // if (!columnExists) {
+    //   console.error(`Column "${column}" does not exist in modalData`);
+    //   return;
+    // }
+  
+    // Set the filter column
+    setFilterColumn9963(column);
+  
+    // Generate filter options based on the column
+    const options = generateFilterOptions(modalData, column);
+    console.log("Generated Filter Options for", column, ":", options);
+  
+    if (!options || options.length === 0) {
+      console.warn(`No filter options found for column "${column}"`);
+    }
+  
+    setFilterOptions9963(options);
+  
+    // Set the modal open
+    setFilterModalOpen9963(true);
+  
+    // Get the position of the icon (using the event object)
+    const iconRect = event.target.getBoundingClientRect();
+  
+    // Calculate the modal position based on the icon's position
+    const modalTop = iconRect.top + window.scrollY + iconRect.height + 10; // Offset below the icon
+    // const modalLeft = iconRect.left + window.scrollX + iconRect.height + 50; // Aligning with the icon
+
+    const modalLeft = iconRect.left + window.scrollX + iconRect.height - 5; // Aligning with the icon
+  
+    // Set the CSS variables dynamically for modal positioning
+    document.documentElement.style.setProperty("--modal-top", `${modalTop}px`);
+    document.documentElement.style.setProperty("--modal-left", `${modalLeft}px`);
   };
   
+  useEffect(() => {
+    function handleClickOutside(event) {
+      console.log("handleClickOutside called"); // Debug log
+  
+      const modalElement = document.querySelector(".filter-modal-9963"); // Get the modal element
+  
+      if (modalElement && modalElement.contains(event.target)) {
+        console.log("Clicked inside filter-modal-9963, not closing");
+        return; // Do nothing if the click is inside the modal
+      }
+  
+      console.log("Clicked outside, closing modal");
+      setFilterModalOpen9963(false); // Close the modal
+    }
+  
+    // Add event listener
+    document.addEventListener("mousedown", handleClickOutside);
+  
+    return () => {
+      // Remove event listener when modal is closed
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isFilterModalOpen9963]);
+  
+
+    
+    
+  const handleSearchChange9963 = (event) => {
+    const query = event.target.value.toLowerCase();
+    setSearchQuery9963(query);
+    const options = generateFilterOptions(modalData, filterColumn9963).filter((option) =>
+      option.toLowerCase().includes(query)
+    );
+    setFilterOptions9963(options);
+  };
+  
+  const handleCheckboxChange9963 = (option) => {
+    const mappedKey = headerToKeyMap[filterColumn9963] || filterColumn9963;
+  
+    const newFilters = { ...selectedFilters9963 };
+
+    if (!newFilters[mappedKey]) {
+        newFilters[mappedKey] = [];
+    }
+
+    // Convert numbers to float only for decimal-based columns
+    const formattedOption = ["Issue", "Return", "Return Percentage"].includes(filterColumn9963)
+        ? parseFloat(option).toFixed(2) // Ensure consistent decimal format
+        : option;
+
+    // Add or remove the selected option
+    if (newFilters[mappedKey].includes(formattedOption)) {
+        newFilters[mappedKey] = newFilters[mappedKey].filter((item) => item !== formattedOption);
+    } else if (filterOptions9963.includes(option)) {
+        newFilters[mappedKey].push(formattedOption);
+    }
+
+    setSelectedFilters9963(newFilters);
+};
+
+  
+
+const generateFilterOptions = (data, column) => {
+  const mappedKey = headerToKeyMap[column] || column;
+
+  return [...new Set(data.map((item) => 
+      ["Issue", "Return", "Return Percentage"].includes(column)
+          ? parseFloat(item[mappedKey]).toFixed(2)  // Convert numbers to fixed decimals
+          : item[mappedKey]
+  ))].filter(Boolean);
+};
+
+  
+
+const applyFilters9963 = () => {
+let filteredData = modalData;
+
+Object.keys(selectedFilters9963).forEach((column) => {
+    const mappedKey = headerToKeyMap[column] || column;
+    if (selectedFilters9963[column].length > 0) {
+        filteredData = filteredData.filter((row) =>
+            ["Issue", "Return", "Return Percentage"].includes(column)
+                ? selectedFilters9963[column].some((value) => 
+                      parseFloat(value).toFixed(2) === parseFloat(row[mappedKey]).toFixed(2) // Consistent decimal precision
+                  )
+                : selectedFilters9963[column].includes(row[mappedKey]) // Default string comparison
+        );
+    }
+});
+
+setModalData(filteredData);
+setFilterModalOpen9963(false);
+};
+
+
+  
  
+  // const resetFilters9963 = () => {
+  //   setSelectedFilters9963({});
+  //   setSearchQuery9963(''); // Clear the search query
+  //   setFilterOptions9963(originalFilterOptions9963); // Reset options to original
+  //   setModalData(originalData); // Reset the data to original if needed
+  //   setFilterModalOpen9963(false);
+  // };
+
   const resetFilters9963 = () => {
     setSelectedFilters9963({});
-    setSearchQuery9963(''); // Clear the search query
+    setSearchQuery9963(""); // Clear the search query
     setFilterOptions9963(originalFilterOptions9963); // Reset options to original
     setModalData(originalData); // Reset the data to original if needed
     setFilterModalOpen9963(false);
+    setActiveHeader(null); // Ensure all filter icons turn white
   };
   
  
@@ -988,9 +1128,9 @@ const oilChangeOrderMapping = {
  
     if (year) {
       // Construct the URL with encoded year
-      // const url = `http://localhost:224/api/fetch_pending_teco_state_wise_data?year=${encodeURIComponent(year)}`;
+    //  const url = `http://localhost:224/api/fetch_pending_teco_state_wise_data?year=${encodeURIComponent(year)}`;
  
-      const url = `${BASE_URL}/api/fetch_pending_teco_state_wise_data?year=${encodeURIComponent(year)}`;
+     const url = `${BASE_URL}/api/fetch_pending_teco_state_wise_data?year=${encodeURIComponent(year)}`;
      
       // Log the encoded URL
       console.log("Request URL:", url);
@@ -1058,35 +1198,78 @@ const oilChangeOrderMapping = {
   };
  
   const headerToKeyMap = {
-  "Order No": "Order No",
-  "Function Loc": "Function Loc",
-  "Issue": "Issue",
-  "Return": "Return",
-  "Return Percentage": "Return Percentage",
-  "Plant": "Plant",
-  "State": "State",
-  "Area": "Area",
-  "Site": "Site",
-  "Material": "Material",
-  "Storage Location": "Storage Location",
-  "Move Type": "Move Type",
-  "Material Document": "Material Document",
-  "Description": "Description",
-  "Val Type": "Val Type",
-  "Posting Date": "Posting Date",
-  "Entry Date": "Entry Date",
-  "Quantity": "Quantity",
-  "Order": "Order",
-  "Order Type": "Order Type",
-  "Component": "Component",
-  "WTG Model": "WTG Model",
-  "Current Oil Change Date": "Current Oil Change Date",
-  "State Engineering Head": "stateEnggHead",
-  "Area Incharge": "areaIncharge",
-  "Site Incharge": "siteIncharge",
-  "State PMO": "statePMO",
-  "Order Status": "Order Status",
-};
+    "Order No": "Order No",
+    "Function Loc": "Function Loc",
+    "Issue": "Issue",
+    "Return": "Return",
+    "Return Percentage": "Return Percentage",
+    "Plant": "Plant",
+    "State": "State",
+    "Area": "Area",
+    "Site": "Site",
+    "Material": "Material",
+    "Storage Location": "Storage Location",
+    "Move Type": "Move Type",
+    "Material Document": "Material Document",
+    "Description": "Description",
+    "Val Type": "Val Type",
+    "Posting Date": "Posting Date",
+    "Entry Date": "Entry Date",
+    "Quantity": "Quantity",
+    "Order": "Order",
+    "Order Type": "Order Type",
+    "Component": "Component",
+    "WTG Model": "WTG Model",
+    "Current Oil Change Date": "Current Oil Change Date",
+    "State Engineering Head": "stateEnggHead",
+    "Area Incharge": "areaIncharge",
+    "Site Incharge": "siteIncharge",
+    "State PMO": "statePMO",
+    "Order Status": "Order Status",
+  };
+  
+  // Conditionally add "Reason" for disputes
+  // if (clickedOrderType === "dispute") {
+  //   headerToKeyMap["Reason"] = "reason";
+  // }
+  
+  const displayToOriginalKeyMap = {
+    "Order Number": "Order No",
+    "Function Location": "Function Loc",
+    "Issue Quantity": "Issue",
+    "Return Quantity": "Return",
+    "Return Percentage": "Return Percentage",
+    "Plant Name": "Plant",
+    "State Name": "State",
+    "Area Name": "Area",
+    "Site Name": "Site",
+    "Material Code": "Material",
+    "Storage Location": "Storage Location",
+    "Movement Type": "Move Type",
+    "Material Document Number": "Material Document",
+    "Material Description": "Description",
+    "Valuation Type": "Val Type",
+    "Posting Date": "Posting Date",
+    "Entry Date": "Entry Date",
+    "Issued Quantity": "Quantity",
+    "Order Reference": "Order",
+    "Order Type": "Order Type",
+    "Component Name": "Component",
+    "WTG Model": "WTG Model",
+    "Current Oil Change Date": "Current Oil Change Date",
+    "State Engineering Head": "stateEnggHead",
+    "Area Incharge": "areaIncharge",
+    "Site Incharge": "siteIncharge",
+    "State PMO": "statePMO",
+    "Order Status": "Order Status",
+    
+  };
+  
+  // // Conditionally add "Reason" for disputes
+  // if (clickedOrderType === "dispute") {
+  //   displayToOriginalKeyMap["Reason"] = "reason";
+  // }
+  
 
 // Mapping of order types to their respective API endpoints
 // const orderTypeApiMap = {
@@ -1130,6 +1313,9 @@ const handleOrderTypeClick = async (orderType) => {
  
   const apiEndpoint = orderTypeApiMap[orderType];
   const url = `${BASE_URL}/api/${apiEndpoint}?order_type=${encodeURIComponent(orderType)}&financial_year=${encodeURIComponent(selectedYear)}`;
+
+ // const url = `http://localhost:3001/api/${apiEndpoint}?order_type=${encodeURIComponent(orderType)}&financial_year=${encodeURIComponent(selectedYear)}`;
+
  
   setLoading(true);
  
@@ -1479,33 +1665,35 @@ const handleConsolidatedFileDownload = () => {
   <button id="closebtn" onClick={() => setShowModal(false)}>Close</button>
 </div>
 
-          {modalData && (
-            <div className="data-table-wrapper-7997">
-       <table className="data-table-7997" id="tbl7997">
+
+
+{modalData && (
+  <div className="data-table-wrapper-7997">
+    {/* <table className="data-table-7997" id="tbl7997">
       <thead>
         <tr>
           {[
-            "Order No",
-            "Function Loc",
-            "Issue",
-            "Return",
+            "Order Number",
+            "Function Location",
+            "Issue Quantity",
+            "Return Quantity",
             "Return Percentage",
-            "Plant",
-            "State",
-            "Area",
-            "Site",
-            "Material",
+            "Plant Name",
+            "State Name",
+            "Area Name",
+            "Site Name",
+            "Material Code",
             "Storage Location",
-            "Move Type",
-            "Material Document",
-            "Description",
-            "Val Type",
+            "Movement Type",
+            "Material Document Number",
+            "Material Description",
+            "Valuation Type",
             "Posting Date",
             "Entry Date",
-            "Quantity",
-            "Order",
+            "Issued Quantity",
+            "Order Reference",
             "Order Type",
-            "Component",
+            "Component Name",
             "WTG Model",
             "Current Oil Change Date",
             "State Engineering Head",
@@ -1513,105 +1701,209 @@ const handleConsolidatedFileDownload = () => {
             "Site Incharge",
             "State PMO",
             "Order Status",
-            ...(clickedOrderType === "dispute" ? ["Reason"] : []), // Conditionally add "Reason" column
+            ...(clickedOrderType === "dispute" ? ["Reason"] : []), // ✅ "Reason" only for disputes
           ].map((header, index) => (
             <th key={index}>
               {header}{" "}
               <FontAwesomeIcon
-  icon={faFilter}
-  className="filter-icon-9963"
-  onClick={(e) => handleOpenFilterModal9963(header, e)} // Pass the event here
-/>
-
+                icon={faFilter}
+                className="filter-icon-9963"
+                onClick={(e) =>
+                  handleOpenFilterModal9963(displayToOriginalKeyMap[header] || header, e)
+                }
+              />
             </th>
           ))}
         </tr>
       </thead>
       <tbody>
-        {modalData &&
-          modalData.map((item, index) => (
-            <tr key={index}>
-              <td>{item["Order No"]}</td>
-              <td>{item["Function Loc"]}</td>
-              {/* <td>{item["Issue"]}</td>
-              <td>{item["Return"]}</td> */}
-              <td>{formatToTwoDecimals(item["Issue"])}</td>
-              <td>{formatToTwoDecimals(item["Return"])}</td>
-              <td>{formatToTwoDecimals(item["Return Percentage"])}</td>
-              <td>{item["Plant"]}</td>
-              <td>{item["State"]}</td>
-              <td>{item["Area"]}</td>
-              <td>{item["Site"]}</td>
-              <td>{item["Material"]}</td>
-              <td>{item["Storage Location"]}</td>
-              <td>{item["Move Type"]}</td>
-              <td>{item["Material Document"]}</td>
-              <td>{item["Description"]}</td>
-              <td>{item["Val Type"]}</td>
-              <td>{item["Posting Date"]}</td>
-              <td>{item["Entry Date"]}</td>
-              <td>{item["Quantity"]}</td>
-              <td>{item["Order"]}</td>
-              <td>{item["Order Type"]}</td>
-              <td>{item["Component"]}</td>
-              <td>{item["WTG Model"]}</td>
-              <td>{item["Current Oil Change Date"]}</td>
-              <td>{item["stateEnggHead"]}</td>
-              <td>{item["areaIncharge"]}</td>
-              <td>{item["siteIncharge"]}</td>
-              <td>{item["statePMO"]}</td>
-              <td>{item["Order Status"]}</td>
-              {clickedOrderType === "dispute" && <td>{item["reason"]}</td>} {/* Conditionally render "Reason" column */}
-            </tr>
-          ))}
+        {modalData.map((item, index) => (
+          <tr key={index}>
+            {[
+              ...Object.keys(displayToOriginalKeyMap), 
+              ...(clickedOrderType === "dispute" ? ["Reason"] : []) // ✅ Ensures reason is mapped properly
+            ].map((header) => (
+              <td key={header}>
+                {["Issue", "Return", "Return Percentage"].includes(displayToOriginalKeyMap[header])
+                  ? formatToTwoDecimals(item[displayToOriginalKeyMap[header]] || item[header])
+                  : item[displayToOriginalKeyMap[header]] || item[header]}
+              </td>
+            ))}
+          </tr>
+        ))}
       </tbody>
-    </table>
-     
-    {isFilterModalOpen9963 && (
-            <div className="filter-modal-9963">
-              <div className="filter-modal-content-9963">
-                <h3>Filter by {filterColumn9963}</h3>
-     
-            {/* Search Bar */}
-            <input
-              type="text"
-              placeholder="Search options..."
-              value={searchQuery9963}
-              onChange={handleSearchChange9963}
-              className="search-bar"
-            />
-<div className="filter-options-9963">
-  {filterOptions9963.map((option, index) => (
-    <div key={index} className="filter-option-9963">
-      <input
-        type="checkbox"
-        id={`filter-checkbox-9963-${index}`}
-        checked={
-          selectedFilters9963[headerToKeyMap[filterColumn9963] || filterColumn9963]?.includes(option) || false
-        }
-        onChange={() => handleCheckboxChange9963(option)}
-      />
-      <label htmlFor={`filter-checkbox-9963-${index}`}>
-        {option || "(Empty)"}
-      </label>
-    </div>
-  ))}
-</div>
+    </table> */}
 
-                <div className="filter-buttons-9963">
-                  <button onClick={applyFilters9963} className="apply-button-9963">
-                    Apply Filters
-                  </button>
-                  <button onClick={resetFilters9963} className="reset-button-9963">
-                    Reset Filters
-                  </button>
+{/* <table className="data-table-7997" id="tbl7997">
+      <thead>
+        <tr>
+          {headers.map((header, index) => (
+            <th key={index}>
+              {header}{" "}
+              <FontAwesomeIcon
+                icon={faFilter}
+                className="filter-icon-9963"
+                style={{ color: activeHeader === header ? "yellow" : "white", cursor: "pointer" }}
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevents triggering table header click
+                  setActiveHeader(header); // Set the active filter icon
+                  handleOpenFilterModal9963(displayToOriginalKeyMap[header] || header, e);
+                }}
+              />
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {modalData.map((item, index) => (
+          <tr key={index}>
+            {Object.keys(displayToOriginalKeyMap).map((header) => (
+              <td key={header}>
+                {["Issue", "Return", "Return Percentage"].includes(displayToOriginalKeyMap[header])
+                  ? formatToTwoDecimals(item[displayToOriginalKeyMap[header]] || item[header])
+                  : item[displayToOriginalKeyMap[header]] || item[header]}
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table> */}
+
+{/* <table className="data-table-7997" id="tbl7997">
+  <thead>
+    <tr>
+      {headers.map((header, index) => (
+        <th key={index}>
+          {header}{" "}
+          <FontAwesomeIcon
+            icon={faFilter}
+            className="filter-icon-9963"
+            style={{ color: activeHeader === header ? "yellow" : "white", cursor: "pointer" }}
+            onClick={(e) => {
+              e.stopPropagation(); // Prevents triggering table header click
+              setActiveHeader(header); // Set the active filter icon
+              handleOpenFilterModal9963(displayToOriginalKeyMap[header] || header, e);
+            }}
+          />
+        </th>
+      ))}
+    </tr>
+  </thead>
+  <tbody>
+    {modalData.map((item, index) => (
+      <tr key={index}>
+        {Object.keys(displayToOriginalKeyMap).map((header) => (
+          <td key={header}>
+            {header === "Reason" && clickedOrderType === "dispute"
+              ? item[displayToOriginalKeyMap[header]] || item[header]
+              : ["Issue", "Return", "Return Percentage"].includes(displayToOriginalKeyMap[header])
+              ? formatToTwoDecimals(item[displayToOriginalKeyMap[header]] || item[header])
+              : item[displayToOriginalKeyMap[header]] || item[header]}
+          </td>
+        ))}
+      </tr>
+    ))}
+  </tbody>
+</table> */}
+
+<table className="data-table-7997" id="tbl7997">
+  <thead>
+    <tr>
+      {headers.map((header, index) => (
+        <th key={index}>
+          {header}{" "}
+          <FontAwesomeIcon
+            icon={faFilter}
+            className="filter-icon-9963"
+            style={{ color: activeHeader === header ? "yellow" : "white", cursor: "pointer" }}
+            onClick={(e) => {
+              e.stopPropagation(); // Prevents triggering table header click
+              setActiveHeader(header); // Set the active filter icon
+              handleOpenFilterModal9963(displayToOriginalKeyMap[header] || header, e);
+            }}
+          />
+        </th>
+      ))}
+    </tr>
+  </thead>
+  <tbody>
+    {modalData.map((item, index) => (
+      <tr key={index}>
+        {Object.keys({ ...displayToOriginalKeyMap, ...(clickedOrderType.toLowerCase() === "dispute" ? { "Reason": "reason" } : {}) }).map((header) => (
+          <td key={header}>
+            {header === "Reason" && (clickedOrderType === "DISPUTE" || clickedOrderType === "dispute")
+              ? item[displayToOriginalKeyMap[header]] || item[header]
+              : ["Issue", "Return", "Return Percentage"].includes(displayToOriginalKeyMap[header])
+              ? formatToTwoDecimals(item[displayToOriginalKeyMap[header]] || item[header])
+              : item[displayToOriginalKeyMap[header]] || item[header]}
+          </td>
+        ))}
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+
+  
+
+    {isFilterModalOpen9963 && (
+      <div className="filter-modal-9963">
+        <div className="filter-modal-content-9963">
+          <h3>Filter by {filterColumn9963}</h3>
+
+          {/* Search Bar */}
+          <input
+            type="text"
+            placeholder="Search options..."
+            value={searchQuery9963}
+            onChange={handleSearchChange9963}
+            className="search-bar"
+          />
+
+          <div className="filter-options-9963">
+            {filterOptions9963
+              .map((option) => {
+                const formattedColumns = ["Issue", "Return", "Return Percentage"];
+                return formattedColumns.includes(filterColumn9963) && !isNaN(option)
+                  ? formatToTwoDecimals(option)
+                  : option; // Only format if the column matches and the value is numeric
+              })
+              .sort((a, b) =>
+                String(a).toLowerCase().localeCompare(String(b).toLowerCase())
+              ) // Sort alphabetically
+              .map((option, index) => (
+                <div key={index} className="filter-option-9963">
+                  <input
+                    type="checkbox"
+                    id={`filter-checkbox-9963-${index}`}
+                    checked={
+                      selectedFilters9963[
+                        displayToOriginalKeyMap[filterColumn9963] || filterColumn9963
+                      ]?.includes(option) || false
+                    }
+                    onChange={() => handleCheckboxChange9963(option)}
+                  />
+                  <label htmlFor={`filter-checkbox-9963-${index}`}>
+                    {option || "(Empty)"}
+                  </label>
                 </div>
-              </div>
-            </div>
-          )}
-     
-            </div>
-          )}
+              ))}
+          </div>
+
+          <div className="filter-buttons-9963">
+            <button onClick={applyFilters9963} className="apply-button-9963">
+              Apply Filters
+            </button>
+            <button onClick={resetFilters9963} className="reset-button-9963">
+              Reset Filters
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
+  </div>
+)}
+
         </div>
       </div>
     )}

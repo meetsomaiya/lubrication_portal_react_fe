@@ -142,8 +142,11 @@ const UploadExcel = () => {
                                                           if (!adminId) {
                                                             // If adminId is not found, redirect to the default route
                                                          //   window.location.href = '/'; // Redirect to the home page or default route
-                                                          window.location.href = '/LubricationPortal'; // Redirect to the home page or default route
-                                                          }
+                                                        //  window.location.href = '/LubricationPortal'; // Redirect to the home page or default route
+
+                                                      //  window.location.href = 'https://suzomsuatapps.suzlon.com/apps/fleetmanager_fe/index.html#/signin'; // Redirect to the home page or default route
+                                                      window.location.href = 'https://suzoms.suzlon.com/FleetM/#/signin'; // Redirect to the home page or default route     
+                                                    }
                                                         };
                                           
                                                         useEffect(() => {
@@ -226,7 +229,8 @@ const handleUploadClick = () => {
   formData.append('file', selectedFile);
 
   fetch(`${BASE_URL}/api/site_incharge_format_upload`, {
-    //fetch('http://localhost:3001/api/site_incharge_format_upload', {
+  //fetch('http://localhost:224/api/site_incharge_format_upload', {
+   // fetch('http://localhost:3001/api/site_incharge_format_upload', {
     method: 'POST',
     body: formData,
   })
@@ -250,8 +254,8 @@ const handleUploadClick = () => {
   const handleDownloadFormat = () => {
     // Trigger the download by requesting the file from the backend
     // fetch('http://localhost:224/api/site-incharge-excel-format') 
-    // fetch('http://localhost:3001/api/site-incharge-excel-format') 
-    fetch(`${BASE_URL}/api/site-incharge-excel-format`)
+   // fetch('http://localhost:3001/api/site-incharge-excel-format') 
+     fetch(`${BASE_URL}/api/site-incharge-excel-format`)
       .then((response) => {
         if (!response.ok) {
           throw new Error('Failed to download the file');

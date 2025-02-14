@@ -148,8 +148,11 @@ useEffect(() => {
                 if (!adminId) {
                   // If adminId is not found, redirect to the default route
                  // window.location.href = '/'; // Redirect to the home page or default route
-                 window.location.href = '/LubricationPortal'; // Redirect to the home page or default route
-                }
+               //  window.location.href = '/LubricationPortal'; // Redirect to the home page or default route
+
+              // window.location.href = 'https://suzomsuatapps.suzlon.com/apps/fleetmanager_fe/index.html#/signin'; // Redirect to the home page or default route
+              window.location.href = 'https://suzoms.suzlon.com/FleetM/#/signin'; // Redirect to the home page or default route        
+            }
               };
 
               useEffect(() => {
@@ -167,20 +170,89 @@ useEffect(() => {
     const [reportData, setReportData] = useState(null); // State for fetched report data
 
     useEffect(() => {
-        const fetchStates = async () => {
-            try {
-                // const response = await fetch('http://localhost:224/api/get_states');
-                const response = await fetch(`${BASE_URL}/api/get_states`);
-                if (!response.ok) throw new Error('Network response was not ok');
-                const data = await response.json();
-                setStates(data);
-            } catch (error) {
-                console.error('Error fetching states:', error);
-            }
-        };
-        fetchStates();
-    }, []);
+      const fetchStates = async () => {
+          try {
+              const response = await fetch(`${BASE_URL}/api/get_states`);
+              if (!response.ok) throw new Error('Network response was not ok');
+              const data = await response.json();
+              setStates(data);
+  
+              if (data.length > 0) {
+                  setSelectedSite1(data[0].name); // Set first state's name as default
+              }
+          } catch (error) {
+              console.error('Error fetching states:', error);
+          }
+      };
+      fetchStates();
+  }, []);
+  
+  useEffect(() => {
+    const fetchStates = async () => {
+        try {
+            const response = await fetch(`${BASE_URL}/api/get_states`);
+            if (!response.ok) throw new Error('Network response was not ok');
+            const data = await response.json();
+            setStates(data);
 
+            if (data.length > 0) {
+                selectedSite1(data[0].name); // This updates selectedSite1 asynchronously
+            }
+        } catch (error) {
+            console.error('Error fetching states:', error);
+        }
+    };
+    fetchStates();
+}, []);
+
+// useEffect(() => {
+//     if (selectedSite1) { // Ensures selectedSite1 has a value before running
+//         const timer = setTimeout(() => {
+//             if (selectedSite1 || selectedArea || selectedSite2) {
+//                 console.log("Calling generateReport with:", selectedSite1, selectedArea, selectedSite2);
+//                 generateReport(selectedSite1, selectedArea, selectedSite2);
+//             } else {
+//                 console.log("generateReport was NOT called - missing values.");
+//             }
+//         }, 1000);
+    
+//         return () => clearTimeout(timer);
+//     }
+// }, [selectedSite1, selectedArea, selectedSite2]); // Runs only when selectedSite1 is updated
+
+useEffect(() => {
+    if (states.length > 0) { // Ensure states array has at least one element
+        const firstState = states[0]; // Get the first state from the array
+        
+        const timer = setTimeout(() => {
+            if (firstState || selectedArea || selectedSite2) {
+                console.log("Calling generateReport with:", firstState, selectedArea, selectedSite2);
+                generateReport(firstState, selectedArea, selectedSite2);
+
+                // Call the appropriate function after generateReport
+                if (selectedArea) {
+                    handleSelectChangeArea({ target: { value: selectedArea } });
+                } else {
+                    handleSelectChangeSite1({ target: { value: firstState } });
+                }
+            } else {
+                console.log("generateReport was NOT called - missing values.");
+            }
+        }, 1000);
+
+        return () => clearTimeout(timer);
+    }
+}, [states, selectedArea, selectedSite2]); // Trigger when states change
+
+
+
+    useEffect(() => {
+      if (selectedSite1) {
+          console.log("selectedSite1 has been set:", selectedSite1);
+      }
+  }, [selectedSite1]);
+
+  
     const handleSelectChangeArea = (event) => {
         const selectedArea = event.target.value;
         setSelectedArea(selectedArea);
@@ -188,26 +260,52 @@ useEffect(() => {
         generateReport(selectedSite1, selectedArea, selectedSite2); // Call generateReport with the current selections
     };
 
-    const handleSelectChangeSite1 = async (event) => {
-        const selectedState = event.target.value;
-        setSelectedSite1(selectedState);
-        setSelectedArea('Select');
+    // const handleSelectChangeSite1 = async (event) => {
+    //     const selectedState = event.target.value;
+    //     setSelectedSite1(selectedState);
+    //     setSelectedArea('Select');
 
-        if (selectedState !== "Select") {
-            try {
-                // const response = await fetch(`http://localhost:224/api/get_areas?state=${selectedState}`);
-                const response = await fetch(`${BASE_URL}/api/get_areas?state=${selectedState}`);
-                if (!response.ok) throw new Error('Failed to fetch areas');
-                const areasData = await response.json();
-                setAreas(areasData.map(item => item.area));
-            } catch (error) {
-                console.error('Error fetching areas:', error);
-            }
-        } else {
-            setAreas([]);
+    //     if (selectedState !== "Select") {
+    //         try {
+    //             // const response = await fetch(`http://localhost:224/api/get_areas?state=${selectedState}`);
+    //             const response = await fetch(`${BASE_URL}/api/get_areas?state=${selectedState}`);
+    //             if (!response.ok) throw new Error('Failed to fetch areas');
+    //             const areasData = await response.json();
+    //             setAreas(areasData.map(item => item.area));
+    //         } catch (error) {
+    //             console.error('Error fetching areas:', error);
+    //         }
+    //     } else {
+    //         setAreas([]);
+    //     }
+    //     generateReport(selectedState, selectedArea, selectedSite2);
+    // };
+
+    const handleSelectChangeSite1 = async (event) => {
+    const selectedState = event.target.value;
+    setSelectedSite1(selectedState);
+    setSelectedArea('Select');
+
+    if (selectedState !== "Select") {
+        try {
+            const url = `${BASE_URL}/api/get_areas?state=${selectedState}`;
+            console.log("Fetching data from URL:", url); // Log the formed URL
+            
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Failed to fetch areas');
+            
+            const areasData = await response.json();
+            setAreas(areasData.map(item => item.area));
+        } catch (error) {
+            console.error('Error fetching areas:', error);
         }
-        generateReport(selectedState, selectedArea, selectedSite2);
-    };
+    } else {
+        setAreas([]);
+    }
+
+    generateReport(selectedState, selectedArea, selectedSite2);
+};
+
 
     const fetchSites = async (state, area) => {
         if (state !== "Select" && area !== "Select") {
@@ -269,13 +367,30 @@ useEffect(() => {
         }
     };
 
+
+  
+
+    // useEffect(() => {
+    //     const timer = setTimeout(() => {
+    //         if (selectedSite1 || selectedArea || selectedSite2) {
+    //             console.log("Calling generateReport with:", selectedSite1, selectedArea, selectedSite2);
+    //             generateReport(selectedSite1, selectedArea, selectedSite2);
+    //         } else {
+    //             console.log("generateReport was NOT called - missing values.");
+    //         }
+    //     }, 1000); // Wait for 1 second
+    
+    //     return () => clearTimeout(timer); // Cleanup timeout on unmount
+    // }, [selectedSite1, selectedArea, selectedSite2]);
+    
+
     return (
         <div className='site_container'>
             {/* <div className='flex mt-1.4' style={{ justifyContent: 'space-between' }}> */}
             <div className='flex mt-1.4'>
                 <div className="sitereport-dropdown">
                     <select onChange={handleSelectChangeSite1} value={selectedSite1} className="searchsite_dropicon">
-                        <option value="Select">State</option>
+                        {/* <option value="Select">State</option> */}
                         {states.map(state => (
                             <option key={state.id} value={state.id}>{state.name}</option>
                         ))}

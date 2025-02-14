@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import './Oil_Analysis_user.css';
 import { BASE_URL } from '../../config'
 
@@ -11,6 +11,9 @@ import * as XLSX from 'xlsx';
 
 
 const OilAnalysisTableUser = () => {
+
+    const filterModalRef = useRef(null);
+
                   let entryTime = null;  // Store the entry time (when user stepped into the page)
                       let exitTime = null;   // Store the exit time (when user left the page)
                       
@@ -179,6 +182,41 @@ const OilAnalysisTableUser = () => {
   const [searchQuery9963, setSearchQuery9963] = useState('');
 
   const [domainId, setDomainId] = useState(null);  // State to store the domain_id
+
+ const [activeHeader, setActiveHeader] = useState(null);
+
+ const headers = [
+  "Order Number",
+  "Function Location",
+  "Issue Quantity",
+  "Return Quantity",
+  "Return Percentage",
+  "Plant Name",
+  "State Name",
+  "Area Name",
+  "Site Name",
+  "Material Code",
+  "Storage Location",
+  "Movement Type",
+  "Material Document Number",
+  "Material Description",
+  "Valuation Type",
+  "Posting Date",
+  "Entry Date",
+  "Issued Quantity",
+  "Order Reference",
+  "Order Type",
+  "Component Name",
+  "WTG Model",
+  "Current Oil Change Date",
+  "State Engineering Head",
+  "Area Incharge",
+  "Site Incharge",
+  "State PMO",
+  "Order Status",
+  ...(clickedOrderType === "dispute" ? ["Reason"] : []),
+];
+
   
   
 
@@ -221,12 +259,39 @@ const OilAnalysisTableUser = () => {
     
       // Calculate the modal position based on the icon's position
       const modalTop = iconRect.top + window.scrollY + iconRect.height + 10; // Adding an offset below the icon
-      const modalLeft = iconRect.left + window.scrollX + iconRect.height + 250; // Aligning with the icon's left edge
+      // Aligning with the icon's left edge
+      // const modalLeft = iconRect.left + window.scrollX + iconRect.height + 250; 
+      const modalLeft = iconRect.left + window.scrollX + iconRect.height + 100; 
     
       // Set the CSS variables dynamically for modal positioning
       document.documentElement.style.setProperty('--modal-top', `${modalTop}px`);
       document.documentElement.style.setProperty('--modal-left', `${modalLeft}px`);
     };
+
+    useEffect(() => {
+        function handleClickOutside(event) {
+          console.log("handleClickOutside called"); // Debug log
+      
+          const modalElement = document.querySelector(".filter-modal-9963"); // Get the modal element
+      
+          if (modalElement && modalElement.contains(event.target)) {
+            console.log("Clicked inside filter-modal-9963, not closing");
+            return; // Do nothing if the click is inside the modal
+          }
+      
+          console.log("Clicked outside, closing modal");
+          setFilterModalOpen9963(false); // Close the modal
+        }
+      
+        // Add event listener
+        document.addEventListener("mousedown", handleClickOutside);
+      
+        return () => {
+          // Remove event listener when modal is closed
+          document.removeEventListener("mousedown", handleClickOutside);
+        };
+      }, [isFilterModalOpen9963]);
+      
     
     
     const handleSearchChange9963 = (event) => {
@@ -241,54 +306,80 @@ const OilAnalysisTableUser = () => {
     const handleCheckboxChange9963 = (option) => {
       const mappedKey = headerToKeyMap[filterColumn9963] || filterColumn9963;
     
-      // Ensure the selectedFilters9963 state aligns with available filter options
       const newFilters = { ...selectedFilters9963 };
-    
-      // Initialize or update the filter array for the specific column
+  
       if (!newFilters[mappedKey]) {
-        newFilters[mappedKey] = [];
+          newFilters[mappedKey] = [];
       }
-    
+  
+      // Convert numbers to float only for decimal-based columns
+      const formattedOption = ["Issue", "Return", "Return Percentage"].includes(filterColumn9963)
+          ? parseFloat(option).toFixed(2) // Ensure consistent decimal format
+          : option;
+  
       // Add or remove the selected option
-      if (newFilters[mappedKey].includes(option)) {
-        newFilters[mappedKey] = newFilters[mappedKey].filter((item) => item !== option);
+      if (newFilters[mappedKey].includes(formattedOption)) {
+          newFilters[mappedKey] = newFilters[mappedKey].filter((item) => item !== formattedOption);
       } else if (filterOptions9963.includes(option)) {
-        // Only add the option if it's a valid filter option
-        newFilters[mappedKey].push(option);
+          newFilters[mappedKey].push(formattedOption);
       }
-    
+  
       setSelectedFilters9963(newFilters);
-    };
-    
-
-    const generateFilterOptions = (data, column) => {
-      const mappedKey = headerToKeyMap[column] || column;
-      return [...new Set(data.map((item) => item[mappedKey]))].filter(Boolean); // Unique and non-empty options
-    };
-    
- 
-  const applyFilters9963 = () => {
-    let filteredData = modalData;
-    Object.keys(selectedFilters9963).forEach((column) => {
-      const mappedKey = headerToKeyMap[column] || column; // Use the mapped key or fallback to the column
-      if (selectedFilters9963[column].length > 0) {
-        filteredData = filteredData.filter((row) =>
-          selectedFilters9963[column].includes(row[mappedKey])
-        );
-      }
-    });
-    setModalData(filteredData);
-    setFilterModalOpen9963(false);
   };
   
+    
+
+  const generateFilterOptions = (data, column) => {
+    const mappedKey = headerToKeyMap[column] || column;
+
+    return [...new Set(data.map((item) => 
+        ["Issue", "Return", "Return Percentage"].includes(column)
+            ? parseFloat(item[mappedKey]).toFixed(2)  // Convert numbers to fixed decimals
+            : item[mappedKey]
+    ))].filter(Boolean);
+};
+
+    
  
+const applyFilters9963 = () => {
+  let filteredData = modalData;
+
+  Object.keys(selectedFilters9963).forEach((column) => {
+      const mappedKey = headerToKeyMap[column] || column;
+      if (selectedFilters9963[column].length > 0) {
+          filteredData = filteredData.filter((row) =>
+              ["Issue", "Return", "Return Percentage"].includes(column)
+                  ? selectedFilters9963[column].some((value) => 
+                        parseFloat(value).toFixed(2) === parseFloat(row[mappedKey]).toFixed(2) // Consistent decimal precision
+                    )
+                  : selectedFilters9963[column].includes(row[mappedKey]) // Default string comparison
+          );
+      }
+  });
+
+  setModalData(filteredData);
+  setFilterModalOpen9963(false);
+};
+
+  
+ 
+  // const resetFilters9963 = () => {
+  //   setSelectedFilters9963({});
+  //   setSearchQuery9963(''); // Clear the search query
+  //   setFilterOptions9963(originalFilterOptions9963); // Reset options to original
+  //   setModalData(originalData); // Reset the data to original if needed
+  //   setFilterModalOpen9963(false);
+  // };
+
   const resetFilters9963 = () => {
     setSelectedFilters9963({});
-    setSearchQuery9963(''); // Clear the search query
+    setSearchQuery9963(""); // Clear the search query
     setFilterOptions9963(originalFilterOptions9963); // Reset options to original
     setModalData(originalData); // Reset the data to original if needed
     setFilterModalOpen9963(false);
+    setActiveHeader(null); // Ensure all filter icons turn white
   };
+  
   
 
   const [dropdownOptions, setDropdownOptions] = React.useState([
@@ -1472,8 +1563,108 @@ const oilChangeOrderMapping = {
     //   console.log("Saving reason for row:", index, modalData[index].reason);
     // };
 
+    // const handleSaveReason = (index) => {
+    //   const currentItem = modalData[index];
+    
+    //   // Retrieve cookies
+    //   const domainId = getCookie("domain_id");
+    //   const userName = getCookie("name");
+    
+    //   // Prepare data to send
+    //   const dataToSend = {
+    //     orderNo: currentItem["Order No"],
+    //     reason: currentItem["reason"],
+    //     domain_id: domainId,
+    //     name: userName,
+    //   };
+    
+    //   // Log data being sent
+    //   console.log("Data being sent to API:", dataToSend);
+    
+    //   // Example API call (uncomment to use)
+    //   fetch("http://localhost:224/api/insert_reason_for_dispute_and_pending_teco", {
+    //     // fetch("http://localhost:3001/api/insert_reason_for_dispute_and_pending_teco", {
+    //     // fetch(`${BASE_URL}/api/insert_reason_for_dispute_and_pending_teco`, {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify(dataToSend),
+    //   })
+    //     .then((response) => response.json())
+    //     .then((data) => {
+    //       // Log the response from API
+    //       console.log("Response from API:", data);
+          
+    //       // Alert the response to the user
+    //       if (data.error) {
+    //         alert(`Error: ${data.error}`);
+    //       } else {
+    //         alert(`Success: Data successfully inserted for Order No: ${data.writtenData.reasons.orderNo}`);
+    //       }
+    //     })
+    //     .catch((error) => {
+    //       console.error("Error:", error);
+    //       alert("An error occurred while processing your request.");
+    //     });
+    // };
+
+    // const handleSaveReason = (index) => {
+    //   const currentItem = modalData[index];
+    
+    //   // Retrieve cookies
+    //   const domainId = getCookie("domain_id");
+    //   const userName = getCookie("name");
+    
+    //   // Prepare data to send
+    //   const dataToSend = {
+    //     orderNo: currentItem["Order No"],
+    //     reason: currentItem["reason"],
+    //     domain_id: domainId,
+    //     name: userName,
+    //   };
+    
+    //   console.log("Data being sent to API:", dataToSend);
+    
+    //   // fetch("http://localhost:224/api/insert_reason_for_dispute_and_pending_teco", {
+    //     fetch(`${BASE_URL}/api/insert_reason_for_dispute_and_pending_teco`, {
+    //     method: "POST",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify(dataToSend),
+    //   })
+    //     .then((response) => response.json()) // Convert response to JSON
+    //     .then((data) => {
+    //       console.log("Response from API:", data);
+    
+    //       if (data.error) {
+    //         // Handle specific error messages from the server
+    //         if (data.error.includes("already exists")) {
+    //           alert(`⚠️ Duplicate Entry: The reason '${dataToSend.reason}' for Order No '${dataToSend.orderNo}' is already recorded.`);
+    //         } else {
+    //           alert(`❌ Error: ${data.error}`);
+    //         }
+    //       } else if (data.message) {
+    //         // Success response handling
+    //         alert(`✅ Success: ${data.message}\n\n📌 Order No: ${data.writtenData.orderNo}\n📌 Reason: ${data.writtenData.reason}`);
+    //       } else {
+    //         // Generic case
+    //         alert("⚠️ Unexpected response from server.");
+    //       }
+    //     })
+    //     .catch((error) => {
+    //       console.error("Error:", error);
+    //       alert("🚨 Network Error: Unable to connect to the server. Please try again later.");
+    //     });
+    // };
+
     const handleSaveReason = (index) => {
       const currentItem = modalData[index];
+    
+      // Check if the reason is "Other"
+      if (currentItem["reason"] === "Other") {
+        alert("⚠️ Please enter a valid reason.");
+        return; // Stop execution if reason is "Other"
+      }
     
       // Retrieve cookies
       const domainId = getCookie("domain_id");
@@ -1487,35 +1678,40 @@ const oilChangeOrderMapping = {
         name: userName,
       };
     
-      // Log data being sent
       console.log("Data being sent to API:", dataToSend);
     
-      // Example API call (uncomment to use)
       // fetch("http://localhost:224/api/insert_reason_for_dispute_and_pending_teco", {
-        fetch(`${BASE_URL}/api/insert_reason_for_dispute_and_pending_teco`, {
+      fetch(`${BASE_URL}/api/insert_reason_for_dispute_and_pending_teco`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(dataToSend),
       })
-        .then((response) => response.json())
+        .then((response) => response.json()) // Convert response to JSON
         .then((data) => {
-          // Log the response from API
           console.log("Response from API:", data);
-          
-          // Alert the response to the user
+    
           if (data.error) {
-            alert(`Error: ${data.error}`);
+            // Handle specific error messages from the server
+            if (data.error.includes("already exists")) {
+              alert(`⚠️ Duplicate Entry: The reason '${dataToSend.reason}' for Order No '${dataToSend.orderNo}' is already recorded.`);
+            } else {
+              alert(`❌ Error: ${data.error}`);
+            }
+          } else if (data.message) {
+            // Success response handling
+            alert(`✅ Success: ${data.message}\n\n📌 Order No: ${data.writtenData.orderNo}\n📌 Reason: ${data.writtenData.reason}`);
           } else {
-            alert(`Success: Data successfully inserted for Order No: ${data.writtenData.reasons.orderNo}`);
+            // Generic case
+            alert("⚠️ Unexpected response from server.");
           }
         })
         .catch((error) => {
           console.error("Error:", error);
-          alert("An error occurred while processing your request.");
+          alert("🚨 Network Error: Unable to connect to the server. Please try again later.");
         });
     };
+    
+    
     
     
     const headerToKeyMap = {
@@ -1549,6 +1745,37 @@ const oilChangeOrderMapping = {
       "Order Status": "Order Status",
     };
 
+    const displayToOriginalKeyMap = {
+      "Order Number": "Order No",
+      "Function Location": "Function Loc",
+      "Issue Quantity": "Issue",
+      "Return Quantity": "Return",
+      "Return Percentage": "Return Percentage",
+      "Plant Name": "Plant",
+      "State Name": "State",
+      "Area Name": "Area",
+      "Site Name": "Site",
+      "Material Code": "Material",
+      "Storage Location": "Storage Location",
+      "Movement Type": "Move Type",
+      "Material Document Number": "Material Document",
+      "Material Description": "Description",
+      "Valuation Type": "Val Type",
+      "Posting Date": "Posting Date",
+      "Entry Date": "Entry Date",
+      "Issued Quantity": "Quantity",
+      "Order Reference": "Order",
+      "Order Type": "Order Type",
+      "Component Name": "Component",
+      "WTG Model": "WTG Model",
+      "Current Oil Change Date": "Current Oil Change Date",
+      "State Engineering Head": "stateEnggHead",
+      "Area Incharge": "areaIncharge",
+      "Site Incharge": "siteIncharge",
+      "State PMO": "statePMO",
+      "Order Status": "Order Status",
+    };
+
     // Mapping of order types to their respective API endpoints
 // const orderTypeApiMap = {
 //   'FC_OIL_CHANGE ORDER': 'fetch_fc_oil_chg_data_user',
@@ -1564,15 +1791,15 @@ const oilChangeOrderMapping = {
 // };
 
 const orderTypeApiMap = {
-  'FC Oil Change Order': 'fetch_fc_oil_chg_data',
-  'GB Oil Change Order': 'fetch_gb_oil_chg_data',
-  'YD Oil Change Order': 'fetch_yd_oil_chg_data',
-  'PD Oil Change Order': 'fetch_pd_oil_chg_data',
-  'gb_topup': 'fetch_gb_topup_data',
-  'fc_topup': 'fetch_fc_topup_data',
-  'ydpd_topup': 'fetch_ydpd_topup_data',
-  'dispute': 'fetch_dispute_data',
-  'Pending Teco': 'fetch_pending_teco_data',
+  'FC Oil Change Order': 'fetch_fc_oil_chg_data_user',
+  'GB Oil Change Order': 'fetch_gb_oil_chg_data_user',
+  'YD Oil Change Order': 'fetch_yd_oil_chg_data_user',
+  'PD Oil Change Order': 'fetch_pd_oil_chg_data_user',
+  'gb_topup': 'fetch_gb_topup_data_user',
+  'fc_topup': 'fetch_fc_topup_data_user',
+  'ydpd_topup': 'fetch_ydpd_topup_data_user',
+  'dispute': 'fetch_dispute_data_user',
+  'Pending Teco': 'fetch_pending_teco_data_user',
   // Add more order types and their corresponding endpoints as needed
 };
 
@@ -1590,11 +1817,26 @@ const handleOrderTypeClick = async (orderType) => {
     return;
   }
 
+  // Extract state from cookies
+  const stateCookie = document.cookie.split('; ').find(row => row.startsWith('state='));
+  const stateValue2 = stateCookie ? decodeURIComponent(stateCookie.split('=')[1]) : null;
+
   // Construct the URL based on the selected order type
   const apiEndpoint = orderTypeApiMap[orderType];
-  // const url = `http://localhost:224/api/${apiEndpoint}?order_type=${encodeURIComponent(orderType)}&financial_year=${encodeURIComponent(selectedYear)}`;
+  // const url = `http://localhost:224/api/${apiEndpoint}?order_type=${encodeURIComponent(orderType)}&financial_year=${encodeURIComponent(selectedYear)}&state=${encodeURIComponent(stateValue2)}`;
+
+ // const url = `http://localhost:3001/api/${apiEndpoint}?order_type=${encodeURIComponent(orderType)}&financial_year=${encodeURIComponent(selectedYear)}&state=${encodeURIComponent(stateValue2)}`;
 
   const url = `${BASE_URL}/api/${apiEndpoint}?order_type=${encodeURIComponent(orderType)}&financial_year=${encodeURIComponent(selectedYear)}&state=${encodeURIComponent(stateValue2)}`;
+
+
+  // Log the URL and data being sent
+  console.log(`Request URL: ${url}`);
+  console.log(`Data being sent:`, {
+    order_type: orderType,
+    financial_year: selectedYear,
+    state: stateValue2
+  });
 
   setLoading(true); // Show loader
 
@@ -1614,6 +1856,7 @@ const handleOrderTypeClick = async (orderType) => {
     setLoading(false); // Hide loader
   }
 };
+
 
   
   // Function to retrieve a specific cookie value by name
@@ -1932,107 +2175,85 @@ const normalizeStateName = (stateName) => {
 </div>
       {modalData && (
         <div className="data-table-wrapper-7997">
-<table className="data-table-7997user" id="tbl7997">
-  <thead>
-    <tr>
-      {[
-        "Order No",
-        "Function Loc",
-        "Issue",
-        "Return",
-        "Return Percentage",
-        "Plant",
-        "State",
-        "Area",
-        "Site",
-        "Material",
-        "Storage Location",
-        "Move Type",
-        "Material Document",
-        "Description",
-        "Val Type",
-        "Posting Date",
-        "Entry Date",
-        "Quantity",
-        "Order",
-        "Order Type",
-        "Component",
-        "WTG Model",
-        "Current Oil Change Date",
-        "State Engineering Head",
-        "Area Incharge",
-        "Site Incharge",
-        "State PMO",
-        "Order Status",
-        // Conditionally render the "Reason" and "Action" headers if the order type is 'dispute'
-        ...(clickedOrderType === 'dispute' ? ["Reason", "Action"] : [])
-      ].map((header, index) => (
-        <th key={index}>
-          {header}{" "}
-          <FontAwesomeIcon
-            icon={faFilter}
-            className="filter-icon-9963"
-            // onClick={() => handleOpenFilterModal9963(header)}
-            onClick={(e) => handleOpenFilterModal9963(header, e)} // Pass the event here
-          />
-        </th>
-      ))}
-    </tr>
-  </thead>
-  <tbody>
-    {modalData &&
-      modalData.map((item, index) => (
-        <tr key={index}>
-          <td>{item["Order No"]}</td>
-          <td>{item["Function Loc"]}</td>
-          {/* <td>{item["Issue"]}</td>
-          <td>{item["Return"]}</td>
-          <td>{item["Return Percentage"]}</td> */}
+    <table className="data-table-7997user" id="tbl7997">
+      <thead>
+        <tr>
+          {[
+            "Order Number",
+            "Function Location",
+            "Issue Quantity",
+            "Return Quantity",
+            "Return Percentage",
+            "Plant Name",
+            "State Name",
+            "Area Name",
+            "Site Name",
+            "Material Code",
+            "Storage Location",
+            "Movement Type",
+            "Material Document Number",
+            "Material Description",
+            "Valuation Type",
+            "Posting Date",
+            "Entry Date",
+            "Issued Quantity",
+            "Order Reference",
+            "Order Type",
+            "Component Name",
+            "WTG Model",
+            "Current Oil Change Date",
+            "State Engineering Head",
+            "Area Incharge",
+            "Site Incharge",
+            "State PMO",
+            "Order Status",
+            ...(clickedOrderType === "dispute" ? ["Reason", "Action"] : [])
+          ].map((header, index) => (
+<th key={index} className={header === "Reason" ? "reason-header" : ""}>
+  {header}{" "}
+  <FontAwesomeIcon
+    icon={faFilter}
+    className="filter-icon-9963"
+    style={{ color: activeHeader === header ? "yellow" : "white", cursor: "pointer" }}
+    onClick={(e) => {
+      e.stopPropagation();
+      setActiveHeader(header);
+      handleOpenFilterModal9963(displayToOriginalKeyMap[header] || header, e);
+    }}
+  />
+</th>
 
-              <td>{formatToTwoDecimals(item["Issue"])}</td>
-              <td>{formatToTwoDecimals(item["Return"])}</td>
-              <td>{formatToTwoDecimals(item["Return Percentage"])}</td>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {modalData &&
+          modalData.map((item, index) => (
+            <tr key={index}>
+              {Object.keys(displayToOriginalKeyMap).map((header) => (
+                <td key={header}>
+                  {["Issue", "Return", "Return Percentage"].includes(displayToOriginalKeyMap[header])
+                    ? formatToTwoDecimals(item[displayToOriginalKeyMap[header]] || item[header])
+                    : item[displayToOriginalKeyMap[header]] || item[header]}
+                </td>
+              ))}
 
-          <td>{item["Plant"]}</td>
-          <td>{item["State"]}</td>
-          <td>{item["Area"]}</td>
-          <td>{item["Site"]}</td>
-          <td>{item["Material"]}</td>
-          <td>{item["Storage Location"]}</td>
-          <td>{item["Move Type"]}</td>
-          <td>{item["Material Document"]}</td>
-          <td>{item["Description"]}</td>
-          <td>{item["Val Type"]}</td>
-          <td>{item["Posting Date"]}</td>
-          <td>{item["Entry Date"]}</td>
-          <td>{item["Quantity"]}</td>
-          <td>{item["Order"]}</td>
-          <td>{item["Order Type"]}</td>
-          <td>{item["Component"]}</td>
-          <td>{item["WTG Model"]}</td>
-          <td>{item["Current Oil Change Date"]}</td>
-          <td>{item["stateEnggHead"]}</td>
-          <td>{item["areaIncharge"]}</td>
-          <td>{item["siteIncharge"]}</td>
-          <td>{item["statePMO"]}</td>
-          <td>{item["Order Status"]}</td>
-
-          {/* Conditionally render "Reason" and "Action" columns if the order type is 'dispute' */}
-          {clickedOrderType === 'dispute' && (
-  <>
- <td className="reason-column">
-  <select className='reason_select'
+              {clickedOrderType === "dispute" && (
+                <>
+                 <td className="reason-column">
+  <select
+    className="reason_select"
     value={item["reason"] || "Select"}
     onChange={(e) => handleReasonChange(e, index)}
   >
-    <option value="Select" disabled>Select</option>
+    <option value="Select" disabled>
+      Select
+    </option>
     {dropdownOptions.map((option, idx) => (
       <option key={idx} value={option}>
         {option}
       </option>
     ))}
-
-    {/* If the selected reason is not in the dropdown, add it dynamically */}
     {item["reason"] && !dropdownOptions.includes(item["reason"]) && (
       <option value={item["reason"]}>{item["reason"]}</option>
     )}
@@ -2049,61 +2270,75 @@ const normalizeStateName = (stateName) => {
           updatedCustomReasons[index] = e.target.value;
           setCustomReasons(updatedCustomReasons);
         }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault(); // Prevent form submission
+            handleAddCustomReason(index);
+          }
+        }}
       />
-      <button onClick={() => handleAddCustomReason(index)}>
-        OK
-      </button>
+      {/* <button onClick={() => handleAddCustomReason(index)}>OK</button> */}
     </div>
   )}
 </td>
 
 
-              <td>
-                <button
-                  onClick={() => handleSaveReason(index)}
-                  className="save-button"
-                >
-                  Save
-                </button>
-              </td>
-            </>
-          )}
-        </tr>
-      ))}
-  </tbody>
-</table>
+                  <td>
+                    <button onClick={() => handleSaveReason(index)} className="save-button">
+                      Save
+                    </button>
+                  </td>
+                </>
+              )}
+            </tr>
+          ))}
+      </tbody>
+    </table>
 
 
 {isFilterModalOpen9963 && (
-            <div className="filter-modal-9963">
-              <div className="filter-modal-content-9963">
-                <h3>Filter by {filterColumn9963}</h3>
-     
-            {/* Search Bar */}
-            <input
-              type="text"
-              placeholder="Search options..."
-              value={searchQuery9963}
-              onChange={handleSearchChange9963}
-              className="search-bar"
-            />
-<div className="filter-options-9963">
-  {filterOptions9963.map((option, index) => (
-    <div key={index} className="filter-option-9963">
-      <input
-        type="checkbox"
-        id={`filter-checkbox-9963-${index}`}
-        checked={
-          selectedFilters9963[headerToKeyMap[filterColumn9963] || filterColumn9963]?.includes(option) || false
-        }
-        onChange={() => handleCheckboxChange9963(option)}
-      />
-      <label htmlFor={`filter-checkbox-9963-${index}`}>
-        {option || "(Empty)"}
-      </label>
-    </div>
-  ))}
-</div>
+      <div className="filter-modal-9963">
+        <div className="filter-modal-content-9963">
+          <h3>Filter by {filterColumn9963}</h3>
+
+          {/* Search Bar */}
+          <input
+            type="text"
+            placeholder="Search options..."
+            value={searchQuery9963}
+            onChange={handleSearchChange9963}
+            className="search-bar"
+          />
+
+          <div className="filter-options-9963">
+            {filterOptions9963
+              .map((option) => {
+                const formattedColumns = ["Issue", "Return", "Return Percentage"];
+                return formattedColumns.includes(filterColumn9963) && !isNaN(option)
+                  ? formatToTwoDecimals(option)
+                  : option; // Only format if the column matches and the value is numeric
+              })
+              .sort((a, b) =>
+                String(a).toLowerCase().localeCompare(String(b).toLowerCase())
+              ) // Sort alphabetically
+              .map((option, index) => (
+                <div key={index} className="filter-option-9963">
+                  <input
+                    type="checkbox"
+                    id={`filter-checkbox-9963-${index}`}
+                    checked={
+                      selectedFilters9963[
+                        displayToOriginalKeyMap[filterColumn9963] || filterColumn9963
+                      ]?.includes(option) || false
+                    }
+                    onChange={() => handleCheckboxChange9963(option)}
+                  />
+                  <label htmlFor={`filter-checkbox-9963-${index}`}>
+                    {option || "(Empty)"}
+                  </label>
+                </div>
+              ))}
+          </div>
 
                 <div className="filter-buttons-9963">
                   <button onClick={applyFilters9963} className="apply-button-9963">

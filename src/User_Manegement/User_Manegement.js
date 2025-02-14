@@ -143,8 +143,11 @@ function UserManagement() {
                                   
                                     if (!adminId) {
                                       // If adminId is not found, redirect to the default route
-                                      window.location.href = '/'; // Redirect to the home page or default route
-                                    }
+                                     // window.location.href = '/'; // Redirect to the home page or default route
+
+                                  //   window.location.href = 'https://suzomsuatapps.suzlon.com/apps/fleetmanager_fe/index.html#/signin'; // Redirect to the home page or default route
+                                  window.location.href = 'https://suzoms.suzlon.com/FleetM/#/signin'; // Redirect to the home page or default route        
+                                }
                                   };
                     
                                   useEffect(() => {
@@ -226,7 +229,8 @@ function UserManagement() {
         // Send the domainId to the backend
         try {
             // const response = await fetch('http://localhost:224/api/delete_user', {
-                const response = await fetch(`${BASE_URL}/api/delete_user`, {
+               // const response = await fetch('http://localhost:3001/api/delete_user', {
+               const response = await fetch(`${BASE_URL}/api/delete_user`, {
                 method: 'POST', // Use POST for sending data securely
                 headers: {
                     'Content-Type': 'application/json',

@@ -140,8 +140,11 @@ const RegisterUsers3394 = () => {
                                                                           if (!adminId) {
                                                                             // If adminId is not found, redirect to the default route
                                                                            // window.location.href = '/'; // Redirect to the home page or default route
-                                                                           window.location.href = '/LubricationPortal'; // Redirect to the home page or default route
-                                                                          }
+                                                                         //  window.location.href = '/LubricationPortal'; // Redirect to the home page or default route
+
+                                                                         // window.location.href = 'https://suzomsuatapps.suzlon.com/apps/fleetmanager_fe/index.html#/signin'; // Redirect to the home page or default route
+                                                                         window.location.href = 'https://suzoms.suzlon.com/FleetM/#/signin'; // Redirect to the home page or default route       
+                                                                        }
                                                                         };
                                                           
                                                                         useEffect(() => {

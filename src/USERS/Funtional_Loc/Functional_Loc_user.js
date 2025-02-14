@@ -200,6 +200,9 @@ const [selectedOrderNos, setSelectedOrderNos] = useState([]);
 const [uniquePlants, setUniquePlants] = useState([]);
 const [uniqueOrderNos, setUniqueOrderNos] = useState([]);
 
+// State to track if the effect has already run
+const [hasRun, setHasRun] = useState(false);
+
 
 
   useEffect(() => {
@@ -260,6 +263,68 @@ const [uniqueOrderNos, setUniqueOrderNos] = useState([]);
   //   setSelectedSite2(e.target.value);
   // };
 
+  // Inside your component
+// useEffect(() => {
+//   // Pre-select the first site when the component mounts
+//   if (sites.length > 0) {
+//     const firstSite = sites[0];
+//     setSelectedSite2(firstSite); // Update the selected site state
+//     handleSelectChangeSite2({ target: { value: firstSite } }); // Trigger the change handler
+//   }
+// }, [sites]); // This effect runs when the sites array is updated or initially loaded
+
+// useEffect(() => {
+//   // Pre-select the first site when the component mounts
+//   if (sites.length > 0) {
+//     const firstSite = sites[0];
+//     setSelectedSite2(firstSite); // Update the selected site state
+    
+//     // Trigger the change handler to fetch functional locations
+//     handleSelectChangeSite2({ target: { value: firstSite } });
+
+//     // Immediately call handleSelectChangeSite3 after selecting the site
+//     // Select the second location if it exists
+//     if (functionalLocations[1]) {
+//       handleSelectChangeSite3({ target: { value: functionalLocations[1].Functional_Location } });
+//     }
+//   }
+// }, [sites, functionalLocations]); // Re-run the effect when 'sites' or 'functionalLocations' change
+
+
+useEffect(() => {
+  // Only run the effect if it hasn't run before and sites are available
+  if (!hasRun && sites.length > 0) {
+    const firstSite = sites[0];
+    setSelectedSite2(firstSite); // Update the selected site state
+
+    // Trigger the change handler to fetch functional locations
+    handleSelectChangeSite2({ target: { value: firstSite } });
+
+    // After running the initial setup, set the flag to prevent re-execution
+    setHasRun(true);
+  }
+}, [sites, hasRun]); // Runs once when sites are available
+
+useEffect(() => {
+  // Continuously retry checking for functionalLocations every 500ms
+  const interval = setInterval(() => {
+    if (functionalLocations.length > 0) {
+      // Functional locations are available, call handleSelectChangeSite3
+      handleSelectChangeSite3({ target: { value: functionalLocations[1].Functional_Location } });
+
+      // Clear the interval once the function is called
+      clearInterval(interval);
+    }
+  }, 500); // Retry every 500ms
+
+  // Cleanup the interval when the component unmounts
+  return () => clearInterval(interval);
+
+}, [functionalLocations]); // Depend on functionalLocations to retry when it changes
+
+
+
+
   const handleSelectChangeSite2 = async (e) => {
     const selectedValue = e.target.value; // Get the selected value from dropdown
     setSelectedSite2(selectedValue); // Update the selected site 3 state
@@ -298,6 +363,7 @@ const [uniqueOrderNos, setUniqueOrderNos] = useState([]);
    // Handle selection change
    // To be used for fetching the data
 const handleSelectChangeSite3 = async (event) => {
+  console.log("function called to fetch lubrication data")
   const funcLoc = event.target.value;
   setSelectedSite3(funcLoc);
 
@@ -327,6 +393,17 @@ const handleSelectChangeSite3 = async (event) => {
     }
   }
 };
+
+    // Automatically select the second option after 1 second on page load
+    useEffect(() => {
+      const timeoutId = setTimeout(() => {
+          if (functionalLocations.length > 1) {
+              setSelectedSite3(functionalLocations[1].Functional_Location); // Select the second option
+          }
+      }, 1000);
+
+      return () => clearTimeout(timeoutId); // Cleanup the timeout when the component unmounts
+  }, [functionalLocations]);
 
   const handleDownload = () => {
     const header = ['Plant', 'Order No.', 'Status', 'Start Date', 'End Date', 'Order Type', 'PM Start Date', 'Delays'];

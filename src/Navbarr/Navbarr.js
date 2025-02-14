@@ -70,8 +70,9 @@ const Navbar = () => {
 
          //  window.location.href = 'https://suzomsuatapps.suzlon.com/LubricationPortal/index.html#/'; // Redirect to login page
 
-           window.location.href = 'https://suzomsuatapps.suzlon.com/apps/fleetmanager_fe/index.html#/signin'; // Redirect to login page
+        //   window.location.href = 'https://suzomsuatapps.suzlon.com/apps/fleetmanager_fe/index.html#/signin'; // Redirect to login page
 
+        window.location.href = 'https://suzoms.suzlon.com/FleetM/#/signin'; // Redirect to the home page or default route     
             } else {
                 console.error('Logout failed');
             }
@@ -94,7 +95,14 @@ const Navbar = () => {
     return (
         <nav className="navbar">
             <div className='flex'>
-                <a className="navbar-brand" href="#">
+                {/* <a className="navbar-brand" href="#">
+                    <img src={myImage} alt="Company Logo" className="suzlon-logo" />
+                </a> */}
+                                {/* <a className="navbar-brand" href="https://suzomsuatapps.suzlon.com/apps/fleetmanager_fe/index.html#/signin">
+                    <img src={myImage} alt="Company Logo" className="suzlon-logo" />
+                </a> */}
+
+<a className="navbar-brand">
                     <img src={myImage} alt="Company Logo" className="suzlon-logo" />
                 </a>
             </div>
@@ -115,7 +123,9 @@ const Navbar = () => {
                 <div className="dropdown-content">
                     <p>{userName}</p>
                     <span>{userDesignation}</span> {/* Display the retrieved designation */}
-                    <a className="dropdown-item" href="#" onClick={handleLogout}>Logout</a>
+                    {/*   <a className="dropdown-item" href="#" onClick={handleLogout}>Logout</a> */}
+
+                   <a className="dropdown-item" onClick={handleLogout}>Logout</a> 
                 </div>
             </div>
         </nav>

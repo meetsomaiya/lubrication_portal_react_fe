@@ -103,8 +103,8 @@ const Sidebar_user = ({ isOpen, toggleSidebar }) => {
                // navigate('/'); // Redirect to login page
 
                //window.location.href = 'https://suzomsuatapps.suzlon.com/LubricationPortal/index.html#/'; // Redirect to login page
-               window.location.href = 'https://suzomsuatapps.suzlon.com/apps/fleetmanager_fe/index.html#/signin'; // Redirect to login page
-            
+             //  window.location.href = 'https://suzomsuatapps.suzlon.com/apps/fleetmanager_fe/index.html#/signin'; // Redirect to login page
+             window.location.href = 'https://suzoms.suzlon.com/FleetM/#/signin'; // Redirect to the home page or default route        
             } else {
                 console.error('Logout failed:', await response.text());
             }

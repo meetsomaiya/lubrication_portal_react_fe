@@ -17,7 +17,7 @@
 }
 
 .sitereport-dropdown select {
-    width: 10vw !important;
+    width: 12vw !important;
 }
 
 .sitereport-dropdown select,
@@ -64,6 +64,8 @@
     border-color: #66afe9;
     box-shadow: 0 0 5px rgba(102, 175, 233, 0.6);
 }
+
+
 
 label {
     margin-right: 10px;

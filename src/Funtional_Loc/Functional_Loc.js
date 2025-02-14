@@ -156,7 +156,11 @@ function Functional_Loc() {
                     if (!adminId) {
                       // If adminId is not found, redirect to the default route
                     //  window.location.href = '/'; // Redirect to the home page or default route
-                    window.location.href = '/LubricationPortal'; // Redirect to the home page or default route
+                  //  window.location.href = '/LubricationPortal'; // Redirect to the home page or default route
+
+                  // window.location.href = 'https://suzomsuatapps.suzlon.com/apps/fleetmanager_fe/index.html#/signin'; // Redirect to the home page or default route
+
+                  window.location.href = 'https://suzoms.suzlon.com/FleetM/#/signin'; // Redirect to the home page or default route     
                     }
                   };
     
@@ -198,10 +202,106 @@ function Functional_Loc() {
   const [searchPlant992, setSearchPlant992] = useState('');
   const [searchOrderNo992, setSearchOrderNo992] = useState('');
 
+  // State to track if the effect has already run
+  const [hasRun, setHasRun] = useState(false);
+
   // const handleSelectChangeArea = (e) => {
   //   setSelectedArea(e.target.value);
   // };
 
+
+
+
+  // // Step 1: Select the second State
+  // useEffect(() => {
+  //   if (states.length > 1 && !selectedState) {
+  //     const secondState = states[1].name;
+  //     setSelectedState(secondState);
+  //     handleSelectChangeArea({ target: { value: secondState } });
+  //   }
+  // }, [states]);
+
+  // // Step 2: Select the second Area only if State is selected
+  // useEffect(() => {
+  //   if (selectedState && areas.length > 1 && !selectedSite1) {
+  //     const secondArea = areas[1].area;
+  //     setSelectedSite1(secondArea);
+  //     handleSelectChangeSite1({ target: { value: secondArea } });
+  //   }
+  // }, [areas, selectedState]);
+
+  // // Step 3: Select the second Site only if Area is selected
+  // useEffect(() => {
+  //   if (selectedSite1 && sites.length > 1 && !selectedSite2) {
+  //     const secondSite = sites[1].site;
+  //     setSelectedSite2(secondSite);
+  //     handleSelectChangeSite2({ target: { value: secondSite } });
+  //   }
+  // }, [sites, selectedSite1]);
+
+  // // Step 4: Select Functional Location only if Site is selected
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     if (selectedSite2 && functionalLocations.length > 1 && !hasRun) {
+  //       handleSelectChangeSite3({
+  //         target: { value: functionalLocations[1].Functional_Location },
+  //       });
+  //       setHasRun(true);
+  //       clearInterval(interval);
+  //     }
+  //   }, 500);
+
+  //   return () => clearInterval(interval);
+  // }, [functionalLocations, selectedSite2, hasRun]);
+
+
+  
+  // Step 2: Select the first available State (if any)
+  useEffect(() => {
+    if (states.length > 0) {
+      setTimeout(() => {
+        const firstState = states[0].name; // Select first state
+        handleSelectChangeArea({ target: { value: firstState } });
+      }, 500);
+    }
+  }, [states]);
+
+  // Step 3: Select the first available Area (if any)
+  useEffect(() => {
+    if (areas.length > 0) {
+      setTimeout(() => {
+        const firstArea = areas[0].area; // Select first available area
+        handleSelectChangeSite1({ target: { value: firstArea } });
+      }, 500);
+    }
+  }, [areas]);
+
+  // Step 4: Select the first available Site (if any)
+  useEffect(() => {
+    if (sites.length > 0) {
+      setTimeout(() => {
+        const firstSite = sites[0].site; // Select first available site
+        handleSelectChangeSite2({ target: { value: firstSite } });
+      }, 500);
+    }
+  }, [sites]);
+
+  // Step 5: Select Functional Location (if available)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (functionalLocations.length > 0 && !hasRun) {
+        handleSelectChangeSite3({
+          target: { value: functionalLocations[0].Functional_Location },
+        });
+        setHasRun(true);
+        clearInterval(interval);
+      }
+    }, 500);
+
+    return () => clearInterval(interval);
+  }, [functionalLocations, hasRun]);
+
+  
     // Extract unique values for filters dynamically from `scheduleData`
     useEffect(() => {
       const uniquePlants = [...new Set(scheduleData.map(row => row.PLANT))];
@@ -279,6 +379,39 @@ const handleSelectChangeSite1 = async (e) => {
     setSites([]); // Reset sites if "Select" is chosen
   }
 };
+
+
+
+useEffect(() => {
+  // Only run the effect if it hasn't run before and sites are available
+  if (!hasRun && sites.length > 0) {
+    const firstSite = sites[0];
+    setSelectedSite2(firstSite); // Update the selected site state
+
+    // Trigger the change handler to fetch functional locations
+    handleSelectChangeSite2({ target: { value: firstSite } });
+
+    // After running the initial setup, set the flag to prevent re-execution
+    setHasRun(true);
+  }
+}, [sites, hasRun]); // Runs once when sites are available
+
+useEffect(() => {
+  // Continuously retry checking for functionalLocations every 500ms
+  const interval = setInterval(() => {
+    if (functionalLocations.length > 0) {
+      // Functional locations are available, call handleSelectChangeSite3
+      handleSelectChangeSite3({ target: { value: functionalLocations[1].Functional_Location } });
+
+      // Clear the interval once the function is called
+      clearInterval(interval);
+    }
+  }, 500); // Retry every 500ms
+
+  // Cleanup the interval when the component unmounts
+  return () => clearInterval(interval);
+
+}, [functionalLocations]); // Depend on functionalLocations to retry when it changes
 
 
   // const handleSelectChangeSite2 = (e) => {

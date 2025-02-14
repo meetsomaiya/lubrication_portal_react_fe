@@ -67,7 +67,9 @@ const Navbar_user = () => {
 
               // window.location.href = 'https://suzomsuatapps.suzlon.com/LubricationPortal/index.html#/'; // Redirect to login page
 
-              window.location.href = 'https://suzomsuatapps.suzlon.com/apps/fleetmanager_fe/index.html#/signin'; // Redirect to login page
+           //   window.location.href = 'https://suzomsuatapps.suzlon.com/apps/fleetmanager_fe/index.html#/signin'; // Redirect to login page
+
+           window.location.href = 'https://suzoms.suzlon.com/FleetM/#/signin'; // Redirect to the home page or default route        
               
             } else {
                 console.error('Logout failed:', await response.text());
@@ -80,7 +82,11 @@ const Navbar_user = () => {
     return (
         <nav className="navbar">
             <div className='flex'>
-                <a className="navbar-brand" href="#">
+                {/* <a className="navbar-brand" href="https://suzomsuatapps.suzlon.com/apps/fleetmanager_fe/index.html#/signin">
+                    <img src={myImage} alt="Company Logo" className="suzlon-logo" />
+                </a> */}
+
+<a className="navbar-brand">
                     <img src={myImage} alt="Company Logo" className="suzlon-logo" />
                 </a>
             </div>

@@ -178,7 +178,9 @@ const Functional_Loc_user = () => {
   const [selectedOrderNo, setSelectedOrderNo] = useState([]);
   // const [selectedOption1, setSelectedOption1] = useState('Select');
 
-    const [selectedOption1, setSelectedOption1] = useState('Q1_LUB_2023');
+    // const [selectedOption1, setSelectedOption1] = useState('Q1_LUB_2023');
+
+    const [selectedOption1, setSelectedOption1] = useState('HALF2_LUB_2023');
 
   // const [selectedOption2, setSelectedOption2] = useState('Select');
   // const [selectedOption3, setSelectedOption3] = useState('Select');
@@ -240,6 +242,8 @@ const [searchTermOrderNo, setSearchTermOrderNo] = useState('');
    // Initialize state for date inputs with different names
    const [startDate, setStartDate] = useState(twoYearsBack);
    const [endDate, setEndDate] = useState(twoYearsAhead);
+
+   const [loading, setLoading] = useState(false); // To track loading state
 
        // Handlers for date inputs
        const handleStartDateChange = (event) => {
@@ -316,7 +320,7 @@ useEffect(() => {
       setOptions(data);
 
       // Set default selected option to the 6th item (index 5)
-      setSelectedOption1(data[6]?.ZEXT_RNO || ""); // Default to 6th item or empty string if not available
+      setSelectedOption1(data[4]?.ZEXT_RNO || ""); // Default to 6th item or empty string if not available
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -543,17 +547,69 @@ useEffect(() => {
   };
 
       // New function to call both fetch functions
-const handleButtonClick = () => {
-  fetchTotalPlannedCount();
-  fetchTotalWtgCount();
-  fetchOpenStatusCount();
-  fetchCompletedStatusCount();
-  fetchOutOfGraceCount();
-  fetchTotalStateWiseCount();
+// const handleButtonClick = () => {
+//   fetchTotalPlannedCount();
+//   fetchTotalWtgCount();
+//   fetchOpenStatusCount();
+//   fetchCompletedStatusCount();
+//   fetchOutOfGraceCount();
+//   fetchTotalStateWiseCount();
 
 
-  handleCardClick('Total');  
+//   handleCardClick('Total');  
+// };
+
+// const handleButtonClick = () => {
+//   // Reset all percentage states to 0
+//   setTotalPercentage(0);
+//   setPlannedPercentage(0);
+//   setOpenPercentage(0);
+//   setCompletedPercentage(0);
+//   setGracePercentage(0);
+
+//   // Call all fetch functions after resetting percentages
+//   fetchTotalPlannedCount();
+//   fetchTotalWtgCount();
+//   fetchOpenStatusCount();
+//   fetchCompletedStatusCount();
+//   fetchOutOfGraceCount();
+//   fetchTotalStateWiseCount();
+
+//   // Handle card click
+//   handleCardClick('Total');
+// };
+
+const handleButtonClick = async () => {
+  setLoading(true); // Set loading to true before starting API calls
+
+  // Reset all percentage states to 0
+  setTotalPercentage(0);
+  setPlannedPercentage(0);
+  setOpenPercentage(0);
+  setCompletedPercentage(0);
+  setGracePercentage(0);
+
+  try {
+    // Wait for all API calls to complete before setting loading to false
+    await Promise.all([
+      fetchTotalPlannedCount(),
+      fetchTotalWtgCount(),
+      fetchOpenStatusCount(),
+      fetchCompletedStatusCount(),
+      fetchOutOfGraceCount(),
+      fetchTotalStateWiseCount()
+    ]);
+  } catch (error) {
+    console.error("Error in one or more API calls:", error);
+  } finally {
+    setLoading(false); // Set loading to false after all API responses arrive
+  }
+
+  // Handle card click
+  handleCardClick('Total');
 };
+
+
 
      // Function to fetch the total WTG count
      const fetchTotalWtgCount = async () => {
@@ -1434,9 +1490,17 @@ const fetchOpenStateWiseCount = async () => {
       ))}
     </select> */}
 
-    <select onChange={handleSelectChange1} value={selectedOption1} className="searchWTG_dropicon">
+    {/* <select onChange={handleSelectChange1} value={selectedOption1} className="searchWTG_dropicon">
   {options.map((option, index) => (
     <option key={index} value={option.ZEXT_RNO} selected={index === 6}>
+      {option.ZEXT_RNO}
+    </option>
+  ))}
+</select> */}
+
+<select onChange={handleSelectChange1} value={selectedOption1} className="searchWTG_dropicon">
+  {options.map((option, index) => (
+    <option key={index} value={option.ZEXT_RNO} selected={index === 4}>
       {option.ZEXT_RNO}
     </option>
   ))}
@@ -1532,6 +1596,7 @@ const fetchOpenStateWiseCount = async () => {
             <div className='flex justify-start'>
               <h2>Total</h2>
               <h3>{totalCount}</h3> {/* Display total count from state */}
+              <div style={{ width: `${totalPercentage}%` }}></div>
             </div>
             <div className='progress-main'>
               <p style={{ color: '#009F89' }}>{totalPercentage}%</p> {/* Display total percentage */}
@@ -1557,11 +1622,13 @@ const fetchOpenStateWiseCount = async () => {
               <h2>Planned</h2>
               {/* <h3>185</h3> */}
               <h3>{plannedCount !== null ? plannedCount : '0'}</h3>
+              <div style={{ width: `${plannedPercentage}%` }}></div>
             </div>
             <div className='progress-main'>
             <p style={{ color: '#013B72' }}>{plannedPercentage.toFixed(0)}%</p> {/* Display calculated percentage */}
               <div className="progress-bar">
-                <div style={{ width: '40%' }}></div>
+                {/* <div style={{ width: '40%' }}></div> */}
+                <div style={{ width: `${plannedPercentage}%` }}></div>
               </div>
             </div>
           </div>
@@ -1580,11 +1647,13 @@ const fetchOpenStateWiseCount = async () => {
               <h2>Open</h2>
               {/* <h3>185</h3> */}
               <h3>{openCount !== null ? openCount : '0'}</h3>
+              <div style={{ width: `${openPercentage}%` }}></div>
             </div>
             <div className='progress-main'>
             <p style={{ color: '#E95060' }}>{openPercentage.toFixed(0)}%</p> {/* Display calculated percentage */}
               <div className="progress-bar">
-                <div style={{ width: '40%' }}></div>
+                {/* <div style={{ width: '40%' }}></div> */}
+                <div style={{ width: `${openPercentage}%` }}></div>
               </div>
             </div>
           </div>
@@ -1603,11 +1672,13 @@ const fetchOpenStateWiseCount = async () => {
               <h2>Completed</h2>
               {/* <h3>185</h3> */}
               <h3>{completedCount !== null ? completedCount : '0'}</h3>
+              <div style={{ width: `${completedPercentage}%` }}></div>
             </div>
             <div className='progress-main'>
             <p style={{ color: '#00AD48' }}>{completedPercentage.toFixed(0)}%</p> {/* Display calculated percentage */}
               <div className="progress-bar">
-                <div style={{ width: '40%' }}></div>
+                {/* <div style={{ width: '40%' }}></div> */}
+                <div style={{ width: `${completedPercentage}%` }}></div>
               </div>
             </div>
           </div>
@@ -1626,15 +1697,17 @@ const fetchOpenStateWiseCount = async () => {
               <h2>Grace Time</h2>
               {/* <h3>185</h3> */}
               <h3>{outofGraceCount !== null ? outofGraceCount : '0'}</h3>
+              <div style={{ width: `${gracePercentage}%` }}></div>
 
             </div>
             <div style={{ height: '1px' }}>
-              <span style={{ fontSize: '9px', marginRight: '129px' }}>±7 Days</span>
+              {/* <span style={{ fontSize: '9px', marginRight: '129px' }}>±7 Days</span> */}
+              <span style={{ fontSize: '13px', marginRight: '129px' }}>±7 Days</span>
             </div>
             <div className='progress-main'>
             <p style={{ color: '#CE6301' }}>{gracePercentage.toFixed(0)}%</p> {/* Display calculated percentage */}
               <div className="progress-bar">
-                <div style={{ width: '56%' }}></div>
+              <div style={{ width: `${gracePercentage}%` }}></div>
               </div>
             </div>
           </div>
@@ -1860,6 +1933,13 @@ const fetchOpenStateWiseCount = async () => {
             </div>
           </div>
         </div>
+
+                        {/* Preloader */}
+                        {loading && (
+            <div className="preloader">
+              <div className="circle"></div>
+            </div>
+          )}
       </div>
     </div>
   );

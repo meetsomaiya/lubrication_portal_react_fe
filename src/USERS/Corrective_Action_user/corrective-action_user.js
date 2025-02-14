@@ -5,6 +5,20 @@ import moment from 'moment-timezone';
 import { BASE_URL } from '../../config'
 
 const TableComponent9976 = () => {
+
+    // Helper function to format the date from yyyymmdd to dd-mm-yyyy
+const formatDate = (dateString) => {
+  if (!dateString) return ""; // If no date is available, return empty string
+
+  const date = dateString.toString();
+  const day = date.slice(6, 8);
+  const month = date.slice(4, 6);
+  const year = date.slice(0, 4);
+
+  return `${day}-${month}-${year}`; // Format to dd-mm-yyyy
+};
+
+
   let entryTime = null;  // Store the entry time (when user stepped into the page)
                       let exitTime = null;   // Store the exit time (when user left the page)
                       
@@ -162,6 +176,55 @@ const TableComponent9976 = () => {
     "SITE_INCHARGE"
   ];
 
+  const headers = [
+    "SERVICEORDER",
+    "SAMPLE_NUMBER",
+    "FUNCTIONAL_LOCATION",
+    "SAMPLE_COLLECTION_DATE",
+    "OIL_MATERIAL_CODE",
+    "DESCRIP",
+    "STATUS",
+    "SAMPLING_DECISION",
+    "REASON",
+    "DECISION_TAKEN_DATE",
+    "LAST_OIL_CHANGED_DATE",
+    "STATE",
+    "AREA",
+    "SITE",
+    "MAINTENANCE_PLANT",
+    "STATE_ENGG_HEAD",
+    "AREA_INCHARGE",
+    "SITE_INCHARGE",
+  ];
+  
+  const dateFields = [
+    "SAMPLE_COLLECTION_DATE",
+    "DECISION_TAKEN_DATE",
+    "LAST_OIL_CHANGED_DATE"
+  ];
+
+  // Mapping between headers used in the table and the original API field names
+  const headerMapping = {
+    SERVICEORDER: "SERVICEORDER",
+    SAMPLE_NUMBER: "Sample_Number",
+    FUNCTIONAL_LOCATION: "FUNCTIONAL_LOCATION",
+    SAMPLE_COLLECTION_DATE: "Sample_Collection_Date",
+    OIL_MATERIAL_CODE: "Oil_Material_Code",
+    DESCRIP: "DESCRIP",
+    STATUS: "STATUS",
+    SAMPLING_DECISION: "Sampling_Decision",
+    REASON: "Reason",
+    DECISION_TAKEN_DATE: "Decision_Taken_Date",
+    LAST_OIL_CHANGED_DATE: "Last_Oil_Changed_Date",
+    STATE: "STATE",
+    AREA: "AREA",
+    SITE: "SITE",
+    MAINTENANCE_PLANT: "MAINTENANCE_PLANT",
+    STATE_ENGG_HEAD: "STATE_ENGG_HEAD",
+    AREA_INCHARGE: "AREA_INCHARGE",
+    SITE_INCHARGE: "SITE_INCHARGE",
+  };
+
   useEffect(() => {
     const cookies = document.cookie.split("; ").reduce((acc, cookie) => {
       const [key, value] = cookie.split("=");
@@ -198,8 +261,44 @@ const TableComponent9976 = () => {
     }));
     setSearchTerms((prev) => ({
       ...prev,
-      [header]: "",
+      [header]: "", // Reset search term when toggling the filter box
     }));
+  };
+  
+  const handleFilterChange = (header, value) => {
+    const updatedFilters = { ...filters };
+    const apiHeader = headerMapping[header]; // Map the header to the original API field name
+    
+    if (!updatedFilters[apiHeader]) {
+      updatedFilters[apiHeader] = new Set();
+    }
+  
+    if (updatedFilters[apiHeader].has(value)) {
+      updatedFilters[apiHeader].delete(value);
+    } else {
+      updatedFilters[apiHeader].add(value);
+    }
+  
+    setFilters(updatedFilters);
+    applyFilters(updatedFilters);
+  };
+  
+  const applyFilters = (activeFilters) => {
+    let filtered = [...data];
+    for (const [header, values] of Object.entries(activeFilters)) {
+      if (values.size > 0) {
+        filtered = filtered.filter((row) => {
+          const value = row[header] ?? ""; // Default to empty string if null/undefined
+          return values.has(value); // Apply filter if value exists
+        });
+      }
+    }
+    setFilteredData(filtered);
+  };
+  
+  const resetFilters = () => {
+    setFilters({});
+    setFilteredData(data);
   };
 
   useEffect(() => {
@@ -222,39 +321,7 @@ const TableComponent9976 = () => {
     }));
   };
 
-  const handleFilterChange = (header, value) => {
-    const updatedFilters = { ...filters };
-    if (!updatedFilters[header]) {
-      updatedFilters[header] = new Set();
-    }
 
-    if (updatedFilters[header].has(value)) {
-      updatedFilters[header].delete(value);
-    } else {
-      updatedFilters[header].add(value);
-    }
-
-    setFilters(updatedFilters);
-    applyFilters(updatedFilters);
-  };
-
-  const applyFilters = (activeFilters) => {
-    let filtered = [...data];
-    for (const [header, values] of Object.entries(activeFilters)) {
-      if (values.size > 0) {
-        filtered = filtered.filter((row) => {
-          const value = row[header] ?? ""; // Default to empty string if null/undefined
-          return values.has(value); // Apply filter if value exists
-        });
-      }
-    }
-    setFilteredData(filtered);
-  };
-
-  const resetFilters = () => {
-    setFilters({});
-    setFilteredData(data);
-  };
 
   const downloadExcel = () => {
     const ws = XLSX.utils.json_to_sheet(filteredData);
@@ -283,71 +350,73 @@ const TableComponent9976 = () => {
       </button>
 
       <div className="data-table-9976-wrapper">
-        <table className="data-table-9976">
-          <thead>
-            <tr>
-              {fieldOrder.map((header, index) => (
-                <th key={index}>
-                  {header.replace(/_/g, " ")}
-                  <span
-                    className="filter-icon"
-                    onClick={() => toggleFilterBox(header)}
-                  >
-                    ⚙️
-                  </span>
-                  {filterBoxes[header] && (
-                    // <div className="filter-box">
-                    <div ref={filterBoxRef} className="filter-box">
-                      {/* Search Bar */}
-                      <input
-                        type="text"
-                        className="filter-search-bar"
-                        placeholder={`Search ${header}`}
-                        value={searchTerms[header] || ""}
-                        onChange={(e) =>
-                          handleSearchChange(header, e.target.value)
-                        }
-                      />
-                      {/* Filter Options */}
-                      {Array.from(
-                        new Set(
-                          data
-                            .map((row) => row[header] ?? "") // Handle null/undefined safely
-                            .filter((value) =>
-                              value
-                                .toString()
-                                .toLowerCase()
-                                .includes(
-                                  (searchTerms[header] || "").toLowerCase()
-                                )
-                            )
+      <table className="data-table-9976">
+  <thead>
+    <tr>
+      {headers.map((header, index) => (
+        <th key={index}>
+          {header.replace(/_/g, " ").toUpperCase()}
+          <span
+            className="filter-icon"
+            onClick={() => toggleFilterBox(header)}
+          >
+            ⚙️
+          </span>
+          {filterBoxes[header] && (
+            <div ref={filterBoxRef} className="filter-box">
+              <input
+                type="text"
+                className="filter-search-bar"
+                placeholder={`Search ${header}`}
+                value={searchTerms[header] || ""}
+                onChange={(e) =>
+                  handleSearchChange(header, e.target.value)
+                }
+              />
+              {Array.from(
+                new Set(
+                  filteredData
+                    .map((row) => row[headerMapping[header]] ?? "")
+                    .filter((value) =>
+                      value
+                        .toString()
+                        .toLowerCase()
+                        .includes(
+                          (searchTerms[header] ?? "").toLowerCase()
                         )
-                      ).map((value, idx) => (
-                        <div key={idx} className="filter-option">
-                          <input
-                            type="checkbox"
-                            checked={filters[header]?.has(value) || false}
-                            onChange={() => handleFilterChange(header, value)}
-                          />
-                          <label>{value}</label>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </th>
+                    )
+                )
+              ).map((value, idx) => (
+                <div key={idx} className="filter-option">
+                  <input
+                    type="checkbox"
+                    checked={filters[header]?.has(value) || false}
+                    onChange={() => handleFilterChange(header, value)}
+                  />
+                  <label>{value}</label>
+                </div>
               ))}
-            </tr>
-          </thead>
-          <tbody>
-            {currentItems.map((row, index) => (
-              <tr key={index}>
-                {fieldOrder.map((header, idx) => (
-                  <td key={idx}>{row[header] ?? ""}</td> // Handle null/undefined safely
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+            </div>
+          )}
+        </th>
+      ))}
+    </tr>
+  </thead>
+  <tbody>
+    {filteredData.map((row, index) => (
+      <tr key={index}>
+        {headers.map((header, idx) => (
+          <td key={idx}>
+            {/* Apply date formatting if the header corresponds to a date field */}
+            {dateFields.includes(header)
+              ? formatDate(row[headerMapping[header]])
+              : row[headerMapping[header]] ?? ""}
+          </td>
+        ))}
+      </tr>
+    ))}
+  </tbody>
+</table>
       </div>
 
       {/* Pagination Controls */}

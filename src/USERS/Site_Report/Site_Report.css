@@ -8,13 +8,14 @@
 
 
 
-.sitereport-dropdown {
+/* .sitereport-dropdown {
     margin: 3px;
     margin-left: 1vmin;
     position: relative;
     margin-top: 3vmax;
     margin-bottom: 2vmax;
 }
+
 
 .sitereport-dropdown select,
 .sitereport-dropdown input[type="date"] {
@@ -30,6 +31,7 @@
     outline: none;
     line-height: 16px;
 }
+
 
 .sitereport-dropdown input[type="date"]::before {
     content: attr(placeholder);
@@ -51,7 +53,8 @@
 .sitereport-dropdown input[type="date"]:focus {
     border-color: #66afe9;
     box-shadow: 0 0 5px rgba(102, 175, 233, 0.6);
-}
+} */
+ 
 
 label {
     margin-right: 10px;
