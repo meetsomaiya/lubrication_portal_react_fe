@@ -403,7 +403,8 @@ const formatDate = (dateString) => {
     </tr>
   </thead>
   <tbody>
-    {filteredData.map((row, index) => (
+    {/* {filteredData.map((row, index) => ( */}
+    {currentItems.map((row, index) => (
       <tr key={index}>
         {headers.map((header, idx) => (
           <td key={idx}>

@@ -698,8 +698,9 @@ const sendAutoLoginRequest = async (domainId) => {
     // Redirect if response is empty
     if (!userData || Object.keys(userData).length === 0) {
       console.error('Empty response received. Redirecting to sign-in page.');
-      window.location.href = 'https://suzomsuatapps.suzlon.com/apps/fleetmanager_fe/index.html#/signin';
-      return;
+     // window.location.href = 'https://suzomsuatapps.suzlon.com/apps/fleetmanager_fe/index.html#/signin';
+     window.location.href = 'https://suzoms.suzlon.com/FleetM/#/signin'; // Redirect to the home page or default route      
+     return;
     }
 
     // Set cookies
@@ -722,7 +723,9 @@ const sendAutoLoginRequest = async (domainId) => {
     console.error('Auto login request failed:', error);
     
     // Redirect to sign-in page on error
-    window.location.href = 'https://suzomsuatapps.suzlon.com/apps/fleetmanager_fe/index.html#/signin';
+   // window.location.href = 'https://suzomsuatapps.suzlon.com/apps/fleetmanager_fe/index.html#/signin';
+
+   window.location.href = 'https://suzoms.suzlon.com/FleetM/#/signin'; // Redirect to the home page or default route     
   }
 };
 
